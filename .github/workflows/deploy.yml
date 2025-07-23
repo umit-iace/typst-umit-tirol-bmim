@@ -1,0 +1,56 @@
+name: Deploy to GitHub Artifacts
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install fonts
+        run: |
+          sudo apt update
+          sudo apt install -y lmodern cm-super fonts-cmu
+
+      - name: Install typst
+        run: |
+          sudo snap install typst
+
+      - name: Build Exam File
+        run: |
+          mkdir -p build_output
+          typst compile ./example/exam/main.typ --root . --format pdf
+          mv example/exam/main.pdf build_output/bmim-exam.pdf
+
+      - name: Build Practial File
+        run: |
+          mkdir -p build_output
+          typst compile ./example/practical/main.typ --root . --format pdf
+          mv example/practical/main.pdf build_output/bmim-practical.pdf
+
+      - name: Upload Artifacts
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: Bmim-Pdf
+          path: build_output/
+

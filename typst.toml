@@ -1,0 +1,15 @@
+[package]
+name = "typst-umit-tirol-bmim"
+version = "0.1.0"
+entrypoint = "src/lib.typ"
+authors = ["IACE <https://github.com/umit-iace>"]
+license = "MIT"
+description = "Template for exams/practicals for UMIT TIROL/BMIM/IACE."
+repository = "https://github.com/umit-iace/typst-umit-tirol-bmim"
+keywords = ["UMIT TIROL", "IACE", "Practial", "Exam", "Article"]
+categories = ["article"]
+exclude = [".github/", "example/"]
+
+[template]
+path = "template"
+entrypoint = "main.typ"
