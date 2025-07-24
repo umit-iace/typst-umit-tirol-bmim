@@ -1,6 +1,3 @@
-// Colors from the official palette of the University of Strasbourg
-// https://langagevisuel.unistra.fr/index.php?id=396
-
 #let white = rgb("#ffffff")
 #let black = rgb("#000000")
 
@@ -14,4 +11,3 @@
 #let bmimgrey = rgb("717788")
 #let bmimyellow = rgb("b98900")
 #let bmimgreen = rgb("006e43")
-

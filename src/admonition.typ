@@ -33,12 +33,12 @@
   ),
   "example": (
     "sg": (
-      "de": "Example",
-      "en": "Beispiel",
+      "de": "Beispiel",
+      "en": "Example",
     ),
     "pl": (
-      "de": "Examples",
-      "en": "Beispiele",
+      "de": "Beispiele",
+      "en": "Examples",
     ),
   ),
 )

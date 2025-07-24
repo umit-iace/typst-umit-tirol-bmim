@@ -1,45 +1,63 @@
-#import "../src/lib.typ": *
+#import "../../src/lib.typ": *
 
 #show: bmim-theme.with(
   variant: "exam",
   title: "Control me",
-  lang: "de",
+  type: "Klausur",
+  lang: "en",
   course: "Advanced Control",
   authors: ("Author1", "Author3", "Author3"),
-  wUmitLogo: true,
+  wUmitLogo: false,
+  with-solution: true,
+  with-points: true,
 )
 
-#outline()
+= Section 1
 
-= Section
+#lorem(20)
 
-#lorem(20) @netwok2020
-
-== Subsection
+== Subsection 1
 
 #lorem(50)
 
-=== Subsubsection
+- #task(points: 10, task: [
+  Test Problem
+
+  Take a look in the solution
+], solution: [
+  Lösung steht hier ganz fett mit $1+1=2$.
+])
+
+=== Subsubsection 1
 
 #lorem(80)
 
 #pagebreak()
 
-#lorem(80)
+== Subsection 2 <bmim:nonumber>
 
-= Section
+#set enum(full: true, numbering: wrapped-enum-numbering("A"))
 
-#lorem(20) @netwok2020
+Group axioms:
++ #enum-label("ax:ass")Associativity
++ #enum-label("ax:id")Existence of identity element
++ #enum-label("ax:inv")Existence of inverse element
 
-#show: backmatter
 
-= Appendix Section
+#set enum(numbering: wrapped-enum-numbering("1.a"), full: true)
+#set math.equation(numbering: "(1.1)")
+Another important list:
++ Newton's laws of motion are three physical laws that relate the motion of an object to the forces acting on it.
+  + A body remains at rest, or in motion at a constant speed in a straight line, unless it is acted upon by a force.
+  + The net force on a body is equal to the body's acceleration multiplied by its mass
+  + #enum-label[newton-third]If two bodies exert forces on each other, these forces have the same magnitude but opposite directions
++ #enum-label[hook1] Another important force is hooks law:
+  $ arrow(F) = -k arrow(Delta x) $ <eq:hook> #enum-label[hook2]
 
-#lorem(80)
 
-= Appendix Section
+We covered the three group axioms @ax:ass[], @ax:id[] and @ax:inv[].
 
-#lorem(80)
+It is important to remember Newton's third law @newton-third, and Hook's law @hook1. In @hook2 we gave Hook's law in @eq:hook.
 
 #important[Test]
 
@@ -49,4 +67,14 @@
 
 #hint[Test]
 
-#bibliography("./../../assets/sources.bib", title: "Literatur")
+= Section
+
+#lorem(20)
+
+- #task(points: 20, task: [
+  Test Problem 2
+
+  Take a look in the solution
+], solution: [
+  Lösung steht hier ganz fett mit $1+5=6$.
+])
