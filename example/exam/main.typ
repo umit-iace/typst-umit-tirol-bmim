@@ -6,6 +6,7 @@
   type: "Klausur",
   lang: "en",
   course: "Advanced Control",
+  course-short: "AC",
   authors: ("Author1", "Author3", "Author3"),
   wUmitLogo: false,
   with-solution: true,

@@ -7,6 +7,7 @@
   lang: "en",
   course: "Advanced Control",
   authors: ("Author1", "Author3", "Author3"),
+  date: datetime(day: 1, month: 3, year: 2024)
   wUmitLogo: false,
   with-solution: true,
   with-points: true,
@@ -14,11 +15,11 @@
 
 #outline()
 
-= Section 1
+= First Section
 
 #lorem(20) @netwok2020
 
-== Subsection 1
+== First Subsection with number
 
 #lorem(50)
 
@@ -30,13 +31,13 @@
   Lösung steht hier ganz fett mit $1+1=2$.
 ])
 
-=== Subsubsection 1
+=== First Subsubsection
 
 #lorem(80)
 
 #pagebreak()
 
-== Subsection 2 <bmim:nonumber>
+== Second Subsection without number <bmim:nonumber>
 
 #set enum(full: true, numbering: wrapped-enum-numbering("A"))
 
