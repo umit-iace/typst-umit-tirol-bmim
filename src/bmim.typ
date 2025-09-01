@@ -8,6 +8,7 @@
 
 #let task-with-sol = state("bmim-tasks-with-sol", false)
 #let task-with-points = state("bmim-tasks-with-points", false)
+#let task-sol-at-end = state("bmim-tasks-sol-at-end", false)
 
 #let bmim-color-theme(name: str) = {
   if name == "blue" {
@@ -36,6 +37,7 @@
   wUmitLogo: true,
   font: ("New Computer Modern Math",),
   with-solution: true,
+  sol-at-end: false,
   with-points: true,
   body,
 ) = {
@@ -49,6 +51,7 @@
   }
   task-with-sol.update(with-solution)
   task-with-points.update(with-points)
+  task-sol-at-end.update(sol-at-end)
 
   set text(lang: lang, font: font, spacing: .5em, size: size)
   set par(leading: 0.55em, spacing: 0.55em, justify: true)
@@ -230,5 +233,16 @@
   // ###
 
   body
+
+  // ### Seperate Solutions for Exam
+  context {
+    if task-sol-at-end.get() {
+      let tt = text[#dictSpell.at(lang).at("sol")].text
+      block[
+        = #upper(tt.first())#tt.slice(1)
+      ]
+      show-task-sol()
+    }
+  }
 
 }

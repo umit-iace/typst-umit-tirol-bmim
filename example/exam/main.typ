@@ -11,6 +11,7 @@
   wUmitLogo: false,
   with-solution: true,
   with-points: true,
+  sol-at-end: true,
 )
 
 = Section 1
