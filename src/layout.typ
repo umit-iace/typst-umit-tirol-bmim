@@ -95,7 +95,7 @@
 #let footer-exam(type, course, title, with-solution, lang) = context {
     set text(size: 11pt)
     line(length: 100%, stroke: 0.5pt)
-    if calc.odd(here().page()) [
+    if calc.odd(here().page()) and here().page() != 1 [
       #type - #course #if with-solution {text(bmimred)[#dictSpell.at(lang).at("with") #dictSpell.at(lang).at("sol")]}
       #h(1fr)
       Matrikelnr: #box(height: -1pt)[#line(length: 25%)]
@@ -109,8 +109,6 @@
         "1/1",
         both: true,
       )
-      #h(1fr)
-      Matrikelnr: #box(height: -1pt)[#line(length: 25%)]
       #h(1fr)
       #type - #course #if with-solution {text(bmimred)[#dictSpell.at(lang).at("with") #dictSpell.at(lang).at("sol")]}
     ]

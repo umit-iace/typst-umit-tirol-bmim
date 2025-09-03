@@ -9,6 +9,7 @@
 #let task-with-sol = state("bmim-tasks-with-sol", false)
 #let task-with-points = state("bmim-tasks-with-points", false)
 #let task-sol-at-end = state("bmim-tasks-sol-at-end", false)
+#let nonumber-cnt = counter("bmim-nonumber")
 
 #let bmim-color-theme(name: str) = {
   if name == "blue" {
@@ -138,7 +139,16 @@
       #block(counter(heading).display(it.numbering)  + h(1em) + it.body)
     ]
   }
-  show heading.where(label: <bmim:nonumber>): set heading(numbering: none, outlined: false)
+  show heading.where(label: <bmim:nonumber>): it => {
+    set heading(numbering: none, outlined: false)
+    set block(
+      width: 100%,
+      fill: theme.primary.lighten(80%),
+      inset: 4pt,
+    )
+    nonumber-cnt.step()
+    block(it.body)
+  }
 
   // ### Outline
   set outline(depth: 2)
@@ -236,10 +246,10 @@
 
   // ### Seperate Solutions for Exam
   context {
-    if task-sol-at-end.get() {
+    if task-with-sol.get() and task-sol-at-end.get() {
       let tt = text[#dictSpell.at(lang).at("sol")].text
       block[
-        = #upper(tt.first())#tt.slice(1)
+        = #upper(tt.first())#tt.slice(1) <bmim:nonumber>
       ]
       show-task-sol()
     }

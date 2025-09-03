@@ -4,79 +4,81 @@
   variant: "exam",
   title: "Control me",
   type: "Klausur",
-  lang: "en",
+  lang: "de",
   course: "Advanced Control",
   course-short: "AC",
   authors: ("Author1", "Author3", "Author3"),
   wUmitLogo: false,
-  with-solution: true,
+  with-solution: false,
   with-points: true,
   sol-at-end: true,
 )
 
-= Section 1
+= Aufgabe 1 <bmim:nonumber>
 
-#lorem(20)
+Das Eingangs-Ausgangsverhalten eines Systems wird durch die Übertragungsfunktion
+$
+  G(s) & = frac(s+2, 2 s^(2) - 2 s + 1)
+$
+beschrieben.
 
-== Subsection 1
+#set enum(full: true, numbering: wrapped-enum-numbering("a)"))
 
-#lorem(50)
-
-- #task(points: 10, task: [
-  Test Problem
-
-  Take a look in the solution
++ #task(points: 20, task: [
+  Geben Sie eine Realisierung der Übertragungsfunktion in Regelungsnormalform an.
 ], solution: [
-  Lösung steht hier ganz fett mit $1+1=2$.
+  Regelungsnormalform:
+  $
+    dot(bold(x)) & = mat(0, 1; -frac(1,2), 1) bold(x) + mat(0; 1) u \
+    y & = mat(1, frac(1, 2)) bold(x)
+  $
 ])
 
-=== Subsubsection 1
-
-#lorem(80)
-
-#pagebreak()
-
-== Subsection 2 <bmim:nonumber>
-
-#set enum(full: true, numbering: wrapped-enum-numbering("A"))
-
-Group axioms:
-+ #enum-label("ax:ass")Associativity
-+ #enum-label("ax:id")Existence of identity element
-+ #enum-label("ax:inv")Existence of inverse element
-
-
-#set enum(numbering: wrapped-enum-numbering("1.a"), full: true)
-#set math.equation(numbering: "(1.1)")
-Another important list:
-+ Newton's laws of motion are three physical laws that relate the motion of an object to the forces acting on it.
-  + A body remains at rest, or in motion at a constant speed in a straight line, unless it is acted upon by a force.
-  + The net force on a body is equal to the body's acceleration multiplied by its mass
-  + #enum-label[newton-third]If two bodies exert forces on each other, these forces have the same magnitude but opposite directions
-+ #enum-label[hook1] Another important force is hooks law:
-  $ arrow(F) = -k arrow(Delta x) $ <eq:hook> #enum-label[hook2]
-
-
-We covered the three group axioms @ax:ass[], @ax:id[] and @ax:inv[].
-
-It is important to remember Newton's third law @newton-third, and Hook's law @hook1. In @hook2 we gave Hook's law in @eq:hook.
-
-#important[Test]
-
-#tip[Test]
-
-#example[Test]
-
-#hint[Test]
-
-= Section
-
-#lorem(20)
-
-- #task(points: 20, task: [
-  Test Problem 2
-
-  Take a look in the solution
++ #task(points: 20, task: [
+  Ist die interne Dynamik des Systems stabil?
+  Begründen Sie Ihre Antwort.
 ], solution: [
-  Lösung steht hier ganz fett mit $1+5=6$.
+  Die Eigenwerte der internen Dynamik entsprechen den Zählernullstellen.
+  Diese sind durch die Lösungen von $s+2=0$ durch $s=-2$ gegeben und somit ist die interne Dynamik in Folge des negativen Realteils stabil.
 ])
+
+= Aufgabe 2 <bmim:nonumber>
+
+Betrachtet wird das System
+$
+  dot(x)_1 = x_2, #h(5em)
+  dot(x)_2 = x_3, #h(5em)
+  dot(x)_3 = x_2 - x_3 + u
+$
+mit dem Ausgang
+$
+  y & = x_1 + 2 x_2 + x_3.
+$
+
+#set enum(full: true, numbering: wrapped-enum-numbering("a)"))
+
++ #task(points: 20, task: [
+  Wie heißt die spezielle Zustandsdarstellung in der das System gegeben ist?
+], solution: [
+  Das System liegt in Regelungsnormalform vor.
+])
+
++ #task(points: 20, task: [
+  Welchen relativen Grad besitzt das System?
+  Begründen Sie Ihre Antwort.
+], solution: [
+  Der relative Grad des Systems ist eins.
+  Dies kann entweder direkt aus der Ausgangsmatrix $c^(sans(upright(T)))=(1,1,1)$ abgelesen werden oder aber durch Differentiation des
+  Ausgangs:
+  $
+    dot(y) & = dot(x)_1 + 2 dot(x)_2 + dot(x)_3 = x_2 + 2 x_3 + x_2 - x_3 + u = 2 x_2 + x_3 + u.
+  $
+])
+
+#context {
+  let nonumber-cnt = counter("bmim-nonumber").final().at(0)
+  for i in range(0, nonumber-cnt) {
+    pagebreak(to: "odd")
+    pagebreak(to: "odd")
+  }
+}

@@ -50,7 +50,7 @@ Group axioms:
 #set enum(numbering: wrapped-enum-numbering("1.a"), full: true)
 #set math.equation(numbering: "(1.1)")
 Another important list:
-+ Newton's laws of motion are three physical laws that relate the motion of an object to the forces acting on it.
+  + Newton's laws of motion are three physical laws that relate the motion of an object to the forces acting on it.
   + A body remains at rest, or in motion at a constant speed in a straight line, unless it is acted upon by a force.
   + The net force on a body is equal to the body's acceleration multiplied by its mass
   + #enum-label[newton-third]If two bodies exert forces on each other, these forces have the same magnitude but opposite directions
