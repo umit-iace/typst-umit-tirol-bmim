@@ -10,6 +10,7 @@
 #let task-with-points = state("bmim-tasks-with-points", false)
 #let task-sol-at-end = state("bmim-tasks-sol-at-end", false)
 #let nonumber-cnt = counter("bmim-nonumber")
+#let item-cnt = counter("item-counter")
 
 #let bmim-color-theme(name: str) = {
   if name == "blue" {
@@ -108,6 +109,14 @@
     }
   }
 
+  show enum: it => {
+    if it.start != 0 { return it }
+    let args = it.fields()
+    let items = args.remove("children")
+    context enum(..args, start: item-cnt.get().first() + 1, ..items)
+    item-cnt.update(i => i + it.children.len())
+  }
+
   set page(
     paper: "a4",
     margin: (
@@ -128,6 +137,8 @@
   show heading.where(level: 1): it => {
     set heading(numbering: "1")
     set text(weight: "bold")
+    item-cnt.update(0)
+
     set block(
       width: 100%,
       fill: theme.primary.lighten(80%),
@@ -139,15 +150,10 @@
       #block(counter(heading).display(it.numbering)  + h(1em) + it.body)
     ]
   }
+  show heading.where(label: <bmim:nonumber>): set heading(numbering: none, outlined: false)
   show heading.where(label: <bmim:nonumber>): it => {
-    set heading(numbering: none, outlined: false)
-    set block(
-      width: 100%,
-      fill: theme.primary.lighten(80%),
-      inset: 4pt,
-    )
     nonumber-cnt.step()
-    block(it.body)
+    it
   }
 
   // ### Outline
