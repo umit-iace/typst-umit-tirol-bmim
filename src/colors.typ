@@ -1,6 +1,3 @@
-#let white = rgb("#ffffff")
-#let black = rgb("#000000")
-
 #let link-color = rgb(118, 50, 55)
 
 #let bmimblue = rgb(0, 53, 103)
