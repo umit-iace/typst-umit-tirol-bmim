@@ -37,17 +37,15 @@ jobs:
         run: |
           sudo snap install typst
 
-      - name: Build Exam File
+      - name: Build Examples
         run: |
           mkdir -p build_output
-          typst compile ./example/exam/main.typ --root . --format pdf
-          mv example/exam/main.pdf build_output/bmim-exam.pdf
-
-      - name: Build Practial File
-        run: |
-          mkdir -p build_output
-          typst compile ./example/practical/main.typ --root . --format pdf
-          mv example/practical/main.pdf build_output/bmim-practical.pdf
+          for file in `ls example/*.typ`; do
+            ex=${file##*/}
+            pdf=${ex%typ}pdf
+            typst c ${file}
+            mv ${file%typ}pdf build_output/bmim-${pdf}
+          done
 
       - name: Upload Artifacts
         id: deployment
