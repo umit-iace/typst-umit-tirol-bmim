@@ -46,7 +46,7 @@
 #let admonition(
   body,
   title: none,
-  color: bmimblue,
+  color: color.blue,
   dotted: false,
   figured: false,
   counter: none,
@@ -152,7 +152,7 @@
 
 #let hint(body, ..args) = admonition(
   body,
-  color: bmimblue,
+  color: color.blue,
   figure-kind: "hint",
   counter: counter("admonition-hint"),
   ..args,
@@ -160,7 +160,7 @@
 
 #let important(body, ..args) = admonition(
   body,
-  color: bmimred,
+  color: color.red,
   figure-kind: "important",
   counter: counter("admonition-important"),
   ..args,
@@ -168,7 +168,7 @@
 
 #let tip(body, ..args) = admonition(
   body,
-  color: bmimgreen,
+  color: color.green,
   figure-kind: "tip",
   counter: counter("admonition-tip"),
   ..args,
@@ -176,7 +176,7 @@
 
 #let example(body, ..args) = admonition(
   body,
-  color: bmimyellow,
+  color: color.yellow,
   figure-kind: "example",
   counter: counter("admonition-example"),
   ..args,

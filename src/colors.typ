@@ -1,10 +1,24 @@
-#let link-color = rgb(118, 50, 55)
 
-#let bmimblue = rgb(0, 53, 103)
-#let bmimgray = rgb(156, 156, 156)
+#let color = (
+	link: rgb(118, 50, 55),
+	blue: rgb(0, 53, 103),
+	gray: rgb(156, 156, 156),
+	grey: rgb("717788"),
+	green: rgb("006e43"),
+	purple: rgb("55488e"),
+	red: rgb("961842"),
+	yellow: rgb("b98900"),
+)
 
-#let bmimred = rgb("961842")
-#let bmimpurple = rgb("55488e")
-#let bmimgrey = rgb("717788")
-#let bmimyellow = rgb("b98900")
-#let bmimgreen = rgb("006e43")
+#let color-theme = (
+	blue:
+	(
+		primary: color.blue,
+		highlight: color.blue.lighten(20%),
+		lolight: color.blue.lighten(80%),
+		secondary: color.red,
+		background: white,
+		neutral-lightest: white,
+	)
+)
+
