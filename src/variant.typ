@@ -151,11 +151,6 @@
   task-solutions
 }}
 
-#let bmim-exercise(
-) = { body => {
-
-}}
-
 #let bmim-lab(
   title: none, // either [Title] , or ([Topic], [Title])
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
@@ -256,6 +251,58 @@
   show heading.where(level: 2): emph
 
   (titleblock.report)(course, title, authors, date)
+
+  body
+}}
+
+#let bmim-workbook(
+  course: none,
+  authors: none,
+  date: datetime.today(),
+  ..chosen,
+) = { body => {
+  option-set(
+    chosen.named()
+    + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
+  )
+  show: bmim-common
+  (titleblock.workbook)(course, authors, date)
+
+  set page(
+    header: header.workbook,
+    footer: (footer.workbook)(),
+    numbering: "1",
+  )
+
+  let headings-on-odd-page(it) = {
+		show heading.where(level: 1): it => {
+			{
+				set page(header: none, footer: none, numbering: none)
+				pagebreak(to: "odd")
+			}
+			it
+		}
+		it
+	}
+  show heading.where(level:1): it => context {
+    set block(inset: (y: 5em))
+    show: strong
+    show: block
+    if it.numbering == none { it.body; return }
+    let n(..c) = numbering(it.numbering, ..c)
+    [
+
+      #set text(1.3em)
+      Kapitel #n(..counter(heading).get())
+      #v(2em)
+      #set text(1.5em)
+      #it.body
+    ]
+  }
+	show: headings-on-odd-page
+
+  outline()
+
 
   body
 }}

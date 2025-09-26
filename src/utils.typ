@@ -32,3 +32,10 @@
   return chain.map(str).join(".")
 }
 
+#let page-is-chap-start() = {
+  return query(heading.where(level: 1))
+    .map(it => it.location().page())
+    .contains(here().page())
+}
+
+#let page-number() = numbering(here().page-numbering(), here().page())
