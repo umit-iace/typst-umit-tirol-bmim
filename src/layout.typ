@@ -19,6 +19,7 @@
     }
   )
 }
+
 #let header-colored(title:none) = context {
   let opts = options.final()
   pad(
@@ -96,6 +97,13 @@
             list.last().body
           }
         }),
+  workbook: context {
+    if page-is-chap-start() {
+      none
+    } else {
+      header-colored()
+    }
+  },
 )
 
 #let footer = (
@@ -168,7 +176,23 @@
       if calc.odd(here().page()) { right } else {left},
       counter(page).display("1")
     )
-  }
+  },
+  workbook: () => context {
+    if page-is-chap-start() {
+      align(center,page-number())
+    } else {
+      let opts = options.final()
+      set text(size: 11pt)
+      line(length: 100%, stroke: 0.5pt)
+      let foot = [ Übungsaufgaben ]
+      let pagenum = counter(page).display("1")
+      if calc.odd(here().page()) and here().page() != 1 {
+        foot + h(1fr) + pagenum
+      } else {
+        pagenum + h(1fr) + foot
+      }
+    }
+  },
 )
 
 #let titleblock = (
@@ -242,7 +266,6 @@
       }
     )
   },
-  exercise: (course, title, authors, date) => context { },
   lab:      (course, title, authors, date) => context {
     let course = if type(course) == array { course.at(0) } else { course }
     let opts = options.final()
@@ -319,6 +342,51 @@
     ])
   },
   slides:   (course, title, authors, date) => context { },
+  workbook: (course, authors, date) => context {
+    let opts = options.final()
+    let course = if type(course) == array { course.at(0) } else { course }
+    set align(center+horizon)
+    set par(spacing: 3em)
+    place(top,[
+      #box(image("./../assets/iace.svg", height: 2.02em))
+      #h(1fr)
+      #box(
+        image(
+          height: 2.02em,
+          if opts.lang == "en" {
+            "./../assets/logo_umit_eng.svg"
+          } else {
+            "./../assets/logo_umit_de.svg"
+          }
+        ))
+      ]
+    )
+    [
+      #smallcaps[
+        #set text(1.3em)
+        Übungsaufgaben zur Lehrveranstaltung
+      ]
+
+      #{
+        set text(1.5em)
+        strong(course)
+      }
+
+      #{
+        set text(1.3em)
+        authors.map(smallcaps).join([, ])
+      }
+      #par[]
+      #par[]
+      #[
+        #set text(1.1em)
+        Institut für Automatisierungs- und Regelungstechnik
+      ]
+
+      #print-date(date)
+    ]
+
+  },
 )
 
 #let poster-box(heading, content, height:none) = context {
