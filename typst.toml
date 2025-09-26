@@ -4,11 +4,11 @@ version = "0.1.0"
 entrypoint = "src/lib.typ"
 authors = ["IACE <https://github.com/umit-iace>"]
 license = "MIT"
-description = "Template for exams/practicals for UMIT TIROL/BMIM/IACE."
+description = "Template for exams/labs for UMIT TIROL/BMIM/IACE."
 repository = "https://github.com/umit-iace/typst-umit-tirol-bmim"
-keywords = ["UMIT TIROL", "IACE", "Practial", "Exam", "Article"]
+keywords = ["UMIT TIROL", "IACE", "Report", "Exam", "Article"]
 categories = ["article"]
-exclude = [".github/", "example/"]
+exclude = [".github/", "example/", "*.pdf"]
 
 [template]
 path = "template"

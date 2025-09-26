@@ -1,39 +1,36 @@
-#import "../../src/lib.typ": *
+#import "/src/lib.typ": *
 
-#show: bmim-theme.with(
-  variant: "practical",
-  title: "Control me",
-  type: "Labor",
-  lang: "en",
-  course: "Advanced Control",
-  authors: ("Author1", "Author3", "Author3"),
-  date: datetime(day: 1, month: 3, year: 2024)
-  wUmitLogo: false,
-  with-solution: true,
-  with-points: true,
+#show: bmim-lab(
+  title: ("Parameteridentifikation", "Motor mit Drehlast"),
+  lang: "de",
+  course: ("Advanced Control", "AC"),
+  authors: ("John Doe", "Jane Doe", "Max Mustermann"),
+  date: datetime(day: 1, month: 3, year: 2024),
+  show-solution: "inline",
 )
-
-#outline()
 
 = First Section
 
-#lorem(20) @netwok2020
+#lorem(10) @netwok2020
 
 == First Subsection with number
 
-#lorem(50)
+#lorem(10)
 
-- #task(points: 10, task: [
-  Test Problem
+#task(
+  // offset: 2,
+  points: 10,
+  description: [
+    Test Problem
 
-  Take a look in the solution
-], solution: [
-  Lösung steht hier ganz fett mit $1+1=2$.
-])
+    Take a look in the solution
+  ], solution: [
+    Lösung steht hier ganz fett mit $1+1=2$.
+  ])
 
 === First Subsubsection
 
-#lorem(80)
+#lorem(10)
 
 #pagebreak()
 
@@ -47,7 +44,7 @@ Group axioms:
 + #enum-label("ax:inv")Existence of inverse element
 
 
-#set enum(numbering: wrapped-enum-numbering("1.a"), full: true)
+// #set enum(numbering: wrapped-enum-numbering("1.a"), full: true)
 #set math.equation(numbering: "(1.1)")
 Another important list:
   + Newton's laws of motion are three physical laws that relate the motion of an object to the forces acting on it.
@@ -66,13 +63,16 @@ It is important to remember Newton's third law @newton-third, and Hook's law @ho
 
 #lorem(20) @netwok2020
 
-- #task(points: 20, task: [
-  Test Problem 2
+#task(
+  offset: 2,
+  points: 20,
+  description: [
+    Test Problem 2
 
-  Take a look in the solution
-], solution: [
-  Lösung steht hier ganz fett mit $1+5=6$.
-])
+    Take a look in the solution
+  ], solution: [
+    Lösung steht hier ganz fett mit $1+5=6$.
+  ])
 
 #show: backmatter
 
@@ -92,4 +92,4 @@ It is important to remember Newton's third law @newton-third, and Hook's law @ho
 
 #hint[Test]
 
-#bibliography("./../../assets/sources.bib", title: "Literatur")
+#bibliography("/assets/sources.bib", title: "Literatur")

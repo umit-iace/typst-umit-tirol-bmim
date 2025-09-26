@@ -1,6 +1,6 @@
-#import "layout.typ": *
-#import "bmim.typ": *
-#import "colors.typ": *
-#import "admonition.typ": *
-#import "list.typ": *
-#import "utils.typ": *
+#import "variant.typ": bmim-exam, bmim-lab, bmim-poster, bmim-report
+#import "admonition.typ": hint, important, tip, example
+#import "task.typ": task
+#import "utils.typ": backmatter
+#import "list.typ": enum-label, wrapped-enum-numbering
+#import "layout.typ": poster-box
