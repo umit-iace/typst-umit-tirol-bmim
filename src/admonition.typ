@@ -1,4 +1,5 @@
 #import "colors.typ": *
+#import "options.typ": *
 
 #let ADMONITION-TRANSLATIONS = (
   "hint": (
@@ -54,14 +55,11 @@
   figure-supplement: none,
   figure-kind: none,
   text-color: black,
+  plural: false,
+  show-numbering: false,
   ..args,
-) = {
-  let lang = args.named().at("lang", default: "de")
-  let plural = args.named().at("plural", default: false)
-  let show-numbering = args.named().at("show-numbering", default: false)
-
-  set text(lang: lang, spacing: .5em, size: 12pt)
-  set par(leading: 0.525em,  justify: true, first-line-indent: 0.55em)
+) = context {
+  let opts = options.final()
 
   let title = if title == none {
     (ADMONITION-TRANSLATIONS)
@@ -71,7 +69,7 @@
         } else {
           "sg"
         })
-      .at(lang)
+      .at(opts.lang)
   } else {
     title
   }
@@ -119,7 +117,7 @@
       pad(
         left: -0.28em,
         top: -0.4em,
-        context box(
+        box(
           outset: 0.3em,
           fill: color,
           strong(
