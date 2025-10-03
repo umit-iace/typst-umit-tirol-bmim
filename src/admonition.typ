@@ -96,7 +96,12 @@
       counter.step()
     }
 
-    context (
+    let title = smallcaps(title) + if show-numbering or figured {
+                [ ] + numbering(
+                  numbering-format,
+                  ..counter.at(here()),
+                )
+              }
 
     block(
       width: 100%,
@@ -120,27 +125,19 @@
       pad(
         left: -0.28em,
         top: -0.4em,
-        text(
-          box(
-            width: measure(title).width + 0.65em,
-            outset: 0.3em,
-            fill: color,
-            strong(
-              text(
-                fill: white,
-                smallcaps(title) + if show-numbering or figured {
-                  [ ] + context numbering(
-                    numbering-format,
-                    ..counter.at(here()),
-                  )
-                },
-              ),
+        context box(
+          width: measure(title).width + 0.65em,
+          outset: 0.3em,
+          fill: color,
+          strong(
+            text(
+              fill: white,
+              title,
             ),
           ),
         ) + h(0.5em) + body,
       ),
     )
-  )
   }
 
   if figured {
