@@ -1,7 +1,7 @@
 #import "utils.typ": *
 #import "layout.typ": *
 #import "list.typ": *
-#import "task.typ": task-solutions
+#import "task.typ": task-solutions, task-show-ref, inline
 
 #let item-cnt = counter("item-counter")
 
@@ -123,6 +123,7 @@
     + (show-solution: show-solution)
   )
   show: bmim-common
+  show ref: task-show-ref
 
   set std.page(
     header: (header.exam)(course, title),
@@ -165,6 +166,7 @@
     + (show-solution: show-solution)
   )
   show: bmim-common
+  show ref: task-show-ref
 
   set std.page(
     header: header.lab,
@@ -268,6 +270,8 @@
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
   )
   show: bmim-common
+  show ref: task-show-ref
+
   (titleblock.workbook)(course, authors, date)
 
   set page(

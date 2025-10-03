@@ -5,7 +5,7 @@
   title: "Eingangstest",
   course: ([Advanced Control],[AC]),
   authors: ("Author1", "Author3", "Author3"),
-  show-solution: none,
+  show-solution: "inline",
   total-time: [90min],
 )
 
@@ -15,12 +15,13 @@
     $
     G(s) & = frac(s+2, 2 s^(2) - 2 s + 1)
     $
-    beschrieben.
+    beschrieben. <task:main>
   ],
   (
     points: 10,
     description: [
-      Geben Sie eine Realisierung der Übertragungsfunktion in Regelungsnormalform an.
+      Geben Sie eine Realisierung der Übertragungsfunktion in
+      Regelungsnormalform an. <task:sub>
     ],
     solution: [
       Regelungsnormalform:
@@ -85,8 +86,9 @@
 
 #task(
   points: 5,
-  description: [ single points task description ],
-  solution: [ this is how ],
+  description: [ single points task description referencing @task:main and also
+  @task:sub],
+  solution: [ this is how to also reference from solution @task:sub],
 )
 
 

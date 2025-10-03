@@ -14,7 +14,9 @@
     page: "Page",
     poi: "Points",
     sol: "solution",
+    subtask: "subtask",
     tab: "Tab.",
+    task: "Task",
     with: "with",
   ),
   de: (
@@ -32,7 +34,9 @@
     page: "Seite",
     poi: "Punkte",
     sol: "Lösung",
+    subtask: "Aufgabe",
     tab: "Tab.",
+    task: "Aufgabe",
     with: "mit",
   )
 )

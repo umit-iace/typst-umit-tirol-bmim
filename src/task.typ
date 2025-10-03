@@ -70,6 +70,64 @@
   }
 }
 
+#let task-show-ref(it) = {
+  let t = str(it.target)
+  if t.starts-with("task:") {
+    if it.element == none {
+      panic("can't reference <" + t + ">")
+    }
+    let opts = options.final()
+    let loc = it.element.location()
+    let c = t-count.at(loc)
+    let loc = if c.len() == 1 {
+      // locate main task
+      let pos = query(selector(heading).before(loc)).last().location().position()
+      pos.y += 0.25cm // why is this needed
+      pos
+    } else {
+      // locate beginning of subtask
+      let loc = query(selector(<bmim-subtask>).before(loc)).last().location()
+      let pos = loc.position()
+
+      let length-from(x) = {
+        let t = type(x)
+        if t == relative {
+          x.ratio * page.width + x.length
+        } else if t == length {
+          x
+        } else {
+          panic(t)
+        }
+      }
+
+      pos.x = if page.margin == auto {
+        2.5cm // TODO get actual page margin
+      } else {
+        length-from(
+          if "x" in page.margin {
+            page.margin.x
+          } else if "left" in page.margin {
+            page.margin.left
+          } else {
+            panic(page.margin)
+          }
+        )
+      }
+      pos.y += 0.25cm // why is this needed
+      pos
+    }
+    let nbr = if c.len() == 1 { "1" } else {
+      "1."+enum.numbering.trim(regex("[.)]"))
+    }
+    let num = numbering(nbr, ..c)
+    let supp = if it.supplement == auto {
+      if c.len() == 1 {opts.spell.task} else {opts.spell.subtask}
+    } else {it.supplement}
+    link(loc,[#supp~#num])
+  } else {
+    it
+  }
+}
 
 #let task-show-table = context {
   let n = t-count.final().first()
