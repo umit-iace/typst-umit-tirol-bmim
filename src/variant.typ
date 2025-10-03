@@ -156,11 +156,13 @@
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
+  show-solution: "inline",
   ..chosen,
 ) = { body => {
   option-set(
     chosen.named()
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
+    + (show-solution: show-solution)
   )
   show: bmim-common
 
