@@ -112,7 +112,7 @@
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
   total-time: none, // str or content
-  show-solution: none, // none, "inline", bottom
+  show-solution: none, // none, inline, bottom
   ..chosen // other options: theme, logo-with-text, size, etc
 ) = { body => {
   if total-time == none {
@@ -157,7 +157,7 @@
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
-  show-solution: "inline",
+  show-solution: inline,
   ..chosen,
 ) = { body => {
   option-set(

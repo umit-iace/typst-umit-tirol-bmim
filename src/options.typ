@@ -6,7 +6,7 @@
   lang: "de", // "de", "en"
   spell: i18n.de,
   logo-with-text: false,
-  show-solution: none, // none, "inline", bottom
+  show-solution: none, // none, inline, bottom
   font: ("New Computer Modern",),
   size: 12pt,
 ))

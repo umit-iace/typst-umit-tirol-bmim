@@ -5,7 +5,7 @@
   title: "Eingangstest",
   course: ([Advanced Control],[AC]),
   authors: ("Author1", "Author3", "Author3"),
-  show-solution: "inline",
+  show-solution: inline,
   total-time: [90min],
 )
 
