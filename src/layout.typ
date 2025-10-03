@@ -86,10 +86,10 @@
 }
 
 #let header = (
-  lab: header-colored(),
   exam: header-plain,
-  report: header-colored(),
+  lab: header-colored(),
   poster: header-colored(),
+  report: header-colored(),
   slides: header-colored(title:
         context if opts.variant == "slides" {
           let list = query(heading.where(level:1).before(here()))
@@ -107,26 +107,6 @@
 )
 
 #let footer = (
-  lab: (course, title) => context {
-    let opts = options.final()
-    let course = if type(course) == array { course.at(1) } else { course }
-    let title = if type(title) == array { title.join([ \- ]) } else { title }
-    set text(size: 0.8em)
-    line(length: 100%, stroke: 0.5pt)
-    let foot = [
-      #opts.spell.lab #course - #title
-      #if opts.show-solution != none [
-        #set text(color.red, stroke: 0.5pt+color.red)
-        #opts.spell.with #opts.spell.sol
-      ]
-    ]
-    let pagenum = counter(page).display("1")
-    if calc.odd(here().page()) {
-      foot; h(1fr); pagenum
-    } else {
-      pagenum; h(1fr); foot
-    }
-  },
   exam: (course, title) => context {
     let opts = options.final()
     let course = if type(course) == array { course.at(1) } else { course }
@@ -151,6 +131,26 @@
       #h(1fr)
       #foot
     ]
+  },
+  lab: (course, title) => context {
+    let opts = options.final()
+    let course = if type(course) == array { course.at(1) } else { course }
+    let title = if type(title) == array { title.join([ \- ]) } else { title }
+    set text(size: 0.8em)
+    line(length: 100%, stroke: 0.5pt)
+    let foot = [
+      #opts.spell.lab #course - #title
+      #if opts.show-solution != none [
+        #set text(color.red, stroke: 0.5pt+color.red)
+        #opts.spell.with #opts.spell.sol
+      ]
+    ]
+    let pagenum = counter(page).display("1")
+    if calc.odd(here().page()) {
+      foot; h(1fr); pagenum
+    } else {
+      pagenum; h(1fr); foot
+    }
   },
   poster: (event,date,location,contact, ..args) => context {
     set text(font: "CMU Typewriter Text")
@@ -181,7 +181,6 @@
     if page-is-chap-start() {
       align(center,page-number())
     } else {
-      let opts = options.final()
       set text(size: 11pt)
       line(length: 100%, stroke: 0.5pt)
       let foot = [ Übungsaufgaben ]
@@ -320,6 +319,12 @@
       ],
     )
   },
+  poster:   (title, authors) => context {
+    place(top+center, float: true, scope: "parent",[
+      #text(1.4em, strong(title))\
+      #authors.join([\ ])
+    ])
+  },
   report:   (course, title, authors, date) => context place(
     top, float: true, scope: "parent",
     block(inset: (top: 2em, bottom: 1em), {
@@ -335,12 +340,6 @@
 
     })
   ),
-  poster:   (title, authors) => context {
-    place(top+center, float: true, scope: "parent",[
-      #text(1.4em, strong(title))\
-      #authors.join([\ ])
-    ])
-  },
   slides:   (course, title, authors, date) => context { },
   workbook: (course, authors, date) => context {
     let opts = options.final()
