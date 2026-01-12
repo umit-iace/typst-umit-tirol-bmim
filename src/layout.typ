@@ -1,7 +1,20 @@
-#import "task.typ": t-count, t-points, task-show-table
+#import "task.typ": task-total-count, task-total-points, task-table
 #import "utils.typ": *
 #import "options.typ": *
 
+#let heading-colored(it) = context {
+  let opts = options.final()
+  set block(
+    width: 100%,
+    fill: opts.theme.lolight,
+    inset: 4pt,
+  )
+  if it.numbering == none [
+    #block(it.body)
+  ] else [
+    #block(counter(heading).display(it.numbering)  + h(1em) + it.body)
+  ]
+}
 
 #let underline-space(fraction) = box(height: -1pt, line(length: fraction))
 
@@ -87,7 +100,9 @@
 
 #let header = (
   exam: header-plain,
+  exercise: header-colored(),
   lab: header-colored(),
+  lecture: header-colored(),
   poster: header-colored(),
   report: header-colored(),
   slides: header-colored(title:
@@ -132,6 +147,8 @@
       #foot
     ]
   },
+  exercise: () => context {
+  },
   lab: (course, title) => context {
     let opts = options.final()
     let course = if type(course) == array { course.at(1) } else { course }
@@ -151,6 +168,8 @@
     } else {
       pagenum; h(1fr); foot
     }
+  },
+  lecture: () => context {
   },
   poster: (event,date,location,contact, ..args) => context {
     set text(font: "CMU Typewriter Text")
@@ -176,6 +195,8 @@
       if calc.odd(here().page()) { right } else {left},
       counter(page).display("1")
     )
+  },
+  slides: () => context {
   },
   workbook: () => context {
     if page-is-chap-start() {
@@ -242,7 +263,7 @@
       align:left,
       {
         strong(opts.spell.eval)
-        task-show-table
+        task-table
       },
       {
         set list(spacing: 1.3em)
@@ -251,10 +272,10 @@
           *Hinweise*
           #v(0.75em)
           #pad(left: 1.4em)[
-            - Die Prüfung umfasst #t-count.final().first() Aufgaben, die
+            - Die Prüfung umfasst #context task-total-count() Aufgaben, die
               Bearbeitungszeit beträgt #total-time.
-            - Es können insgesamt #t-points.final().sum() Punkte erreicht werden.
-            - Zugelassene Hilfsmittel:
+            // - Es können insgesamt #t-points.final().sum() Punkte erreicht werden.
+            - Es können insgesamt #context task-total-points() Punkte erreicht werden. - Zugelassene Hilfsmittel:
               - *ein handschriftlich* beschriebener A4 Zettel; *Muss* am Ende der Klausur abgegeben werden.
               - *keine* weiteren Unterlagen
               - *keine* elektronischen Geräte
@@ -264,6 +285,8 @@
         ]
       }
     )
+  },
+  exercise: () => context {
   },
   lab:      (course, title, authors, date) => context {
     let course = if type(course) == array { course.at(0) } else { course }
@@ -318,6 +341,8 @@
         #curDate.day(). #translatedMonth(curDate, opts.lang) #curDate.year()
       ],
     )
+  },
+  lecture: () => context {
   },
   poster:   (title, authors) => context {
     place(top+center, float: true, scope: "parent",[
@@ -414,5 +439,21 @@
     stroke: opts.theme.highlight + 0.1em,
 
     content
+  )
+}
+
+#let solution-box(sol) = {
+  block(
+    // stroke:0.5pt,
+    width: 100%,
+    fill: color.red.lighten(0%),
+    inset: 2pt,
+    box(
+      stroke:0.5pt,
+      width: 100%,
+      fill: white,
+      inset: 0.3em,
+      sol,
+    ),
   )
 }

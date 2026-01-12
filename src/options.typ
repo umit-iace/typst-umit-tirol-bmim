@@ -7,13 +7,50 @@
   spell: i18n.de,
   logo-with-text: false,
   show-solution: none, // none, inline, bottom
+  task-show: (counter, points, task) => context [
+    #let hdrnum = query(heading.where(level:1, outlined: false).before(here())).len()
+    #if heading.numbering != none [
+    = Aufgabe #hdrnum.#counter <bmim:nonumber>
+  ] else [
+    = Aufgabe #counter <bmim:nonumber>
+  ]
+
+    *Punkte:* #points
+
+    #set math.equation(numbering: "(1)")//, supplement: none)
+    #task
+  ],
+  task-show-solution: solution => {
+    let blocked(it) = {
+      block(
+        // stroke:0.5pt,
+        width: 100%,
+        fill: color.red.lighten(0%),
+        inset: 2pt,
+        box(
+          stroke:0.5pt,
+          width: 100%,
+          fill: white,
+          inset: 0.3em,
+          it,
+        ),
+      )
+    }
+    for s in solution {
+    blocked[
+      *Lösung*
+
+      #s
+    ]
+  }
+  },
   font: ("New Computer Modern",),
   size: 12pt,
 ))
 
 #let option-set(dict) = {
   options.update(o => {
-    for (key, val) in dict.pairs() {
+    for (key, val) in dict {
       if key not in o {
         let known = o.keys().filter(k => k != "spell")
         panic(
