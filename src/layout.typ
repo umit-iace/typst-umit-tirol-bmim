@@ -99,12 +99,12 @@
 }
 
 #let header = (
-  exam: header-plain,
-  exercise: header-colored(),
   lab: header-colored(),
-  lecture: header-colored(),
-  poster: header-colored(),
+  exam: header-colored(),
+  exercise: header-colored(),
   report: header-colored(),
+  poster: header-colored(),
+  lecture: header-colored(),
   slides: header-colored(title:
         context if opts.variant == "slides" {
           let list = query(heading.where(level:1).before(here()))
@@ -221,22 +221,13 @@
     let course = if type(course) == array { course.at(0) } else { course }
 
     [
-      #box(image("./../assets/iace.svg", height: 2.02em))
-      #h(1fr)
-      #box(image(height: 2.02em,
-              if opts.lang == "en" {
-                "./../assets/logo_umit_eng.svg"
-              } else {
-                "./../assets/logo_umit_de.svg"
-              }
-            ))
       #set align(center)
 
       *#title - #course*
     ]
     v(1em)
     grid(
-      columns: (1.25fr, 1fr),
+      columns: (2fr, 1fr),
       gutter: 0.5em,
       align: (right, left),
       strong[
@@ -247,7 +238,12 @@
         row-gutter: 0.5em,
         ..authors.map(author => strong(author)),
       ),
-      grid.cell( colspan: 2, v(0.75em),),
+    )
+    v(1.25em)
+    grid(
+      columns: (1fr, 1fr),
+      gutter: 0.5em,
+      align: (right, left),
       [
         Name: #underline-space(73%) #h(2em)
       ],
@@ -275,7 +271,8 @@
             - Die Prüfung umfasst #context task-total-count() Aufgaben, die
               Bearbeitungszeit beträgt #total-time.
             // - Es können insgesamt #t-points.final().sum() Punkte erreicht werden.
-            - Es können insgesamt #context task-total-points() Punkte erreicht werden. - Zugelassene Hilfsmittel:
+            - Es können insgesamt #context task-total-points() Punkte erreicht werden.
+            - Zugelassene Hilfsmittel:
               - *ein handschriftlich* beschriebener A4 Zettel; *Muss* am Ende der Klausur abgegeben werden.
               - *keine* weiteren Unterlagen
               - *keine* elektronischen Geräte

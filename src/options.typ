@@ -12,23 +12,20 @@
     #if heading.numbering != none [
     = Aufgabe #hdrnum.#counter <bmim:nonumber>
   ] else [
-    = Aufgabe #counter <bmim:nonumber>
+    = Aufgabe #counter #h(1fr) Punkte: #points <bmim:nonumber>
   ]
-
-    *Punkte:* #points
-
     #set math.equation(numbering: "(1)")//, supplement: none)
     #task
   ],
   task-show-solution: solution => {
     let blocked(it) = {
       block(
-        // stroke:0.5pt,
         width: 100%,
         fill: color.red.lighten(0%),
         inset: 2pt,
+        breakable: true,
         box(
-          stroke:0.5pt,
+          stroke: 0.5pt,
           width: 100%,
           fill: white,
           inset: 0.3em,
@@ -38,7 +35,7 @@
     }
     for s in solution {
     blocked[
-      *Lösung*
+      *Lösung:*
 
       #s
     ]

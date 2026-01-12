@@ -17,6 +17,7 @@
   context {
     let opts = options.final()
     let ex = t-count.get().first()
+    let all = t-count.get()
 
     if is-super {
       // store points
@@ -42,7 +43,7 @@
 
     let sol = if is-super {
       (args.pos().slice(1).zip(t-points.final().at(ex - 1)).map(((it, p)) =>
-      [+ #it.solution\ #opts.spell.poi: #p ]).join(),)
+      [+ #it.solution \ #grid(columns: (1fr, auto), align: (right, left), block[#text(fill: color.green)[#repeat("." + h(2.5pt))]], block[#text(fill: color.green)[$Sigma$ #p P.] ], )]).join(),)
     } else {
       (args.named().solution,)
     }
@@ -50,6 +51,8 @@
     // inline solutions
     if opts.show-solution == inline {
       (opts.task-show-solution)(sol)
+    } else if opts.show-solution == bottom {
+      t-solutions.update(p => { p.push(all); return p})
     }
   }
 }
@@ -140,19 +143,20 @@
   } else if opts.show-solution == none {
     pagebreak(to:"even")  * t-count.final().first()
   } else if opts.show-solution == bottom {
-    for val in t-solutions.final() {
-      let ((task, ..sub), sol) = val
-      let frst = str(task)
-      let lbl = label("sol-"+frst)
-      context if query(selector(lbl).before(here())).len() == 0 [
-        = Lösung #frst #lbl <bmim:nonumber>
-      ]
-      if sub.len() == 0 {
-        sol
-      } else [
-        + #sol
-      ]
-    }
+    t-solutions.final()
+//    for val in t-solutions.final() {
+//      let ((task, ..sub), sol) = val
+//      let frst = str(task)
+//      let lbl = label("sol-"+frst)
+//      context if query(selector(lbl).before(here())).len() == 0 [
+//        = Lösung #frst #lbl <bmim:nonumber>
+//      ]
+//      if sub.len() == 0 {
+//        sol
+//      } else [
+//        + #sol
+//      ]
+//    }
   }
 }
 
