@@ -1,6 +1,6 @@
 #import "/src/lib.typ": *
 #import "@preview/layout-ltd:0.1.0": layout-limiter
-#show: layout-limiter.with(max-iterations: 4)
+#show: layout-limiter.with(max-iterations: 5)
 
 
 
@@ -8,7 +8,7 @@
   title: "Eingangstest",
   course: ([Advanced Control],[AC]),
   authors: ("Author1", "Author3", "Author3"),
-  show-solution: inline,
+  show-solution: bottom,
   total-time: [90min],
   lang: "en",
 )
