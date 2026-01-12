@@ -128,10 +128,10 @@
   show ref: task-show-ref
 
   set std.page(
-    header: (header.exam)(course, title),
+    header: (header.exam),
+    footer: (footer.exam)(course, title),
   )
 
-  // set heading(numbering: "1.")
   show heading.where(level: 1): heading-colored
 
   (titleblock.exam)(course, title, authors, date, total-time)
