@@ -25,6 +25,8 @@
   )
   show raw: set text(font: "CMU Typewriter Text")
 
+  set enum(numbering: "a)")
+
   show figure.where(kind: table): set figure(supplement: opts.spell.tab)
   show figure.where(kind: table): it => {
     set figure.caption(position: top)
@@ -79,7 +81,7 @@
     item-cnt.update(i => i + it.children.len())
   }
 
-  set heading(numbering: "1.1")
+  // set heading(numbering: "1.1")
   show heading.where(level: 1): it => {
     item-cnt.update(0)
     it
@@ -129,20 +131,8 @@
     header: (header.exam)(course, title),
   )
 
-  set heading(numbering: "1.")
-  show heading.where(level: 1): it => context {
-    let opts = options.final()
-    set block(
-      width: 100%,
-      fill: opts.theme.lolight,
-      inset: 4pt,
-    )
-    if it.numbering == none [
-      #block(it.body)
-    ] else [
-      #block(counter(heading).display(it.numbering)  + h(1em) + it.body)
-    ]
-  }
+  // set heading(numbering: "1.")
+  show heading.where(level: 1): heading-colored
 
   (titleblock.exam)(course, title, authors, date, total-time)
 
@@ -150,6 +140,15 @@
 
   pagebreak(weak:true)
   task-solutions
+}}
+
+#let bmim-exercise(
+  course: none, // [Course Name] or ([Course Name], [Short Course Name])
+  authors: none, // array of str or content
+  date: datetime.today(), // datetime or content
+  show-solution: none, // none, inline, bottom
+  ..chosen
+) = { body => {
 }}
 
 #let bmim-lab(
@@ -174,26 +173,22 @@
   )
 
   set heading(numbering: "1.")
-  show heading.where(level: 1): it => context {
-    let opts = options.final()
-    set block(
-      width: 100%,
-      fill: opts.theme.lolight,
-      inset: 4pt,
-    )
-    if it.numbering == none [
-      #block(it.body)
-    ] else [
-      #block(counter(heading).display(it.numbering)  + h(1em) + it.body)
-    ]
-  }
-
+  show heading.where(level: 1): heading-colored
   (titleblock.lab)(course, title, authors, date)
 
   body
 
   pagebreak(weak:true)
   task-solutions
+}}
+
+#let bmim-lecture(
+  course: none, // [Course Name] or ([Course Name], [Short Course Name])
+  authors: none, // array of str or content
+  date: datetime.today(), // datetime or content
+  show-solution: none, // none, inline, bottom
+  ..chosen
+) = { body => {
 }}
 
 #let bmim-poster(
@@ -290,6 +285,8 @@
 		}
 		it
 	}
+  set heading(numbering: "1.1")
+  show heading.where(level:2): heading-colored
   show heading.where(level:1): it => context {
     set block(inset: (y: 5em))
     show: strong
