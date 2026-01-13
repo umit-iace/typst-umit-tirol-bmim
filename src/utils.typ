@@ -24,7 +24,7 @@
 }
 
 
-#let heading_prefix_numbering(..args, loc: none) = context {
+#let heading-prefix-numbering(..args, loc: none) = context {
   let hdr = counter(heading).at(
     if loc == none { here() } else { loc }
   )
