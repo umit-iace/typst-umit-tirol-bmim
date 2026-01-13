@@ -24,11 +24,12 @@
         fill: color.red.lighten(0%),
         inset: 2pt,
         breakable: true,
-        box(
+        block(
           stroke: 0.5pt,
           width: 100%,
           fill: white,
           inset: 0.3em,
+          breakable: true,
           it,
         ),
       )
