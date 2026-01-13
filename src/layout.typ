@@ -156,7 +156,7 @@
     set text(size: 0.8em)
     line(length: 100%, stroke: 0.5pt)
     let foot = [
-      #opts.spell.lab #course - #title
+      #opts.spell.lab - #course - #title
       #if opts.show-solution != none [
         #set text(color.red, stroke: 0.5pt+color.red)
         #opts.spell.with #opts.spell.sol
@@ -299,13 +299,12 @@
         stroke: (paint: black.lighten(20%), thickness: 1.3pt),
         strong[
           #opts.spell.lab \
+          #sym.hyph \
           #course \
-          #if type(title) == array {
-            sym.hyph; linebreak()
-            title.at(0)
-          }
           #line(length: 95%)
           #if type(title) == array {
+            title.at(0)
+            linebreak()
             title.at(1)
           } else {
             title
