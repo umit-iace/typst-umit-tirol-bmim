@@ -1,8 +1,6 @@
-#import "/src/lib.typ": *
+#import "/src/lib.typ": task, bmim-exam
 #import "@preview/layout-ltd:0.1.0": layout-limiter
 #show: layout-limiter.with(max-iterations: 5)
-
-
 
 #show: bmim-exam(
   title: "Eingangstest",
