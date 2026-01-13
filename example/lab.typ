@@ -1,4 +1,5 @@
-#import "/src/lib.typ": *
+#import "/src/lib.typ" as bmim
+#import "/src/lib.typ": task, enum-label, bmim-lab, wrapped-enum-numbering, backmatter, important, tip, example, hint
 
 #show: bmim-lab(
   title: ("Parameteridentifikation", "Motor mit Drehlast"),
@@ -6,7 +7,7 @@
   course: ("Advanced Control", "AC"),
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   date: datetime(day: 1, month: 3, year: 2024),
-  show-solution: "inline",
+  show-solution: bmim.inline,
 )
 
 = First Section
