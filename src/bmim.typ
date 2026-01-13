@@ -26,7 +26,7 @@
       bottom: 2.5cm,
     ),
   )
-  show raw: set text(font: "CMU Typewriter Text")
+  show raw: set text(font: "CMU Typewriter Text", size: opts.size)
 
   show figure.where(kind: table): set figure(supplement: opts.spell.tab)
   show figure.where(kind: table): it => {

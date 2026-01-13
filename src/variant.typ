@@ -23,7 +23,7 @@
       bottom: 2.5cm,
     ),
   )
-  show raw: set text(font: "CMU Typewriter Text")
+  show raw: set text(font: "CMU Typewriter Text", size: opts.size)
 
   set enum(numbering: "a)")
 
