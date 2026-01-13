@@ -4,3 +4,4 @@
 #import "utils.typ": backmatter
 #import "list.typ": enum-label, wrapped-enum-numbering
 #import "layout.typ": poster-box
+#import "colors.typ" as bmim-colors
