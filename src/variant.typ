@@ -1,7 +1,7 @@
 #import "utils.typ": *
 #import "layout.typ": *
 #import "list.typ": *
-#import "task.typ": task-solutions, task-show-ref, inline
+#import "task.typ": task-solutions, task-show-ref
 
 #let item-cnt = counter("item-counter")
 
@@ -156,7 +156,7 @@
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
-  show-solution: inline,
+  show-solution: "inline",
   ..chosen,
 ) = { body => {
   option-set(

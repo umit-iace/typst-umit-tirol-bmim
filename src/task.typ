@@ -2,7 +2,6 @@
 #let t-count = counter("task")
 #let t-points = state("task-points", ())
 #let t-solutions = state("task-solutions", ())
-#let inline = "inline"
 
 #let task(..args) = {
   let is-super = "points" not in args.named()
@@ -60,9 +59,9 @@
     }
 
     // inline solutions
-    if opts.show-solution == inline {
+    if opts.show-solution == "inline" {
       (opts.task-show-solution)(sol)
-    } else if opts.show-solution == bottom {
+    } else if opts.show-solution == "bottom" {
       t-solutions.update(p => { p.push((ex, sol)); return p})
     }
   }
@@ -149,11 +148,11 @@
 
 #let task-solutions = context {
   let opts = options.final()
-  if opts.show-solution == inline  {
+  if opts.show-solution == "inline"  {
     return
   } else if opts.show-solution == none {
     pagebreak(to:"even")  * t-count.final().first()
-  } else if opts.show-solution == bottom {
+  } else if opts.show-solution == "bottom" {
    for val in t-solutions.final() {
      let (num, sol) = val
      let num = str(num)

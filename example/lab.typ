@@ -6,7 +6,7 @@
   course: ("Advanced Control", "AC"),
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   date: datetime(day: 1, month: 3, year: 2024),
-  show-solution: inline,
+  show-solution: "inline",
 )
 
 = First Section
