@@ -134,11 +134,16 @@
         #opts.spell.with #opts.spell.sol
       ]
     ]
-    let pagenum = counter(page).display("1/1")
+    let pagenum = counter(page).display("1/1", both: true)
     if calc.odd(here().page()) and here().page() != 1 [
       #foot
       #h(1fr)
       Matrikelnr: #underline-space(25%)
+      #h(1fr)
+      #pagenum
+    ]
+    else if here().page() == 1 [
+      #foot
       #h(1fr)
       #pagenum
     ] else [

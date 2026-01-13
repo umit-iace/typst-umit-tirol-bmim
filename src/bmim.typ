@@ -178,6 +178,7 @@
 
   set std.page(
     header: (header.exam)(course, title),
+    footer: (footer.exam)(course, title),
   )
 
   set heading(numbering: "1.")
