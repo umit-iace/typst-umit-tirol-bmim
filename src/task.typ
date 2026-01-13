@@ -50,7 +50,13 @@
           ))
       ]).join(),)
     } else {
-      (args.named().solution,)
+      ([#args.named().solution \
+        #text(fill: color.green, grid(
+          columns: 2,
+          repeat("." + h(2.5pt)),
+          [$Sigma$ #t-points.final().at(ex - 1).first() P.]
+        ))
+      ], )
     }
 
     // inline solutions
@@ -153,7 +159,7 @@
      let num = str(num)
      let lbl = label("sol-"+num)
      context if query(selector(lbl).before(here())).len() == 0 [
-       = Lösung #num #lbl <bmim:nonumber>
+       = Lösung zu Aufgabe #num #lbl <bmim:nonumber>
 
        #sol.join()
      ]
