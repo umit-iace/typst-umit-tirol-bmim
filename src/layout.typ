@@ -9,6 +9,7 @@
     fill: opts.theme.lolight,
     inset: 4pt,
   )
+  place(hide(it))
   if it.numbering == none [
     #block(it.body)
   ] else [
