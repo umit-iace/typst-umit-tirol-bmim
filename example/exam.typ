@@ -7,6 +7,7 @@
   course: ([Advanced Control],[AC]),
   authors: ("Author1", "Author3", "Author3"),
   show-solution: bottom,
+  empty-sheets: auto,
   total-time: [90min],
   lang: "en",
 )

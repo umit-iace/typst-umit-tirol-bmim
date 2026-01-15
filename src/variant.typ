@@ -1,7 +1,7 @@
 #import "utils.typ": *
 #import "layout.typ": *
 #import "list.typ": *
-#import "task.typ": task-solutions, task-show-ref
+#import "task.typ": task-solutions, task-show-ref, task-total-count
 
 #let item-cnt = counter("item-counter")
 
@@ -115,6 +115,7 @@
   date: datetime.today(), // datetime or content
   total-time: none, // str or content
   show-solution: none, // none, inline, bottom
+  empty-sheets: auto, // none, auto (= 1 per task), int
   ..chosen // other options: theme, logo-with-text, size, etc
 ) = { body => {
   if total-time == none {
@@ -138,8 +139,26 @@
 
   body
 
-  pagebreak(weak:true)
-  task-solutions
+  if show-solution == bottom {
+    pagebreak(weak:true)
+    task-solutions
+  }
+  context {
+    let sheets = if type(empty-sheets) == int {
+      empty-sheets
+    } else if empty-sheets == auto and show-solution == none {
+      task-total-count()
+    } else {
+      0
+    }
+    if sheets != 0 {
+      pagebreak(weak:true, to: "odd")
+      if calc.odd(here().page()) {
+        pagebreak(to: "even")
+      }
+      pagebreak(to:"even") * sheets
+    }
+  }
 }}
 
 #let bmim-exercise(
@@ -178,8 +197,10 @@
 
   body
 
-  pagebreak(weak:true)
-  task-solutions
+  if show-solution == bottom {
+    pagebreak(weak:true)
+    task-solutions
+  }
 }}
 
 #let bmim-lecture(
