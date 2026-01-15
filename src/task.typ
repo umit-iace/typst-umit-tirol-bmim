@@ -3,8 +3,7 @@
 #let t-points = state("task-points", ())
 #let t-solutions = state("task-solutions", ())
 #let inline = "inline"
-#let bottom = "bottom"
-#let none-wPages = "none-wPages"
+#let bottom = bottom // for re-exporting in package namespace
 
 #let task(..args) = {
   let is-super = "points" not in args.named()
@@ -150,22 +149,15 @@
 }
 
 #let task-solutions = context {
-  let opts = options.final()
-  if opts.show-solution == inline  or opts.show-solution == none {
-    return
-  } else if opts.show-solution == none-wPages {
-    pagebreak(to:"even")  * t-count.final().first()
-  } else if opts.show-solution == bottom {
-    for val in t-solutions.final() {
-      let (num, sol) = val
-      let num = str(num)
-      let lbl = label("sol-"+num)
-      context if query(selector(lbl).before(here())).len() == 0 [
-        = Lösung zu Aufgabe #num #lbl <bmim:nonumber>
+  for val in t-solutions.final() {
+    let (num, sol) = val
+    let num = str(num)
+    let lbl = label("sol-"+num)
+    context if query(selector(lbl).before(here())).len() == 0 [
+      = Lösung zu Aufgabe #num #lbl <bmim:nonumber>
 
-        #sol.join()
-      ]
-    }
+      #sol.join()
+    ]
   }
 }
 
