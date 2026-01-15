@@ -25,7 +25,7 @@
         t-points.update(p => {p.last().push(arg.points); return p})
       }
     }
-    let points = t-points.final().at(ex -1).sum(default: 0)
+    let points = t-points.final().at(ex - 1, default:())
     let description = if is-super [
           #args.pos().first()
 
@@ -37,12 +37,12 @@
     // show descriptions
     (opts.task-show)(
       ex,
-      points,
+      points.sum(default:0),
       description
     )
 
     let sol = if is-super {
-      (args.pos().slice(1).zip(t-points.final().at(ex - 1)).map(((it, p)) => [
+      (args.pos().slice(1).zip(points).map(((it, p)) => [
         + #it.solution \
           #text(fill: color.green, grid(
             columns: 2,
@@ -55,7 +55,7 @@
         #text(fill: color.green, grid(
           columns: 2,
           repeat("." + h(2.5pt)),
-          [$Sigma$ #t-points.final().at(ex - 1).first() P.]
+          [$Sigma$ #points.first(default:0) P.]
         ))
       ], )
     }
@@ -130,7 +130,7 @@
 
 #let task-total-count() = t-count.final().first()
 #let task-points() = t-points.final().map(array.sum.with(default: 0))
-#let task-total-points() = task-points().sum()
+#let task-total-points() = task-points().sum(default:0)
 
 
 #let task-table = context {
@@ -143,7 +143,7 @@
     rows: (auto, auto, 2em),
     align: center,
     ..range(1,n+1).map(str), $Sigma$, [Note],
-    ..points.map(str), str(points.sum()), [],
+    ..points.map(str), str(points.sum(default:0)), [],
     ..range(n+2).map(it => [])
   )
 }
