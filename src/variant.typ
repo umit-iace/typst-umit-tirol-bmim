@@ -14,7 +14,12 @@
     spacing: .5em,
     size: opts.size,
   )
-  set par(leading: 0.55em, spacing: 0.55em, justify: true)
+  set par(
+    leading: 0.55em, spacing: 0.55em, justify: true,
+    justification-limits: (
+			tracking: (min: -0.01em, max: 0.02em),
+		)
+  )
   set page(
     margin: (
       left: 2cm,
