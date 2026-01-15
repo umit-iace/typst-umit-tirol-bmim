@@ -1,10 +1,10 @@
 #import "utils.typ": *
 #import "layout.typ": *
 #import "list.typ": *
-#import "task.typ": task-solutions, task-show-ref, task-total-count
+#import "task.typ": (solution-bottom, task-show-ref, task-total-count,
+show-task-heading, show-task-enum)
 
 #let item-cnt = counter("item-counter")
-
 
 #let bmim-common(body) = context {
   let opts = options.final()
@@ -63,8 +63,8 @@
       // get the counter value in the correct format according to location
       let loc = el.location()
       let num = enum-numbering-state.at(loc)
-      if std.type(enum-numbering-state.at(loc)) != str {
-        num = enum-numbering-state.at(loc).with(loc:loc)
+      if std.type(num) != str {
+        num = num.with(loc:loc)
       }
       let ref-counter = numbering(num, ..enum-counter.at(loc))
       if is-empty(supp) {
@@ -127,8 +127,9 @@
     panic("Exam needs total-time option set")
   }
   option-set(
-    chosen.named()
+    (task-show: show-task-heading)
     + (show-solution: show-solution)
+    + chosen.named()
   )
   show: bmim-common
   show ref: task-show-ref
@@ -146,7 +147,7 @@
 
   if show-solution == bottom {
     pagebreak(weak:true)
-    task-solutions
+    solution-bottom
   }
   context {
     let sheets = if type(empty-sheets) == int {
@@ -184,9 +185,10 @@
   ..chosen,
 ) = { body => {
   option-set(
-    chosen.named()
+    (task-show: show-task-enum)
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
     + (show-solution: show-solution)
+    + chosen.named()
   )
   show: bmim-common
   show ref: task-show-ref
@@ -204,7 +206,7 @@
 
   if show-solution == bottom {
     pagebreak(weak:true)
-    task-solutions
+    solution-bottom
   }
 }}
 
