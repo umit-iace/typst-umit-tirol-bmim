@@ -222,7 +222,7 @@
 )
 
 #let titleblock = (
-  exam:     (course, title, authors, date, total-time) => context {
+  exam:     (course, title, authors, date, total-time, show-hints) => context {
     let opts = options.final()
     let course = if type(course) == array { course.at(0) } else { course }
 
@@ -267,27 +267,35 @@
         strong(opts.spell.eval)
         task-table
       },
-      {
-        set list(spacing: 1.3em)
-        set text(size: 10pt)
-        [
-          *Hinweise*
-          #v(0.75em)
-          #pad(left: 1.4em)[
-            - Die Prüfung umfasst #context task-total-count() Aufgaben, die
-              Bearbeitungszeit beträgt #total-time.
-            // - Es können insgesamt #t-points.final().sum() Punkte erreicht werden.
-            - Es können insgesamt #context task-total-points() Punkte erreicht werden.
-            - Zugelassene Hilfsmittel:
-              - *ein handschriftlich* beschriebener A4 Zettel; *Muss* am Ende der Klausur abgegeben werden.
-              - *keine* weiteren Unterlagen
-              - *keine* elektronischen Geräte
-            - Bitte schreiben Sie *leserlich* und geben Sie den *Lösungsweg* vollständig an.
-            - Schreiben Sie *nicht* mit Bleistift und *nicht* mit Rotstift.
-          ]
-        ]
-      }
     )
+    if show-hints {
+      table(
+        inset: 0.5em,
+        gutter: 0.5em,
+        stroke: 0.5pt,
+        align:left,
+        {
+          set list(spacing: 1.3em)
+          set text(size: 10pt)
+          [
+            *Hinweise*
+            #v(0.75em)
+            #pad(left: 1.4em)[
+              - Die Prüfung umfasst #context task-total-count() Aufgaben, die
+              Bearbeitungszeit beträgt #total-time.
+              // - Es können insgesamt #t-points.final().sum() Punkte erreicht werden.
+              - Es können insgesamt #context task-total-points() Punkte erreicht werden.
+              - Zugelassene Hilfsmittel:
+                - *ein handschriftlich* beschriebener A4 Zettel; *Muss* am Ende der Klausur abgegeben werden.
+                - *keine* weiteren Unterlagen
+                - *keine* elektronischen Geräte
+              - Bitte schreiben Sie *leserlich* und geben Sie den *Lösungsweg* vollständig an.
+              - Schreiben Sie *nicht* mit Bleistift und *nicht* mit Rotstift.
+            ]
+          ]
+        }
+      )
+    }
   },
   exercise: () => context {
   },
