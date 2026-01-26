@@ -182,7 +182,7 @@ show-task-heading, show-task-enum)
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
-  show-solution: "inline",
+  show-solution: none, // none, inline, bottom
   ..chosen,
 ) = { body => {
   option-set(
@@ -215,9 +215,14 @@ show-task-heading, show-task-enum)
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
-  show-solution: none, // none, inline, bottom
   ..chosen
 ) = { body => {
+  set std.page(
+    header: header.lecture,
+    footer: (footer.lecture)(),
+  )
+
+  body
 }}
 
 #let bmim-poster(
@@ -286,11 +291,14 @@ show-task-heading, show-task-enum)
 #let bmim-workbook(
   course: none,
   authors: none,
+  show-solution: none, // none, inline, bottom
   date: datetime.today(),
   ..chosen,
 ) = { body => {
   option-set(
-    chosen.named()
+    (task-show: show-task-heading)
+    + (show-solution: show-solution)
+    + chosen.named()
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
   )
   show: bmim-common
@@ -331,10 +339,14 @@ show-task-heading, show-task-enum)
       #it.body
     ]
   }
-	show: headings-on-odd-page
+  show: headings-on-odd-page
 
   outline()
 
-
   body
+
+  if show-solution == bottom {
+    pagebreak(weak:true)
+    solution-bottom
+  }
 }}

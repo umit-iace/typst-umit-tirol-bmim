@@ -1,4 +1,4 @@
-#import "variant.typ": bmim-exam, bmim-lab, bmim-poster, bmim-report, bmim-workbook
+#import "variant.typ": bmim-exam, bmim-lab, bmim-poster, bmim-report, bmim-workbook, bmim-lecture, bmim-exercise
 #import "admonition.typ": hint, important, tip, example
 #import "task.typ": task, inline, bottom
 #import "utils.typ": backmatter, heading-prefix-numbering

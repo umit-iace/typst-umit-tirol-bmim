@@ -244,7 +244,6 @@
   task-solutions
 }}
 
-
 // #let bmim(
 //   variant: "exam", // "exam", "lab", "workbook", "slides", "poster", "report"
 //   title: none,
