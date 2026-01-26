@@ -121,6 +121,7 @@ show-task-heading, show-task-enum)
   total-time: none, // str or content
   show-solution: none, // none, inline, bottom
   empty-sheets: auto, // none, auto (= 1 per task), int
+  show-hints: true, // false, true
   ..chosen // other options: theme, logo-with-text, size, etc
 ) = { body => {
   if total-time == none {
@@ -141,7 +142,7 @@ show-task-heading, show-task-enum)
 
   show heading.where(level: 1): heading-colored
 
-  (titleblock.exam)(course, title, authors, date, total-time)
+  (titleblock.exam)(course, title, authors, date, total-time, show-hints)
 
   body
 
