@@ -1,11 +1,12 @@
 #import "/src/lib.typ": *
 
 #show: bmim-workbook(
-	course: [VU Modellbildung und Simulation 1],
-	authors: ([Luca Mayer], [Frank Woittennek]),
-	lang:"de",
+  course: [VU Modellbildung und Simulation 1],
+  authors: ([Luca Mayer], [Frank Woittennek]),
+  lang:"de",
 )
 
+#set math.equation(numbering: "(1.1)")
 
 = Dynamische Systeme
 

@@ -1,12 +1,11 @@
 #import "/src/lib.typ": *
 
-
 #show: bmim-report(
-	title: [Laborbericht],
-	authors: (
-		[Max Mustermann],
-		[Eva Musterfrau],
-	),
+  title: [Laborbericht],
+  authors: (
+    [Max Mustermann],
+    [Eva Musterfrau],
+  ),
 )
 
 = Kurzzusammenfassung
@@ -28,14 +27,14 @@
 - element
 - another
 
-	Do try @tab:try.
-	#figure(
-		table(
-			columns: 4,
-			..(context{counter("a").step(); str(counter("a").get().first())},)*8,
-		),
-		caption: [Try me! #lorem(20)],
-	) <tab:try>
+  Do try @tab:try.
+  #figure(
+    table(
+      columns: 4,
+      ..(context{counter("a").step(); str(counter("a").get().first())},)*8,
+    ),
+    caption: [Try me! #lorem(20)],
+  ) <tab:try>
 
 == Subsection
 
