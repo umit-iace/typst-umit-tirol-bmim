@@ -258,22 +258,13 @@
       ],
     )
     v(1.25em)
-    table(
-      inset: 0.5em,
-      gutter: 0.5em,
-      stroke: 0.5pt,
-      align:left,
+
+    let tableData = (
       {
         strong(opts.spell.eval)
         task-table
       },
-    )
-    if show-hints {
-      table(
-        inset: 0.5em,
-        gutter: 0.5em,
-        stroke: 0.5pt,
-        align:left,
+      if show-hints {
         {
           set list(spacing: 1.3em)
           set text(size: 10pt)
@@ -281,9 +272,7 @@
             *Hinweise*
             #v(0.75em)
             #pad(left: 1.4em)[
-              - Die Prüfung umfasst #context task-total-count() Aufgaben, die
-              Bearbeitungszeit beträgt #total-time.
-              // - Es können insgesamt #t-points.final().sum() Punkte erreicht werden.
+              - Die Prüfung umfasst #context task-total-count() Aufgaben, die Bearbeitungszeit beträgt #total-time.
               - Es können insgesamt #context task-total-points() Punkte erreicht werden.
               - Zugelassene Hilfsmittel:
                 - *ein handschriftlich* beschriebener A4 Zettel; *Muss* am Ende der Klausur abgegeben werden.
@@ -294,8 +283,16 @@
             ]
           ]
         }
-      )
-    }
+      }
+    )
+    v(1.25em)
+    table(
+      inset: 0.5em,
+      gutter: 0.5em,
+      stroke: 0.5pt,
+      align:left,
+      ..tableData.filter(x => x != none)
+    )
   },
   exercise: () => context {
   },
