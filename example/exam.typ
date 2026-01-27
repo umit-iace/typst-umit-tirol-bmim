@@ -9,6 +9,7 @@
   show-solution: bottom,
   empty-sheets: auto,
   total-time: [90min],
+  show-hints: true,
   lang: "en",
 )
 
