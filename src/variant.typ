@@ -48,7 +48,7 @@ show-task-heading, show-task-enum)
   show figure: fig => {
     show figure.caption: cap => context [
       #let n = numbering(cap.numbering, ..cap.counter.at(fig.location()))
-      *#cap.supplement~#n*~#sym.minus~#cap.body
+      *#cap.supplement~#n*~#sym.minus#cap.body
     ]
     fig
   }
