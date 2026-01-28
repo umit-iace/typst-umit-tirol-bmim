@@ -14,6 +14,7 @@
 // #set heading(offset: 1)
 #task(
 	// [= Fliehkraftregler],
+	label: <task:fkr>,
 [zeigt den mechanischen Teil eines Fliehkraftreglers. Darin bezeichnen das Drehmoment M(t), die
 Winkelgeschwindigkeit ω(t) und der Winkel α(t) die Systemgrößen. Die Masse m, die Länge ℓ und die
 Erdbeschleunigung g sind konstante Parameter. Die nichtlinearen Modellgleichungen für das betrachtete
@@ -22,14 +23,15 @@ $
 m l^2 ( dot(omega) (t) sin^2(alpha (t)) + omega(t) dot(alpha)(t) sin(2 alpha(t))) &= M(t)\
 2 l dot.double(alpha)(t) - l omega^2(t) sin(2 alpha(t)) &= -2g sin(alpha(t))
 $ <eq:fliehkraftregler>
-gegeben. <task:fkr>
+gegeben.
 ],
 (
 	points: 0,
+	label: <task:sub>,
 	description: [
 		Wählen Sie das Drehmoment $M(t)$ als Eingang, den Winkel
 		$alpha(t)$ als Ausgang und gegben Sie eine Zustandsdarstellung des
-		nichtlinearen Systems zu diesem Eingang an. <task:sub>
+		nichtlinearen Systems zu diesem Eingang an.
 	],
 	solution: [],
 ),

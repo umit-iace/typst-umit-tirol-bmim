@@ -1,8 +1,7 @@
 #import "utils.typ": *
 #import "layout.typ": *
 #import "list.typ": *
-#import "task.typ": (solution-bottom, task-show-ref, task-total-count,
-show-task-heading, show-task-enum)
+#import "task.typ"
 
 #let item-cnt = counter("item-counter")
 
@@ -53,31 +52,7 @@ show-task-heading, show-task-enum)
     fig
   }
 
-  show ref: it => {
-    let el = it.element
-    if el != none and el.func() == metadata and el == enum-label-mark {
-      let supp = it.supplement
-      if supp == auto {
-        supp = opts.spell.item
-      }
-      // get the counter value in the correct format according to location
-      let loc = el.location()
-      let num = enum-numbering-state.at(loc)
-      if std.type(num) != str {
-        num = num.with(loc:loc)
-      }
-      let ref-counter = numbering(num, ..enum-counter.at(loc))
-      if is-empty(supp) {
-        link(el.location(), ref-counter)
-      }
-      else {
-        link(el.location(), box([#supp~#ref-counter]))
-      }
-    } else {
-      it
-    }
-  }
-
+  show ref: enum-show-ref.with(opts:opts)
   show enum: it => {
     if it.start != 0 { return it }
     let args = it.fields()
@@ -128,12 +103,12 @@ show-task-heading, show-task-enum)
     panic("Exam needs total-time option set")
   }
   option-set(
-    (task-show: show-task-heading)
+    (task-show: task.style-heading)
     + (show-solution: show-solution)
     + chosen.named()
   )
   show: bmim-common
-  show ref: task-show-ref
+  show ref: task.show-ref
 
   set std.page(
     header: (header.exam),
@@ -148,13 +123,13 @@ show-task-heading, show-task-enum)
 
   if show-solution == bottom {
     pagebreak(weak:true)
-    solution-bottom
+    task.solution-bottom
   }
   context {
     let sheets = if type(empty-sheets) == int {
       empty-sheets
     } else if empty-sheets == auto and show-solution == none {
-      task-total-count()
+      task.total-count()
     } else {
       0
     }
@@ -177,12 +152,12 @@ show-task-heading, show-task-enum)
   ..chosen
 ) = { body => {
   option-set(
-    (task-show: show-task-heading)
+    (task-show: task.style-heading)
     + (show-solution: show-solution)
     + chosen.named()
   )
   show: bmim-common
-  show ref: task-show-ref
+  show ref: task.show-ref
 
   set std.page(
     header: (header.exercise),
@@ -197,7 +172,7 @@ show-task-heading, show-task-enum)
 
   if show-solution == bottom {
     pagebreak(weak:true)
-    solution-bottom
+    task.solution-bottom
   }
 }}
 
@@ -210,13 +185,13 @@ show-task-heading, show-task-enum)
   ..chosen,
 ) = { body => {
   option-set(
-    (task-show: show-task-enum)
+    (task-show: task.style-enum)
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
     + (show-solution: show-solution)
     + chosen.named()
   )
   show: bmim-common
-  show ref: task-show-ref
+  show ref: task.show-ref
 
   set std.page(
     header: header.lab,
@@ -231,7 +206,7 @@ show-task-heading, show-task-enum)
 
   if show-solution == bottom {
     pagebreak(weak:true)
-    solution-bottom
+    task.solution-bottom
   }
 }}
 
@@ -320,13 +295,13 @@ show-task-heading, show-task-enum)
   ..chosen,
 ) = { body => {
   option-set(
-    (task-show: show-task-heading)
+    (task-show: task.style-heading)
     + (show-solution: show-solution)
     + chosen.named()
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
   )
   show: bmim-common
-  show ref: task-show-ref
+  show ref: task.show-ref
 
   (titleblock.workbook)(course, authors, date)
 
@@ -371,6 +346,6 @@ show-task-heading, show-task-enum)
 
   if show-solution == bottom {
     pagebreak(weak:true)
-    solution-bottom
+    task.solution-bottom
   }
 }}
