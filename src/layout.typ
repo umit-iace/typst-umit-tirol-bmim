@@ -153,7 +153,7 @@
       #foot
     ]
   },
-  exercise: () => context {
+  exercise: (..args) => context {
   },
   lab: (course, title) => context {
     let opts = options.final()
@@ -294,7 +294,7 @@
       ..tableData.filter(x => x != none)
     )
   },
-  exercise: () => context {
+  exercise: (..args) => context {
   },
   lab:      (course, title, authors, date) => context {
     let course = if type(course) == array { course.at(0) } else { course }
