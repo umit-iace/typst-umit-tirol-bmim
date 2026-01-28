@@ -6,7 +6,7 @@
 #let inline = "inline"
 #let bottom = bottom // for re-exporting in package namespace
 
-#let total-count() = t-count.final().first()
+#let total-count() = t-points.final().len()
 #let task-points() = t-points.final().map(array.sum.with(default: 0))
 #let total-points() = task-points().sum(default:0)
 
@@ -26,6 +26,9 @@
 
 #let style-enum(lbl, tasknum, points, task) = context [
   #let opts = options.final()
+  #set enum(numbering: (..n) => context {
+    numbering("1.1.a", ..t-count.get())
+  })
   + #lbl#task
 ]
 
@@ -59,7 +62,7 @@
   ]
 }
 
-#let task(..args) = {
+#let task(..args) = context {
   let is-super = "points" not in args.named()
   let lbl = if "label" in args.named() { args.named().label }
 
@@ -67,12 +70,30 @@
     if is-super { () } else { (args.named().points,).flatten() }
   }
 
-  t-count.step()
+  let opts = options.final()
+  let wrap = if opts.task-wrap-counter == none {
+    (c: counter("task-counter-ignore"), lvl: 0)
+  } else {
+    ("c", "lvl").zip(opts.task-wrap-counter).fold((:), (acc, it) => {
+      acc += (it.first(): it.last())
+      acc
+    })
+  }
+  if wrap.lvl != 0 { // check if we need to reset, recursively
+    let w = wrap.c.get()
+    for i in range(wrap.lvl) {
+      if w.at(i) != t-count.get().at(i) {
+        t-count.update(
+          w.slice(0, wrap.lvl)
+        )
+        break
+      }
+    }
+  }
+  t-count.step(level: wrap.lvl+1)
   t-points.update(p => { p.push(points-or-empty); return p });
-
   context {
-    let opts = options.final()
-    let tasknum = t-count.get().first()
+    let tasknum = t-points.get().len()
 
     if is-super {
       // store points
@@ -86,7 +107,7 @@
 
           #args.pos().slice(1).map(it => {
             let lbl = if "label" in it [ #t-mark#it.label ]
-            [+ #lbl#t-count.step(level:2) #it.description]
+            [+ #t-count.step(level:wrap.lvl+2)#lbl #it.description]
           }).join()
     ] else { args.named().description }
 
@@ -129,7 +150,6 @@
 }
 
 #let show-ref(it) = {
-  let t = str(it.target)
   let opts = options.final()
   let el = it.element
   if el != none and el.func() == metadata and el == t-mark {
@@ -138,14 +158,8 @@
       supp = opts.spell.task
     }
     let loc = el.location()
-
-    // repr(it)
-    // // let num = enum-numbering-state.at(loc)
-    // // if std.type(num) != str {
-    // //   num = num.with(loc:loc)
-    // // }
-    // // let ref-counter = numbering(num, ..enum-counter.at(loc))
-    let ref-counter = text(blue)[need number]
+    let num = if opts.task-wrap-counter != none { opts.task-wrap-counter.at(1) * "1." } + "1.a"
+    let ref-counter = numbering(num, ..t-count.at(loc))
     if utils.is-empty(supp) {
       link(el.location(), ref-counter)
     }
