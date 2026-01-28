@@ -170,11 +170,35 @@ show-task-heading, show-task-enum)
 
 #let bmim-exercise(
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
+  title: none, // str or content
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
   show-solution: none, // none, inline, bottom
   ..chosen
 ) = { body => {
+  option-set(
+    (task-show: show-task-heading)
+    + (show-solution: show-solution)
+    + chosen.named()
+  )
+  show: bmim-common
+  show ref: task-show-ref
+
+  set std.page(
+    header: (header.exercise),
+    footer: (footer.exercise)(course, title),
+  )
+
+  show heading.where(level: 1): heading-colored
+
+  (titleblock.exercise)(course, title, authors, date)
+
+  body
+
+  if show-solution == bottom {
+    pagebreak(weak:true)
+    solution-bottom
+  }
 }}
 
 #let bmim-lab(
