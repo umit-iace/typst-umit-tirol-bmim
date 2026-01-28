@@ -56,8 +56,6 @@
   for (num, solution) in t-solutions.final().enumerate(start:1) [
     = Lösung zu #ref(t-label(num)) <bmim:nonumber>
 
-    #query(selector(t-label(num))).map(it => it.location().position()).map(it => link(it, repr(it))).join([\ ])
-
     #solution
   ]
 }
