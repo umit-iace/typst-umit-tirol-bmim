@@ -15,16 +15,23 @@
 #let t-label-sol(lbl) = label(str(lbl)+"-sol")
 
 
-#let style-heading(lbl, tasknum, points, task) = context [
+#let style-heading(lbl, tasknum, name, points, task) = context [
   #let spell = options.final().spell
+  #let msg = {
+    [#spell.task #tasknum]
+    if name != none { h(1em) + name }
+    h(1fr)
+    [#spell.poi: #points]
+  }
+
   #show heading: set block(above: 0pt)
   #block(above:1.2em, below:0pt,sticky:true, lbl)
-  = #spell.task #tasknum #h(1fr) #spell.poi: #points <bmim:nonumber>
+  = #msg <bmim:nonumber>
 
   #task
 ]
 
-#let style-enum(lbl, tasknum, points, task) = context [
+#let style-enum(lbl, tasknum, name, points, task) = context [
   #let opts = options.final()
   #set enum(numbering: (..n) => context {
     numbering("1.1.a", ..t-count.get())
@@ -114,6 +121,7 @@
       [#t-mark#t-label(tasknum)] +
       if lbl != none [#t-mark#lbl],
       tasknum,
+      args.named().at("name", default: none),
       points.sum(default:0),
       description
     )

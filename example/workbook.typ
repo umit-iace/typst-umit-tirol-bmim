@@ -13,7 +13,7 @@
 // #[
 // #set heading(offset: 1)
 #task(
-	// [= Fliehkraftregler],
+	name: [Fliehkraftregler],
 	label: <task:fkr>,
 [zeigt den mechanischen Teil eines Fliehkraftreglers. Darin bezeichnen das Drehmoment M(t), die
 Winkelgeschwindigkeit ω(t) und der Winkel α(t) die Systemgrößen. Die Masse m, die Länge ℓ und die
