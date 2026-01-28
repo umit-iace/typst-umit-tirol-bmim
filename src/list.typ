@@ -1,3 +1,4 @@
+#import "utils.typ"
 #let enum-label-mark = metadata("enumeration_label")
 #let enum-counter = counter("enum-counter")
 #let enum-numbering-state = state("enum-numbering", none)
@@ -20,17 +21,27 @@
   enum-numbering
 }
 
-#let is-empty(value) = {
-  let empty-values = (
-    array: (),
-    dictionary: (:),
-    str: "",
-    content: [],
-  )
-  let t = repr(type(value))
-  if t in empty-values {
-    return value == empty-values.at(t)
+#let enum-show-ref(it, opts:none) = {
+  let el = it.element
+  if el != none and el.func() == metadata and el == enum-label-mark {
+    let supp = it.supplement
+    if supp == auto {
+      supp = opts.spell.item
+    }
+    // get the counter value in the correct format according to location
+    let loc = el.location()
+    let num = enum-numbering-state.at(loc)
+    if std.type(num) != str {
+      num = num.with(loc:loc)
+    }
+    let ref-counter = numbering(num, ..enum-counter.at(loc))
+    if utils.is-empty(supp) {
+      link(el.location(), ref-counter)
+    }
+    else {
+      link(el.location(), box([#supp~#ref-counter]))
+    }
   } else {
-    return value == none
+    it
   }
 }

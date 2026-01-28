@@ -1,4 +1,4 @@
-#import "task.typ": task-total-count, task-total-points, task-table
+#import "task.typ"
 #import "utils.typ": *
 #import "options.typ": *
 
@@ -262,7 +262,7 @@
     let tableData = (
       {
         strong(opts.spell.eval)
-        task-table
+        task.points-table
       },
       if show-hints {
         {
@@ -272,8 +272,8 @@
             *Hinweise*
             #v(0.75em)
             #pad(left: 1.4em)[
-              - Die Prüfung umfasst #context task-total-count() Aufgaben, die Bearbeitungszeit beträgt #total-time.
-              - Es können insgesamt #context task-total-points() Punkte erreicht werden.
+              - Die Prüfung umfasst #context task.total-count() Aufgaben, die Bearbeitungszeit beträgt #total-time.
+              - Es können insgesamt #context task.total-points() Punkte erreicht werden.
               - Zugelassene Hilfsmittel:
                 - *ein handschriftlich* beschriebener A4 Zettel; *Muss* am Ende der Klausur abgegeben werden.
                 - *keine* weiteren Unterlagen

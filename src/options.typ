@@ -8,7 +8,6 @@
   logo-with-text: false,
   show-solution: none, // none, inline, bottom
   task-show: none,
-  task-show-solution: none,
   font: ("New Computer Modern",),
   size: 12pt,
 ))
@@ -19,7 +18,7 @@
       if key not in o {
         let known = o.keys().filter(k => k != "spell")
         panic(
-          "Unknown option: "+ key +
+          "Unknown option: " + key +
           ". Known options: " + known.join(", ")
         )
       }

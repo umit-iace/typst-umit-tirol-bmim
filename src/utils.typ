@@ -23,7 +23,6 @@
   } else [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
 }
 
-
 #let heading-prefix-numbering(..args, loc: none) = context {
   let hdr = counter(heading).at(
     if loc == none { here() } else { loc }
@@ -39,3 +38,18 @@
 }
 
 #let page-number() = numbering(here().page-numbering(), here().page())
+
+#let is-empty(value) = {
+  let empty-values = (
+    array: (),
+    dictionary: (:),
+    str: "",
+    content: [],
+  )
+  let t = repr(type(value))
+  if t in empty-values {
+    return value == empty-values.at(t)
+  } else {
+    return value == none
+  }
+}

@@ -10,22 +10,24 @@
   empty-sheets: auto,
   total-time: [90min],
   show-hints: true,
-  lang: "en",
+  lang: "de",
 )
 
 #task(
+  label: <task:main>,
   [
     Das Eingangs-Ausgangsverhalten eines Systems wird durch die Übertragungsfunktion
     $
     G(s) & = frac(s+2, 2 s^(2) - 2 s + 1)
     $
-    beschrieben. <task:main>
+    beschrieben.
   ],
   (
     points: 10,
+    label: <task:sub1>,
     description: [
       Geben Sie eine Realisierung der Übertragungsfunktion in
-      Regelungsnormalform an. <task:sub>
+      Regelungsnormalform an.
     ],
     solution: [
       Regelungsnormalform:
@@ -37,6 +39,7 @@
   ),
   (
     points: 30,
+    label: <task:sub2>,
     description: [
       Ist die interne Dynamik des Systems stabil?
       Begründen Sie Ihre Antwort.
@@ -91,8 +94,8 @@
 #task(
   points: 5,
   description: [ single points task description referencing @task:main and also
-  @task:sub],
-  solution: [ this is how to also reference from solution @task:sub],
+  @task:sub1],
+  solution: [ this is how to also reference from solution @task:sub2],
 )
 
 

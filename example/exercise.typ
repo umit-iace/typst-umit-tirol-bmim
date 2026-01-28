@@ -11,18 +11,20 @@
 )
 
 #task(
+  label: <task:main>,
   [
     Das Eingangs-Ausgangsverhalten eines Systems wird durch die Übertragungsfunktion
     $
     G(s) & = frac(s+2, 2 s^(2) - 2 s + 1)
     $
-    beschrieben. <task:main>
+    beschrieben.
   ],
   (
     points: 10,
+    label: <task:sub>,
     description: [
       Geben Sie eine Realisierung der Übertragungsfunktion in
-      Regelungsnormalform an. <task:sub>
+      Regelungsnormalform an.
     ],
     solution: [
       Regelungsnormalform:
