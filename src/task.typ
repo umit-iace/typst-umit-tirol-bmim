@@ -69,7 +69,7 @@
 
 #let task(..args) = context {
   let is-super = "points" not in args.named()
-  let lbl = if "label" in args.named() { args.named().label }
+  let lbl = args.named().at("label", default: none)
 
   let points-or-empty = {
     if is-super { () } else { (args.named().points,).flatten() }
