@@ -186,6 +186,7 @@
 ) = { body => {
   option-set(
     (task-show: task.style-enum)
+    + (task-wrap-counter: (counter(heading), 1))
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
     + (show-solution: show-solution)
     + chosen.named()
