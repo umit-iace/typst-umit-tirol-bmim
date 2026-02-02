@@ -9,7 +9,3 @@ repository = "https://github.com/umit-iace/typst-umit-tirol-bmim"
 keywords = ["UMIT TIROL", "IACE", "Report", "Exam", "Article"]
 categories = ["article"]
 exclude = [".github/", "example/", "*.pdf"]
-
-[template]
-path = "template"
-entrypoint = "main.typ"
