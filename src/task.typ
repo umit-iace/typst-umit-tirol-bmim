@@ -11,12 +11,13 @@
 #let total-points() = task-points().sum(default:0)
 
 #let t-mark = metadata("task-locator")
-#let t-label(lbl) = label(str(lbl)+"-tsk")
-#let t-label-sol(lbl) = label(str(lbl)+"-sol")
+#let t-label(lbl) = label("bmim-"+str(lbl)+"-tsk")
+#let t-label-sol(lbl) = label("bmim-"+str(lbl)+"-sol")
 
 
 #let style-heading(lbl, tasknum, name, points, task) = context [
-  #let spell = options.final().spell
+  #let opts = options.final()
+  #let spell = opts.spell
   #let msg = {
     [#spell.task #tasknum]
     if name != none { h(1em) + name }
@@ -28,7 +29,18 @@
   #block(above:1.2em, below:0pt,sticky:true, lbl)
   = #msg <bmim:nonumber>
 
-  #task
+  #task#parbreak()
+  #if opts.show-solution == bottom {
+    let loc = locate(t-label-sol(tasknum))
+    let msg = {
+      sym.arrow.r.hook
+      sym.space.nobreak.narrow
+      spell.page
+      sym.space.nobreak.narrow
+      str(loc.page())
+    }
+    [Lösung auf #link(loc, msg).]
+  }
 ]
 
 #let style-enum(lbl, tasknum, name, points, task) = context [
@@ -59,13 +71,16 @@
   )
 }
 
-#let solution-bottom = context {
-  for (num, solution) in t-solutions.final().enumerate(start:1) [
-    = Lösung zu #ref(t-label(num)) <bmim:nonumber>
+#let solution-bottom = context [
+  = Lösungen <bmim:nonumber>
+  #for (num, solution) in t-solutions.final().enumerate(start:1) [
+    #show heading: set block(above: 0pt)
+    #block(above:1.2em, below:0pt,sticky:true, [#t-mark#t-label-sol(num)])
+    == Lösung zu #ref(t-label(num)) <bmim:nonumber>
 
     #solution
   ]
-}
+]
 
 #let task(..args) = context {
   let is-super = "points" not in args.named()
