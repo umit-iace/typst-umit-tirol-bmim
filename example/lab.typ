@@ -1,13 +1,12 @@
-#import "/src/lib.typ" as bmim
-#import "/src/lib.typ": task, enum-label, bmim-lab, wrapped-enum-numbering, backmatter, important, tip, example, hint
+#import "@local/typst-umit-tirol-bmim:0.1.0" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, important, tip, example, hint
 
-#show: bmim-lab(
+#show: bmim.lab(
   title: ("Parameteridentifikation", "Motor mit Drehlast"),
   lang: "de",
   course: ("Advanced Control", "AC"),
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   date: datetime(day: 1, month: 3, year: 2024),
-  show-solution: bmim.inline,
+  show-solution: "inline",
 )
 
 = First Section

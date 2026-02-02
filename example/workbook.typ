@@ -1,6 +1,6 @@
-#import "/src/lib.typ": *
+#import "@local/typst-umit-tirol-bmim:0.1.0" as bmim: task, hint
 
-#show: bmim-workbook(
+#show: bmim.workbook(
   course: [VU Modellbildung und Simulation 1],
   authors: ([Luca Mayer], [Frank Woittennek]),
   lang:"de",

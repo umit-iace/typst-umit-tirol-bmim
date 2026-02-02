@@ -1,6 +1,6 @@
-#import "/src/lib.typ": *
+#import "@local/typst-umit-tirol-bmim:0.1.0" as bmim
 
-#show: bmim-report(
+#show: bmim.report(
   title: [Laborbericht],
   authors: (
     [Max Mustermann],

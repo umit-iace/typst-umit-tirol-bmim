@@ -3,8 +3,6 @@
 #let t-count = counter("task")
 #let t-points = state("task-points", ())
 #let t-solutions = state("task-solutions", ())
-#let inline = "inline"
-#let bottom = bottom // for re-exporting in package namespace
 
 #let total-count() = t-points.final().len()
 #let task-points() = t-points.final().map(array.sum.with(default: 0))
@@ -30,7 +28,7 @@
   = #msg <bmim:nonumber>
 
   #task#parbreak()
-  #if opts.show-solution == bottom {
+  #if opts.show-solution == "bottom" {
     let loc = locate(t-label-sol(tasknum))
     let msg = {
       sym.arrow.r.hook
@@ -159,12 +157,12 @@
     )}).map(tmp => sol-style(..tmp)).join()
 
     // inline solutions
-    if opts.show-solution == inline {
+    if opts.show-solution == "inline" {
         solution-inline[
 
           #solution
         ]
-    } else if opts.show-solution == bottom {
+    } else if opts.show-solution == "bottom" {
       t-solutions.update(p => { p.push(solution); return p})
     }
   }
