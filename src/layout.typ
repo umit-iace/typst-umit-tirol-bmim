@@ -153,7 +153,25 @@
       #foot
     ]
   },
-  exercise: (..args) => context {
+  exercise: (course, title) => context {
+    let opts = options.final()
+    let course = if type(course) == array { course.at(1) } else { course }
+    let title = if type(title) == array { title.join([ \- ]) } else { title }
+    set text(size: 0.8em)
+    line(length: 100%, stroke: 0.5pt)
+    let foot = [
+      #course - #title
+      #if opts.show-solution != none [
+        #set text(color.red, stroke: 0.5pt+color.red)
+        #opts.spell.with #opts.spell.sol
+      ]
+    ]
+    let pagenum = counter(page).display("1")
+    if calc.odd(here().page()) {
+      foot; h(1fr); pagenum
+    } else {
+      pagenum; h(1fr); foot
+    }
   },
   lab: (course, title) => context {
     let opts = options.final()
@@ -294,7 +312,29 @@
       ..tableData.filter(x => x != none)
     )
   },
-  exercise: (..args) => context {
+  exercise: (course, title, authors, date) => context {
+    let opts = options.final()
+    let course = if type(course) == array { course.at(0) } else { course }
+
+    [
+      #set align(center)
+
+      *#title - #course*
+    ]
+    v(1em)
+    grid(
+      columns: (2fr, 1fr),
+      gutter: 0.5em,
+      align: (right, left),
+      strong[
+        #opts.spell.on #date.day(). #translatedMonth(date, opts.lang)
+        #date.year(), #opts.spell.ho:
+      ],
+      grid(
+        row-gutter: 0.5em,
+        ..authors.map(author => strong(author)),
+      ),
+    )
   },
   lab:      (course, title, authors, date) => context {
     let course = if type(course) == array { course.at(0) } else { course }
