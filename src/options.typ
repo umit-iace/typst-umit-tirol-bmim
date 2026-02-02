@@ -8,6 +8,7 @@
   logo-with-text: false,
   show-solution: none, // none, "inline", "bottom"
   task-show: none,
+  task-show-points: true,
   task-wrap-counter: none,
   font: ("New Computer Modern",),
   size: 12pt,

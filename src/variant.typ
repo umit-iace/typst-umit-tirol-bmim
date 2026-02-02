@@ -149,10 +149,12 @@
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
   show-solution: none, // none, "inline", "bottom"
+  task-show-points: false,
   ..chosen
 ) = { body => {
   option-set(
     (task-show: task.style-heading)
+    + (task-show-points: task-show-points)
     + (show-solution: show-solution)
     + chosen.named()
   )
@@ -292,12 +294,14 @@
   course: none,
   authors: none,
   show-solution: none, // none, "inline", "bottom"
+  task-show-points: false,
   date: datetime.today(),
   ..chosen,
 ) = { body => {
   option-set(
     (task-show: task.style-heading)
     + (show-solution: show-solution)
+    + (task-show-points: task-show-points)
     + chosen.named()
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
   )

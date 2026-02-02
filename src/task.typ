@@ -20,7 +20,7 @@
     [#spell.task #tasknum]
     if name != none { h(1em) + name }
     h(1fr)
-    [#spell.poi: #points]
+    if opts.task-show-points [#spell.poi: #points]
   }
 
   #show heading: set block(above: 0pt)
@@ -139,14 +139,14 @@
       description
     )
 
-    let show-points(p) = text(
+    let show-points(p) = if opts.task-show-points {text(
       fill: color.green,
       grid(
         columns: 2,
         repeat("." + h(2.5pt)),
         [$Sigma$ #p P.]
       )
-    )
+    )}
 
     let sol-style = if is-super { (it, p) => [+ #it \ #show-points(p) ] }
                     else { (it, p) => [#it \ #show-points(p) ] }
