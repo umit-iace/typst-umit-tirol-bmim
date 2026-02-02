@@ -88,13 +88,13 @@
   body
 }
 
-#let bmim-exam(
+#let exam(
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   title: none, // str or content
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
   total-time: none, // str or content
-  show-solution: none, // none, inline, bottom
+  show-solution: none, // none, "inline", "bottom"
   empty-sheets: auto, // none, auto (= 1 per task), int
   show-hints: true, // false, true
   ..chosen // other options: theme, logo-with-text, size, etc
@@ -121,7 +121,7 @@
 
   body
 
-  if show-solution == bottom {
+  if show-solution == "bottom" {
     pagebreak(weak:true)
     task.solution-bottom
   }
@@ -143,12 +143,12 @@
   }
 }}
 
-#let bmim-exercise(
+#let exercise(
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   title: none, // str or content
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
-  show-solution: none, // none, inline, bottom
+  show-solution: none, // none, "inline", "bottom"
   ..chosen
 ) = { body => {
   option-set(
@@ -170,18 +170,18 @@
 
   body
 
-  if show-solution == bottom {
+  if show-solution == "bottom" {
     pagebreak(weak:true)
     task.solution-bottom
   }
 }}
 
-#let bmim-lab(
+#let lab(
   title: none, // either [Title] , or ([Topic], [Title])
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
-  show-solution: none, // none, inline, bottom
+  show-solution: none, // none, "inline", "bottom"
   ..chosen,
 ) = { body => {
   option-set(
@@ -205,13 +205,13 @@
 
   body
 
-  if show-solution == bottom {
+  if show-solution == "bottom" {
     pagebreak(weak:true)
     task.solution-bottom
   }
 }}
 
-#let bmim-lecture(
+#let lecture(
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
@@ -225,7 +225,7 @@
   body
 }}
 
-#let bmim-poster(
+#let poster(
   title: none, // str or content
   authors: none, // array of str or content
   page: "a2", // pagesize
@@ -260,7 +260,7 @@
   body
 }}
 
-#let bmim-report(
+#let report(
   title: none, // str or content
   course: none, // either [Course Name] , or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
@@ -288,10 +288,10 @@
   body
 }}
 
-#let bmim-workbook(
+#let workbook(
   course: none,
   authors: none,
-  show-solution: none, // none, inline, bottom
+  show-solution: none, // none, "inline", "bottom"
   date: datetime.today(),
   ..chosen,
 ) = { body => {
@@ -345,7 +345,7 @@
 
   body
 
-  if show-solution == bottom {
+  if show-solution == "bottom" {
     pagebreak(weak:true)
     task.solution-bottom
   }
