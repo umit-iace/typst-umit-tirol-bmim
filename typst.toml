@@ -1,11 +1,12 @@
 [package]
 name = "typst-umit-tirol-bmim"
-version = "0.1.0"
+version = "0.2.0"
 entrypoint = "src/lib.typ"
 authors = ["IACE <https://github.com/umit-iace>"]
 license = "MIT"
-description = "Template for exams/labs for UMIT TIROL/BMIM/IACE."
+description = "Template for exams/labs/poster/lectures/reports/workbooks/exercises for UMIT TIROL/BMIM/IACE."
 repository = "https://github.com/umit-iace/typst-umit-tirol-bmim"
-keywords = ["UMIT TIROL", "IACE", "Report", "Exam", "Article"]
-categories = ["article"]
+keywords = ["UMIT TIROL", "IACE", "Lab", "Exam", "Lecture", "Poster", "Report", "Workbook", "Exercise"]
+categories = ["office"]
+disciplines = ["education"]
 exclude = [".github/", "example/", "*.pdf"]

@@ -1,4 +1,4 @@
-#import "@local/typst-umit-tirol-bmim:0.1.0" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, important, tip, example, hint
+#import "@local/typst-umit-tirol-bmim:0.2.0" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, important, tip, example, hint
 
 #show: bmim.lab(
   title: ("Parameteridentifikation", "Motor mit Drehlast"),

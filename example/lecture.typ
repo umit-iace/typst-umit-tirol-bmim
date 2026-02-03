@@ -1,4 +1,4 @@
-#import "@local/typst-umit-tirol-bmim:0.1.0" as bmim
+#import "@local/typst-umit-tirol-bmim:0.2.0" as bmim
 
 #show: bmim.lecture(
   course: ([Advanced Control],[AC]),
