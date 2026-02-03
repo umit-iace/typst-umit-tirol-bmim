@@ -37,7 +37,7 @@
       sym.space.nobreak.narrow
       str(loc.page())
     }
-    [Lösung auf #link(loc, msg).]
+    [_Lösung auf #link(loc, msg)._]
   }
 ]
 
