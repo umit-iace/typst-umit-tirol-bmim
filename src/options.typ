@@ -30,6 +30,14 @@
       } else {
         o.at(key) = val
       }
+      if key == "show-solution" {
+        let recognized = (none, "inline", "bottom")
+        assert( val in recognized, message:
+          "Option 'show-solution' must be one of ["+
+          recognized.map(repr).join(", ") +
+          "], but was set to " + repr(val)
+        )
+      }
     }
     return o
   })
