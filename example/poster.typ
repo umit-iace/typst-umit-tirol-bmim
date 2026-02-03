@@ -1,4 +1,4 @@
-#import "@local/typst-umit-tirol-bmim:0.1.0" as bmim: poster-box
+#import "@local/typst-umit-tirol-bmim:0.2.0" as bmim: poster-box
 
 #show: bmim.poster(
 	title:[Regelungskonzepte für hochtransiente, effizienz- und emissionsoptimierte
