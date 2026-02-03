@@ -1,0 +1,92 @@
+# source this script to prepare some common environment variables
+
+# adapted from https://github.com/johannes-wolf/cetz/blob/35c0868378cea5ad323cc0d9c2f76de8ed9ba5bd/scripts/package
+# licensed under Apache License 2.0
+
+# Local package directories per platform
+if [[ "$OSTYPE" == "linux"* ]]; then
+  DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  DATA_DIR="$HOME/Library/Application Support"
+else
+  DATA_DIR="${APPDATA}"
+fi
+
+function read-toml() {
+  local file="$1"
+  local key="$2"
+  # Read a key value pair in the format: <key> = "<value>"
+  # stripping surrounding quotes.
+  perl -lne "print \"\$1\" if /^${key}\\s*=\\s*\"(.*)\"/" < "$file"
+}
+
+function resolve-target() {
+  local target="$1"
+
+  if [[ "$target" == "@local" ]]; then
+    echo "${DATA_DIR}/typst/packages/local"
+  elif [[ "$target" == "@preview" ]]; then
+    echo "${DATA_DIR}/typst/packages/preview"
+  else
+    echo "$target"
+  fi
+}
+
+# recursively print all files that are not excluded via .typstignore
+function enumerate {
+  local root="$1"
+  if [[ -f "$root" ]]; then
+    echo "$root"
+  else
+    local files
+    readarray -t files < <(find "$root" \
+      -mindepth 1 -maxdepth 1 \
+      -not -name .git \
+      -not -name .typstignore)
+
+    local f
+    for f in "${files[@]}"; do
+      local include
+      include=1
+
+      local ignore
+      for ignore in "${ignores[@]}"; do
+        if [[ "$ignore" =~ ^! ]]; then
+          ignore="${ignore:1}"
+          if [[ "$f" == ./$ignore ]]; then
+            include=1
+          fi
+        elif [[ "$f" == ./$ignore ]]; then
+          include=0
+        fi
+      done
+      if [[ "$include" == 1 ]]; then
+        enumerate "$f"
+      fi
+    done
+  fi
+}
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)/.." # macOS has no realpath
+PKG_PREFIX="$(read-toml "$ROOT/typst.toml" "name")"
+VERSION="$(read-toml "$ROOT/typst.toml" "version")"
+
+TARGET="$(resolve-target "${1:?Missing target path, @local or @preview}")"
+TARGET="${TARGET:?}/${PKG_PREFIX:?}/${VERSION:?}"
+
+echo "Install dir: $TARGET"
+
+mkdir -p "$TARGET"
+
+# ignore rules
+readarray -t ignores < <(grep -v '^#' .typstignore | grep '[^[:blank:]]')
+
+# List of all files
+readarray -t files < <(enumerate ".")
+# declare -p files >&2
+
+for f in "${files[@]}"; do
+  mkdir -p "$TARGET/$(dirname "$f")" 2>/dev/null
+  cp -r "$ROOT/$f" "$TARGET/$f"
+done
+

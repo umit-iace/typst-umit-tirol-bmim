@@ -33,9 +33,14 @@ jobs:
           sudo apt update
           sudo apt install -y lmodern cm-super fonts-cmu
 
-      - name: Install typst
+      - name: Setup typst
+        uses: typst-community/setup-typst@v4
+        with:
+          typst-version: latest
+
+      - name: Determine and check package metadata
         run: |
-          sudo snap install typst
+          . scripts/setup @local
 
       - name: Build Examples
         run: |
@@ -43,14 +48,14 @@ jobs:
           for file in `ls example/*.typ`; do
             ex=${file##*/}
             pdf=${ex%typ}pdf
-            typst c ${file}
+            typst c ${file} --root ./
             mv ${file%typ}pdf build_output/bmim-${pdf}
           done
 
       - name: Upload Artifacts
         id: deployment
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: Bmim-Pdf
+          name: BMIM-Pdf
           path: build_output/
 
