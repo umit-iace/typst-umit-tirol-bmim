@@ -17,7 +17,7 @@
 
 ## Example
 
-See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim-practical/actions/runs/) of last run for an example output, and
+See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of last run for example variants:
 - [example/exam.typ](example/exam.typ) for the corresponding exam Typst file,
 - [example/exercise.typ](example/exercise.typ) for the corresponding exercise Typst file.
 - [example/lab.typ](example/lab.typ) for the corresponding laboratory Typst file.
