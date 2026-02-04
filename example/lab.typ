@@ -9,6 +9,8 @@
   show-solution: "inline",
 )
 
+#outline()
+
 = First Section
 
 #lorem(10) @netwok2020
