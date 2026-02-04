@@ -13,11 +13,12 @@
 #let t-label-sol(lbl) = label("bmim-"+str(lbl)+"-sol")
 
 
-#let style-heading(lbl, tasknum, name, points, task) = context [
+#let style-heading(lbl, tasknum, name, points, task, lvl:1) = context [
   #let opts = options.final()
   #let spell = opts.spell
   #let msg = {
-    [#spell.task #tasknum]
+    [#spell.task #numbering("1.1.a", ..t-count.get())
+    ]
     if name != none { h(1em) + name }
     h(1fr)
     if opts.task-show-points [#spell.poi: #points]
@@ -25,7 +26,8 @@
 
   #show heading: set block(above: 0pt)
   #block(above:1.2em, below:0pt,sticky:true, lbl)
-  = #msg <bmim:nonumber>
+
+  #heading(level:lvl, msg, numbering: none)
 
   #task#parbreak()
   #if opts.show-solution == "bottom" {

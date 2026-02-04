@@ -16,8 +16,8 @@
   set par(
     leading: 0.55em, spacing: 0.55em, justify: true,
     justification-limits: (
-			tracking: (min: -0.01em, max: 0.02em),
-		)
+      tracking: (min: -0.01em, max: 0.02em),
+    )
   )
   set page(
     margin: (
@@ -118,7 +118,6 @@
   show heading.where(level: 1): heading-colored
 
   (titleblock.exam)(course, title, authors, date, total-time, show-hints)
-
   body
 
   if show-solution == "bottom" {
@@ -299,8 +298,9 @@
   ..chosen,
 ) = { body => {
   option-set(
-    (task-show: task.style-heading)
+    (task-show: task.style-heading.with(lvl:2))
     + (show-solution: show-solution)
+    + (task-wrap-counter: (counter(heading), 1))
     + (task-show-points: task-show-points)
     + chosen.named()
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
@@ -312,40 +312,39 @@
 
   set page(
     header: header.workbook,
-    footer: (footer.workbook)(),
+    footer: (footer.workbook)(course),
     numbering: "1",
   )
 
+  set outline(depth: 1)
   let headings-on-odd-page(it) = {
-		show heading.where(level: 1): it => {
-			{
-				set page(header: none, footer: none, numbering: none)
-				pagebreak(to: "odd")
-			}
-			it
-		}
-		it
-	}
+    show heading.where(level: 1): it => {
+      pagebreak(to: "odd")
+      it
+    }
+    it
+  }
   set heading(numbering: "1.1")
   show heading.where(level:2): heading-colored
   show heading.where(level:1): it => context {
-    set block(inset: (y: 5em))
+    set block(inset: (y: 2em))
     show: strong
     show: block
     if it.numbering == none { it.body; return }
     let n(..c) = numbering(it.numbering, ..c)
     [
-
       #set text(1.3em)
       Kapitel #n(..counter(heading).get())
-      #v(2em)
+      #v(1em)
       #set text(1.5em)
       #it.body
     ]
   }
-  show: headings-on-odd-page
 
   outline()
+  counter(page).update(1)
+
+  show: headings-on-odd-page
 
   body
 
