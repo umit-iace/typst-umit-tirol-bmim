@@ -222,20 +222,29 @@
   },
   slides: () => context {
   },
-  workbook: () => context {
-    if page-is-chap-start() {
-      align(center,page-number())
-    } else {
-      set text(size: 11pt)
-      line(length: 100%, stroke: 0.5pt)
-      let foot = [ Übungsaufgaben ]
-      let pagenum = counter(page).display("1")
-      if calc.odd(here().page()) and here().page() != 1 {
-        foot + h(1fr) + pagenum
-      } else {
-        pagenum + h(1fr) + foot
-      }
-    }
+  workbook: (course) => context {
+    let opts = options.final()
+    let course = if type(course) == array { course.at(1) } else { course }
+    set text(size: 11pt)
+    line(length: 100%, stroke: 0.5pt)
+    let foot = [
+      #course - Übungsaufgaben
+    ]
+    let pagenum = counter(page).display("1")
+    if calc.odd(here().page()) and here().page() != 1 [
+      #foot
+      #h(1fr)
+      #pagenum
+    ]
+    else if here().page() == 1 [
+      #foot
+      #h(1fr)
+      #pagenum
+    ] else [
+      #pagenum
+      #h(1fr)
+      #foot
+    ]
   },
 )
 
@@ -418,20 +427,7 @@
     let course = if type(course) == array { course.at(0) } else { course }
     set align(center+horizon)
     set par(spacing: 3em)
-    place(top,[
-      #box(image("./../assets/iace.svg", height: 2.02em))
-      #h(1fr)
-      #box(
-        image(
-          height: 2.02em,
-          if opts.lang == "en" {
-            "./../assets/logo_umit_eng.svg"
-          } else {
-            "./../assets/logo_umit_de.svg"
-          }
-        ))
-      ]
-    )
+
     [
       #smallcaps[
         #set text(1.3em)
@@ -452,11 +448,21 @@
       #[
         #set text(1.1em)
         Institut für Automatisierungs- und Regelungstechnik
-      ]
 
+        #grid(
+          columns: (auto, auto),
+          grid.cell(
+            pad(
+              left: -0.6em,
+              right: -0.2em,
+              image("./../assets/iace.svg", height: 2.65em)
+            )
+          )
+        )
+      ]
       #print-date(date)
     ]
-
+    pagebreak(to: "odd")
   },
 )
 
