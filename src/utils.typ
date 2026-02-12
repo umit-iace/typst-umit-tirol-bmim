@@ -53,3 +53,18 @@
     return value == none
   }
 }
+
+#let getmarginx() = {
+  // TODO actually implement all cases
+  if page.margin == auto {
+    return 2.5cm
+  } else if type(page.margin) == length {
+    return page.margin
+  } else {
+    let it = page.margin.left
+    if it == auto {
+      return 2.5cm * 2
+    }
+    return it
+  }
+}
