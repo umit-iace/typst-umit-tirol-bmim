@@ -554,7 +554,7 @@
         #std.heading(heading)
         #block(
             height: .5em,
-            width: 20%,
+            width: 7em,
             fill: opts.theme.lolight,
             above: .75em,
             below: 1.25em,

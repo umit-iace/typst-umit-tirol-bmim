@@ -266,8 +266,10 @@
         )
         show: bmim-common
 
+        set document(title: title)
+
         let base_margin = 3em
-        let margin = (top: 17%, x: base_margin, bottom: base_margin)
+        let margin = (top: 17%, x: base_margin, bottom: 7%)
 
         set std.page(
             paper: paper,
@@ -328,7 +330,14 @@
                     ],
                 )))
             },
-            footer: [],
+            footer: context {
+                let opts = options.final()
+                let mx = getmarginx()
+                layout(l => move(dx: -mx, box(
+                    height: l.height,
+                    width: page.width,
+                    fill: opts.theme.primary)))},
+            footer-descent: base_margin,
             background: [
                 #place(center + bottom, {
                     image("../assets/bg.jpg", width: 100%)
@@ -336,13 +345,14 @@
                 #place(bottom, {
                     box(width: 100%, height: 52%, fill: gradient.linear(
                         white,
-                        white.transparentize(60%),
+                        white.transparentize(30%),
                         angle: 90deg,
                     ))
                 })
             ],
         )
         set heading(numbering: "1.")
+        set list(marker: ([‣], [--]))
 
         body
     }
