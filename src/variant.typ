@@ -1,3 +1,5 @@
+#import "@preview/rustycure:0.2.0": qr-code
+
 #import "utils.typ": *
 #import "layout.typ": *
 #import "list.typ": *
@@ -248,6 +250,7 @@
 #let poster(
     title: none, // str or content
     authors: none, // array of str or content
+    affiliations: none, // array of str or content
     paper: "a2", // paper size
     orientation: "landscape", // "landscape", "portrait"
     date: datetime.today(), // datetime or content
@@ -306,15 +309,23 @@
                                         height: .5em,
                                         width: 38.2%,
                                         fill: opts.theme.lolight,
-                                        below: 2em,
                                     )
-                                    #box[
+                                    #block(above: 2em)[
                                         #text(
                                             size: 1.3em,
                                             fill: white,
                                             font: "Noto Sans",
                                             hyphenate: false,
                                             authors.join([\ ]),
+                                        )
+                                    ]
+                                    #block(above: 1em)[
+                                        #text(
+                                            size: 1em,
+                                            fill: white,
+                                            font: "Noto Sans",
+                                            hyphenate: false,
+                                            affiliations.join([\ ]),
                                         )
                                     ]
                                 ]
@@ -336,7 +347,58 @@
                 layout(l => move(dx: -mx, box(
                     height: l.height,
                     width: page.width,
-                    fill: opts.theme.primary)))},
+                    fill: opts.theme.primary)[
+                    #grid(
+                            columns: (auto, auto, 1fr, auto, auto),
+                            inset: (x: mx, y: 0.7em),
+                            gutter: 0em,
+                            // gutter: mx,
+                    )[
+                      #let vcard = "
+                      BEGIN:VCARD
+                      VERSION:4.0
+                      N:Ecklebe;Stefan;;Dr.-Ing.;
+                      FN:Dr.-Ing. Stefan Ecklebe
+                      ORG:UMIT-TIROL
+                      ROLE:Universitätsassistent
+                      TEL;TYPE=work,voice;VALUE=uri:tel:+4350-8648-3832
+                      ADR;TYPE=work;LABEL=\"Eduard-Wallnöfer-Zentrum 1\nA-6060 Hall n Tirol\nÖsterreich\":;;Eduard-Wallnöfer-Zentrum 1;Hall in Tirol;;A-6060;Austria
+                      EMAIL:stefan.ecklebe@umit-tirol.at
+                      REV:20260212T221110Z
+                      END:VCARD
+                      "
+                      // TITLE:Redaktion & Gestaltung
+                      // PHOTO;MEDIATYPE=image/jpeg:http://commons.wikimedia.org/wiki/File:Erika_Mustermann_2010.jpg
+                      #qr-code(
+                          height: 100%,
+                          quiet-zone: false,
+                          dark-color: white,
+                          light-color: opts.theme.primary,
+                          vcard,
+                      )
+                    ][
+                      #set text(size: .8em, fill: white)
+                      // Kontakt:\
+                      Dr.-Ing. Stefan Ecklebe, Universitätsassistent \
+                      Eduard-Wallnöfer-Zentrum 1, A-6060 Hall in Tirol,                   Österreich\
+                      *Tel.* +4350 8648 3832\
+                      *Email:* #contact
+                    ][
+                      // filler
+                    ][
+                      #set text(size: .8em, fill: white)
+                      Institut für Automatisierungstechnik -- IACE\
+                      http://iace.umit-tirol.at
+                    ][
+                      #qr-code(
+                          height: 100%,
+                          quiet-zone: false,
+                          dark-color: white,
+                          light-color: opts.theme.primary,
+                          "https://umit-tirol.at/iace",
+                      )
+                  ]
+                    ]))},
             footer-descent: base_margin,
             background: [
                 #place(center + bottom, {
