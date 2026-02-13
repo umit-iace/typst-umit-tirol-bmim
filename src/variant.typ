@@ -347,14 +347,17 @@
                 layout(l => move(dx: -mx, box(
                     height: l.height,
                     width: page.width,
-                    fill: opts.theme.primary)[
+                    inset: (x: mx, y: 0.7em),
+                    fill: opts.theme.primary,
+                )[
+                    #set text(size: .8em, fill: white)
                     #grid(
-                            columns: (auto, auto, 1fr, auto, auto),
-                            inset: (x: mx, y: 0.7em),
-                            gutter: 0em,
-                            // gutter: mx,
+                        columns: (auto, auto, 1fr, auto, auto, auto),
+                        gutter: 1em,
+                        // fill: blue,
+                        // gutter: mx,
                     )[
-                      #let vcard = "
+                        #let vcard = "
                       BEGIN:VCARD
                       VERSION:4.0
                       N:Ecklebe;Stefan;;Dr.-Ing.;
@@ -367,38 +370,56 @@
                       REV:20260212T221110Z
                       END:VCARD
                       "
-                      // TITLE:Redaktion & Gestaltung
-                      // PHOTO;MEDIATYPE=image/jpeg:http://commons.wikimedia.org/wiki/File:Erika_Mustermann_2010.jpg
-                      #qr-code(
-                          height: 100%,
-                          quiet-zone: false,
-                          dark-color: white,
-                          light-color: opts.theme.primary,
-                          vcard,
-                      )
+                        // TITLE:Redaktion & Gestaltung
+                        // PHOTO;MEDIATYPE=image/jpeg:http://commons.wikimedia.org/wiki/File:Erika_Mustermann_2010.jpg
+                        #qr-code(
+                            height: 100%,
+                            quiet-zone: false,
+                            dark-color: white,
+                            light-color: opts.theme.primary,
+                            vcard,
+                        )
                     ][
-                      #set text(size: .8em, fill: white)
-                      // Kontakt:\
-                      Dr.-Ing. Stefan Ecklebe, Universitätsassistent \
-                      Eduard-Wallnöfer-Zentrum 1, A-6060 Hall in Tirol,                   Österreich\
-                      *Tel.* +4350 8648 3832\
-                      *Email:* #contact
+                        #grid(
+                            columns: 2,
+                            rows: auto,
+                            gutter: .7em,
+                            // TODO take these from args
+                            [*Kontakt:*],
+                            [Dr.-Ing. Stefan Ecklebe, Universitätsassistent],
+
+                            [*Adresse:*],
+                            [Eduard-Wallnöfer-Zentrum 1, A-6060 Hall in Tirol,
+                                Österreich],
+
+                            [*Tel.*], [+4350 8648 3832],
+                            [*Email:*], [#contact],
+                        )
                     ][
-                      // filler
+                        // filler
                     ][
-                      #set text(size: .8em, fill: white)
-                      Institut für Automatisierungstechnik -- IACE\
-                      http://iace.umit-tirol.at
+                        // #set par(leading: .7em)
+                        // Institut für Automatisierungs- und Regelungstechnik\
+                        // UMIT TIROL –
+                        // // Die Tiroler Privatuniversität\
+                        // Private Universität für Gesundheitswissenschaften \
+                        // und -technologie GmbH \
+                        // https://iace.umit-tirol.at
                     ][
-                      #qr-code(
-                          height: 100%,
-                          quiet-zone: false,
-                          dark-color: white,
-                          light-color: opts.theme.primary,
-                          "https://umit-tirol.at/iace",
-                      )
-                  ]
-                    ]))},
+                        #set align(center)
+                        #image("../assets/iace_white.svg", height: 50%)
+                        #image("../assets/logo_umit_white.svg", height: 40%)
+                    ][
+                        #qr-code(
+                            height: 100%,
+                            quiet-zone: false,
+                            dark-color: white,
+                            light-color: opts.theme.primary,
+                            "https://umit-tirol.at/iace",
+                        )
+                    ]
+                ]))
+            },
             footer-descent: base_margin,
             background: [
                 #place(center + bottom, {
