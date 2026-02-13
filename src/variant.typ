@@ -257,6 +257,7 @@
     event: none, // str or content
     location: none, // str or content
     contact: none, // dict with keys: title, name, address(dict), telephone, email, role,
+    thanks: none, // str or content
     ..chosen, // other options: theme, size, etc
 ) = {
     body => context {
@@ -288,19 +289,17 @@
                     height: l.height,
                     width: page.width,
                     fill: opts.theme.primary,
-                    pad(x: mx, top: mx, bottom: mx / 2)[
+                    pad(x: mx, top: 2/3*mx, bottom: 1/3*mx)[
                         #grid(
-                            // columns: (61.8%, 38.2%),
                             columns: (2fr, 1fr),
                             gutter: mx,
                             [
                                 // Title and Authors
+                                #set text(fill: white)
                                 #align(left + top)[
                                     #set par(leading: .5em)
                                     #text(
                                         size: 2.8em,
-                                        fill: white,
-                                        font: "Noto Sans",
                                         weight: "bold",
                                         hyphenate: false,
                                         title,
@@ -309,23 +308,17 @@
                                         above: 1.5em,
                                         height: .5em,
                                         width: 38.2%,
-                                        fill: opts.theme.lolight,
+                                        fill: opts.theme.highlight,
                                     )
                                     #block(above: 2em)[
                                         #text(
                                             size: 1.3em,
-                                            fill: white,
-                                            font: "Noto Sans",
-                                            hyphenate: false,
                                             authors.join([\ ]),
                                         )
                                     ]
                                     #block(above: 1em)[
                                         #text(
                                             size: 1em,
-                                            fill: white,
-                                            font: "Noto Sans",
-                                            hyphenate: false,
                                             affiliations.join([\ ]),
                                         )
                                     ]
@@ -333,7 +326,7 @@
                             ],
                             grid.vline(stroke: .125em + white),
                             [
-                                //  Logos
+                                // Own and partner logos
                                 #align(center + horizon)[
                                     #image("../assets/logos.pdf", height: 100%)
                                 ]
@@ -342,6 +335,7 @@
                     ],
                 )))
             },
+            footer-descent: base_margin,
             footer: context {
                 let mx = getmarginx()
                 layout(l => move(dx: -mx, box(
@@ -355,11 +349,7 @@
                         columns: (auto, auto, 1fr, 20%, 1fr, auto, auto),
                         gutter: 1em,
                         // fill: blue,
-                        // gutter: mx,
                     )[
-
-                        // TITLE:Redaktion & Gestaltung
-                        // PHOTO;MEDIATYPE=image/jpeg:http://commons.wikimedia.org/wiki/File:Erika_Mustermann_2010.jpg
                         #qr-code(
                             height: 100%,
                             quiet-zone: false,
@@ -380,31 +370,31 @@
                             [*Adresse:*],
                             [#adr.streetnumber\ #adr.zip #adr.town, #adr.country],
 
-                            [*Tel.*], [#contact.telephone],
+                            [*Telefon:*], [#contact.telephone],
                             [*Email:*], [#contact.email],
                         )
                     ][
                         // filler
                     ][
+                        // acknowledgements
                         #set par(justify: false)
                         #set align(center + horizon)
                         #set text(weight: "bold")
-                        Diese Forschung wurde durch den Österreichischen
-                        Wissenschaftsfonds (FWF) [I 6519-N] finanziert.
-                        // #set par(leading: .7em)
-                        // Institut für Automatisierungs- und Regelungstechnik\
-                        // UMIT TIROL –
-                        // // Die Tiroler Privatuniversität\
-                        // Private Universität für Gesundheitswissenschaften \
-                        // und -technologie GmbH \
-                        // https://iace.umit-tirol.at
+                        #thanks
                     ][
                         // filler
                     ][
+                        // logos
                         #set align(center)
                         #image("../assets/iace_white.svg", height: 50%)
-                        #image("../assets/logo_umit_white.svg", height: 40%)
+                        // #image("../assets/logo_umit_white.svg", height: 40%)
+                        *Institut für Automatisierungs- und Regelungstechnik*\
+                        // UMIT TIROL – Die Tiroler Privatuniversität\
+                        // Private Universität für Gesundheitswissenschaften \
+                        // und -technologie GmbH \
+                        Webpräsenz: https://iace.umit-tirol.at
                     ][
+                        // institute website
                         #qr-code(
                             height: 100%,
                             quiet-zone: false,
@@ -415,7 +405,6 @@
                     ]
                 ]))
             },
-            footer-descent: base_margin,
             background: [
                 #place(center + bottom, {
                     image("../assets/bg.jpg", width: 100%)

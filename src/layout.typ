@@ -549,7 +549,7 @@
         #block(
             height: .5em,
             width: 7em,
-            fill: opts.theme.lolight,
+            fill: opts.theme.lowlight,
             above: .75em,
             below: 1.25em,
         )
