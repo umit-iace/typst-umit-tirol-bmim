@@ -543,13 +543,7 @@
 
 #let poster-box(heading, content, height: none) = context {
     let opts = options.final()
-    show std.heading.where(level: 1): it => {
-        set text(fill: opts.theme.neutral-darkest, size: 1.2em)
-        it.body
-    }
     set align(left)
-    // block(fill: opts.theme.neutral-lightest.transparentize(50%),
-    // outset: 1em, inset: 1em, radius: 1mm)
     [
         #std.heading(heading)
         #block(
@@ -562,11 +556,6 @@
         #block(
             width: 100%,
             height: if height == none { auto } else { height },
-            // outset: (x: 0.4em, y: 0.2em),
-            // inset: (x: 0.4em, y: 0.2em),
-            // fill: opts.theme.highlight.lighten(90%),
-            // stroke: opts.theme.highlight + 0.1em,
-
             content,
         )
     ]
@@ -575,13 +564,12 @@
 #let poster-vsep = context {
     let opts = options.final()
     set align(center)
-        block(
-            height: .25em,
-            width: 61.8%,
-            fill: opts.theme.neutral-lightest,
-            above: 2em,
-            below: 2em,
-        )
+    block(
+        height: .25em,
+        width: 61.8%,
+        fill: opts.theme.neutral-lightest,
+        above: 1em,
+    )
 }
 
 #let poster-hsep = context {

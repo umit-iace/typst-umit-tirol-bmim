@@ -259,7 +259,7 @@
     contact: none, // str or content
     ..chosen, // other options: theme, size, etc
 ) = {
-    body => {
+    body => context {
         option-set(
             chosen.named()
                 + if "size" not in chosen.named() { (size: 20pt) }
@@ -267,12 +267,14 @@
                     (logo-with-text: true)
                 },
         )
+        let opts = options.final()
+
         show: bmim-common
 
         set document(title: title)
 
         let base_margin = 3em
-        let margin = (top: 17%, x: base_margin, bottom: 7%)
+        let margin = (top: 16%, x: base_margin, bottom: 7%)
 
         set std.page(
             paper: paper,
@@ -281,7 +283,6 @@
             margin: margin,
             header-ascent: base_margin,
             header: context {
-                let opts = options.final()
                 let mx = getmarginx()
                 layout(l => move(dx: -mx, box(
                     height: l.height,
@@ -342,7 +343,6 @@
                 )))
             },
             footer: context {
-                let opts = options.final()
                 let mx = getmarginx()
                 layout(l => move(dx: -mx, box(
                     height: l.height,
@@ -350,9 +350,9 @@
                     inset: (x: mx, y: 0.7em),
                     fill: opts.theme.primary,
                 )[
-                    #set text(size: .8em, fill: white)
+                    #set text(size: .7em, fill: white)
                     #grid(
-                        columns: (auto, auto, 1fr, auto, auto, auto),
+                        columns: (auto, auto, 1fr, 20%, 1fr, auto, auto),
                         gutter: 1em,
                         // fill: blue,
                         // gutter: mx,
@@ -383,13 +383,15 @@
                         #grid(
                             columns: 2,
                             rows: auto,
-                            gutter: .7em,
+                            gutter: .55em,
                             // TODO take these from args
                             [*Kontakt:*],
-                            [Dr.-Ing. Stefan Ecklebe, Universitätsassistent],
+                            [Dr.-Ing. Stefan Ecklebe
+                                // , Universitätsassistent
+                            ],
 
                             [*Adresse:*],
-                            [Eduard-Wallnöfer-Zentrum 1, A-6060 Hall in Tirol,
+                            [Eduard-Wallnöfer-Zentrum 1,\ A-6060 Hall in Tirol,
                                 Österreich],
 
                             [*Tel.*], [+4350 8648 3832],
@@ -398,6 +400,11 @@
                     ][
                         // filler
                     ][
+                        #set par(justify: false)
+                        #set align(center + horizon)
+                        #set text(weight: "bold")
+                        Diese Forschung wurde durch den Österreichischen
+                        Wissenschaftsfonds (FWF) [I 6519-N] finanziert.
                         // #set par(leading: .7em)
                         // Institut für Automatisierungs- und Regelungstechnik\
                         // UMIT TIROL –
@@ -405,6 +412,8 @@
                         // Private Universität für Gesundheitswissenschaften \
                         // und -technologie GmbH \
                         // https://iace.umit-tirol.at
+                    ][
+                        // filler
                     ][
                         #set align(center)
                         #image("../assets/iace_white.svg", height: 50%)
@@ -434,7 +443,12 @@
                 })
             ],
         )
-        set heading(numbering: "1.")
+        // format headings
+        set heading(numbering: none)
+        show heading: set text(fill: opts.theme.neutral-darkest)
+        show heading.where(level: 1): set text(size: 1.2em)
+
+
         set list(marker: ([‣], [--]))
 
         body
