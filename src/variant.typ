@@ -256,7 +256,7 @@
     date: datetime.today(), // datetime or content
     event: none, // str or content
     location: none, // str or content
-    contact: none, // str or content
+    contact: none, // dict with keys: title, name, address(dict), telephone, email, role,
     ..chosen, // other options: theme, size, etc
 ) = {
     body => context {
@@ -357,19 +357,7 @@
                         // fill: blue,
                         // gutter: mx,
                     )[
-                        #let vcard = "
-                      BEGIN:VCARD
-                      VERSION:4.0
-                      N:Ecklebe;Stefan;;Dr.-Ing.;
-                      FN:Dr.-Ing. Stefan Ecklebe
-                      ORG:UMIT-TIROL
-                      ROLE:Universitätsassistent
-                      TEL;TYPE=work,voice;VALUE=uri:tel:+4350-8648-3832
-                      ADR;TYPE=work;LABEL=\"Eduard-Wallnöfer-Zentrum 1\nA-6060 Hall n Tirol\nÖsterreich\":;;Eduard-Wallnöfer-Zentrum 1;Hall in Tirol;;A-6060;Austria
-                      EMAIL:stefan.ecklebe@umit-tirol.at
-                      REV:20260212T221110Z
-                      END:VCARD
-                      "
+
                         // TITLE:Redaktion & Gestaltung
                         // PHOTO;MEDIATYPE=image/jpeg:http://commons.wikimedia.org/wiki/File:Erika_Mustermann_2010.jpg
                         #qr-code(
@@ -377,25 +365,23 @@
                             quiet-zone: false,
                             dark-color: white,
                             light-color: opts.theme.primary,
-                            vcard,
+                            build_mecard(contact),
                         )
                     ][
+                        #let adr = contact.address
                         #grid(
                             columns: 2,
                             rows: auto,
                             gutter: .55em,
                             // TODO take these from args
                             [*Kontakt:*],
-                            [Dr.-Ing. Stefan Ecklebe
-                                // , Universitätsassistent
-                            ],
+                            [#contact.firstname #contact.lastname],
 
                             [*Adresse:*],
-                            [Eduard-Wallnöfer-Zentrum 1,\ A-6060 Hall in Tirol,
-                                Österreich],
+                            [#adr.streetnumber\ #adr.zip #adr.town, #adr.country],
 
-                            [*Tel.*], [+4350 8648 3832],
-                            [*Email:*], [#contact],
+                            [*Tel.*], [#contact.telephone],
+                            [*Email:*], [#contact.email],
                         )
                     ][
                         // filler

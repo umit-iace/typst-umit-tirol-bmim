@@ -68,3 +68,39 @@
     return it
   }
 }
+
+#let vcard_template = "BEGIN:VCARD
+VERSION:4.0
+N:__LASTNAME__;__FIRSTNAME__;;__TITLE__;
+FN:__TITLE__ __FIRSTNAME__ __LASTNAME__
+ORG:UMIT-TIROL
+ROLE:__ROLE__
+TEL;TYPE=work,voice;VALUE=uri:tel:__TEL__
+ADR;TYPE=work;LABEL=\"__STREETNUMBER__\n__ZIP__ __TOWN__\n__COUNTRY__\":;;__STREETNUMBER__;__TOWN__;;__ZIP__;__COUNTRY__
+EMAIL:__EMAIL__
+REV:__REV__
+END:VCARD
+"
+#let build_vcard(contact) = {
+  let rev = (datetime.today().display("[year][month][day]"),"T").join("")
+  return vcard_template
+    .replace("__TITLE__", contact.title)
+    .replace("__FIRSTNAME__", contact.firstname)
+    .replace("__LASTNAME__", contact.lastname)
+    .replace("__TITLE__", contact.title)
+    .replace("__ROLE__", contact.role)
+    .replace("__TEL__", contact.telephone)
+    .replace("__EMAIL__", contact.email)
+    .replace("__REV__", rev)
+}
+
+#let mecard_template = "MECARD:N:__LASTNAME__,__FIRSTNAME__;TEL:__TEL__;EMAIL:__EMAIL__;;"
+
+#let build_mecard(contact) = {
+  return mecard_template
+    .replace("__FIRSTNAME__", contact.firstname)
+    .replace("__LASTNAME__", contact.lastname)
+    .replace("__TEL__", contact.telephone)
+    .replace("__EMAIL__", contact.email)
+}
+
