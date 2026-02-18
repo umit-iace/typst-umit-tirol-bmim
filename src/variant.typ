@@ -275,14 +275,14 @@
         set document(title: title)
 
         let base_margin = 3em
-        let margin = (top: 16%, x: base_margin, bottom: 7%)
+        let margin = (top: 15%, x: base_margin, bottom: 6%)
 
         set std.page(
             paper: paper,
             columns: if orientation == "landscape" { 3 } else { 2 },
             flipped: orientation == "landscape",
             margin: margin,
-            header-ascent: base_margin,
+            header-ascent: 2/3*base_margin,
             header: context {
                 let mx = getmarginx()
                 layout(l => move(dx: -mx, box(
@@ -335,7 +335,7 @@
                     ],
                 )))
             },
-            footer-descent: base_margin,
+            footer-descent: 2/3*base_margin,
             footer: context {
                 let mx = getmarginx()
                 layout(l => move(dx: -mx, box(
