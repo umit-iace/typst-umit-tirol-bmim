@@ -362,7 +362,7 @@
                         #grid(
                             columns: 2,
                             rows: auto,
-                            gutter: .55em,
+                            gutter: .45em,
                             // TODO take these from args
                             [*Kontakt:*],
                             [#contact.firstname #contact.lastname],
