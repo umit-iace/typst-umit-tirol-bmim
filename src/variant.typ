@@ -264,6 +264,7 @@
         option-set(
             chosen.named()
                 + if "size" not in chosen.named() { (size: 20pt) }
+                + if "lang" not in chosen.named() { (lang: "de") }
                 + if "logo-with-text" not in chosen.named() {
                     (logo-with-text: true)
                 },
@@ -282,14 +283,14 @@
             columns: if orientation == "landscape" { 3 } else { 2 },
             flipped: orientation == "landscape",
             margin: margin,
-            header-ascent: 2/3*base_margin,
+            header-ascent: 2 / 3 * base_margin,
             header: context {
                 let mx = getmarginx()
                 layout(l => move(dx: -mx, box(
                     height: l.height,
                     width: page.width,
                     fill: opts.theme.primary,
-                    pad(x: mx, top: 2/3*mx, bottom: 1/3*mx)[
+                    pad(x: mx, top: 2 / 3 * mx, bottom: 1 / 3 * mx)[
                         #grid(
                             columns: (2fr, 1fr),
                             gutter: mx,
@@ -326,16 +327,45 @@
                             ],
                             grid.vline(stroke: .125em + white),
                             [
+                            #set align(center)
+                            #box(inset: (left: mx, rest: 0em), height: 100%)[
+                                #set align(left + horizon)
                                 // Own and partner logos
-                                #align(center + horizon)[
-                                    #image("../assets/logos.pdf", height: 100%)
-                                ]
-                            ],
+                                // #grid(
+                                //     columns: (1fr, 1fr),
+                                //     inset: (x: 1em, y: 0em),
+                                //     gutter: 0em,
+                                //     [
+                                //         #image(
+                                //             "../assets/dfg_logo_schriftzug_weiss.svg",
+                                //             width: 100%,
+                                //         )
+                                //     ],
+                                //     [
+                                //         #image(
+                                //             "../assets/FWF_Logo_Zusatz_Weiß_RGB_DE.svg",
+                                //             width: 100%,
+                                //         )
+                                //     ],
+                                // )
+                                #image(
+                                    "../assets/dfg_logo_schriftzug_weiss.svg",
+                                    width: 80%,
+                                )
+                                #image(
+                                    "../assets/FWF_Logo_Zusatz_Weiß_RGB_DE.svg",
+                                    width: 80%,
+                                )
+                                #image(
+                                    "../assets/logo_umit_de_white.svg",
+                                    width: 90%,
+                                )
+                              ]],
                         )
                     ],
                 )))
             },
-            footer-descent: 2/3*base_margin,
+            footer-descent: 2 / 3 * base_margin,
             footer: context {
                 let mx = getmarginx()
                 layout(l => move(dx: -mx, box(
@@ -368,7 +398,8 @@
                             [#contact.firstname #contact.lastname],
 
                             [*Adresse:*],
-                            [#adr.streetnumber\ #adr.zip #adr.town, #adr.country],
+                            [#adr.streetnumber\ #adr.zip #adr.town,
+                                #adr.country],
 
                             [*Telefon:*], [#contact.telephone],
                             [*Email:*], [#contact.email],
