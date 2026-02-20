@@ -352,10 +352,12 @@
                                     "../assets/dfg_logo_schriftzug_weiss.svg",
                                     width: 80%,
                                 )
+                                #h(1fr)
                                 #image(
                                     "../assets/FWF_Logo_Zusatz_Weiß_RGB_DE.svg",
                                     width: 80%,
                                 )
+                                #h(1fr)
                                 #image(
                                     "../assets/logo_umit_de_white.svg",
                                     width: 90%,
