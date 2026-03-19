@@ -2,8 +2,100 @@
 #import "layout.typ": *
 #import "list.typ": *
 #import "task.typ"
+#import "slides.typ": *
 
 #let item-cnt = counter("item-counter")
+
+#let bmim-common-slides(body) = context {
+  let opts = options.final()
+  set text(
+    lang: opts.lang,
+    font: opts.font,
+    spacing: .5em,
+    size: opts.size,
+  )
+
+  show: touying-slides.with(
+    config-page(
+      paper: "presentation-" + opts.aspect-ratio,
+      header: self => {
+        set std.align(top)
+        utils.call-or-display(self, self.store.header)
+      },
+      // footer: self => {
+      //   set std.align(bottom)
+      //   set text(size: .5em)
+      //   utils.call-or-display(self, self.store.footer)
+      // },
+      header-ascent: 0em,
+      footer-descent: 0em,
+      margin: (top: 2em, bottom: 1.25em, x: 1.5em),
+    ),
+    config-common(
+      slide-fn: slide,
+      title-slide-fn: title-slide,
+      new-section-slide-fn: new-section-slide,
+    ),
+    config-methods(
+      alert: utils.alert-with-primary-color,
+
+      init: (self: none, body) => {
+        set text(size: 18pt)
+        set list(marker: text(size: 1.25em, baseline: -0.075em, fill: self.colors.primary, sym.triangle.filled.r))
+        show figure.caption: set text(size: 0.6em)
+        show footnote.entry: set text(size: 0.6em)
+        set footnote.entry(gap: 0.2em)
+        show heading: set text(fill: self.colors.primary)
+        show link: it => if type(it.dest) == str {
+          set text(fill: self.colors.primary)
+          it
+        } else {
+          it
+        }
+
+        show strong: self.methods.alert.with(self: self)
+
+        show quote: it => _custom-quote(
+          it,
+          self.store.quotes.at("left"),
+          self.store.quotes.at("right"),
+          self.store.quotes.at("outset"),
+          self.store.quotes.at("margin-top"),
+        )
+
+        show bibliography: set text(size: 15pt)
+        show bibliography: set par(spacing: 0.5em, leading: 0.4em)
+
+        show figure.where(kind: table): set figure.caption(position: top)
+
+        body
+      },
+    ),
+    config-colors(
+      ..opts.theme,
+      neutral-lightest: white,
+    ),
+    config-store(
+      aspect-ratio: opts.aspect-ratio,
+      align: opts.align,
+      wUmitLogo: true,
+      lang: opts.lang,
+      outline-align: opts.outline-align,
+      alpha: 20%,
+      title: self => utils.display-current-heading(depth: self.slide-level),
+      footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
+      header: (header.slides),
+      footer: (footer.slides),
+      quotes: (
+        left: "« ",
+        right: " »",
+        outset: 0.5em,
+        margin-top: 0em,
+      ),
+    ),
+  )
+  body
+}
 
 #let bmim-common(body) = context {
   let opts = options.final()
@@ -352,4 +444,24 @@
     pagebreak(weak:true)
     task.solution-bottom
   }
+}}
+
+#let slides(
+  title: none, // either [Title] , or ([Title], [Short Title])
+  subtitle: none, // str or content
+  conference: none, // str or content
+  authors: none, // array of str or content
+  institution: none, // str or content
+  date: datetime.today(), // datetime or content
+  ..chosen,
+) = { body => {
+  option-set(
+    chosen.named()
+    + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
+  )
+
+  show: bmim-common-slides
+
+  body
+
 }}

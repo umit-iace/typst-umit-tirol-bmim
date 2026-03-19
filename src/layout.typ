@@ -34,6 +34,67 @@
   )
 }
 
+#let header-slides-colored(title:none) = context {
+  let opts = options.final()
+  pad(
+    top: 0.6em,
+      grid(
+        columns: (7%, 10%, 62.25%, 13.5%, 10%),
+        grid.cell(
+            block(
+              width: 100%,
+              height: 0.9em,
+              fill: opts.theme.highlight,
+              below: 0.25em,
+            )
+        ),
+        grid.cell(
+            pad(
+              top: -8pt,
+              left: -7pt,
+              image("./../assets/iace.svg")
+            )
+        ),
+        grid.cell(
+            pad(
+              left: -3pt,
+              block(
+                width: 100%,
+                height: 0.9em,
+                fill: opts.theme.highlight,
+                place(
+                  left + horizon,
+                  text(
+                    fill: white,
+                    weight: "bold",
+                    size: 0.8em,
+                    [Test]// utils.call-or-display(self, self.store.title),
+                  ),
+                  dx: 0.5em,
+                  dy: -0.5pt,
+                ),
+                below: 0.25em,
+              )
+          )
+        ),
+        grid.cell(
+            pad(
+              left: 5pt,
+                  image("./../assets/logo_umit_de.svg", height: 1.4em)
+          )
+        ),
+        grid.cell(
+            block(
+              width: 100%,
+              height: 0.9em,
+              fill: opts.theme.highlight,
+              below: 0.25em,
+            )
+        ),
+      )
+    )
+}
+
 #let header-colored(title:none) = context {
   let opts = options.final()
   pad(
@@ -106,13 +167,7 @@
   report: header-colored(),
   poster: header-colored(),
   lecture: header-colored(),
-  slides: header-colored(title:
-        context if opts.variant == "slides" {
-          let list = query(heading.where(level:1).before(here()))
-          if list.len() != 0 {
-            list.last().body
-          }
-        }),
+  slides: header-slides-colored(),
   workbook: context {
     if page-is-chap-start() {
       none
@@ -221,6 +276,34 @@
     )
   },
   slides: () => context {
+    let opts = options.final()
+    box(
+      stroke: opts.theme.highlight,
+      inset: (x: 2em, top: -0.3em ,bottom: 0.5em),
+      grid(
+        columns: (25%, 50%, 1fr, 5em),
+        rows: (1.5em, auto),
+        grid.cell(
+          align: left,
+          touying.utils.call-or-display(self, self.info.author),
+        ),
+        grid.cell(
+          touying.utils.call-or-display(self, if self.info.short-title == auto {
+            self.info.title
+          } else {
+            self.info.short-title
+          }),
+        ),
+        grid.cell(
+          align: center,
+          touying.utils.call-or-display(self, self.info.date),
+        ),
+        grid.cell(
+          align: right,
+          touying.utils.call-or-display(self, self.store.footer-pagenum),
+        )
+      ),
+    )
   },
   workbook: (course) => context {
     let opts = options.final()
@@ -421,7 +504,7 @@
 
     })
   ),
-  slides:   (course, title, authors, date) => context { },
+  slides: () => context {},
   workbook: (course, authors, date) => context {
     let opts = options.final()
     let course = if type(course) == array { course.at(0) } else { course }
