@@ -20,6 +20,7 @@
   conference: none,
   institution: none,
   date: none,
+  bib: none,
 ))
 
 

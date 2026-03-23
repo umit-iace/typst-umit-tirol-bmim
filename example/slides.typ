@@ -8,6 +8,7 @@
   institution: "Institut für Automatisierungs und Regelungstechnik",
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   date: datetime(day: 1, month: 3, year: 2024),
+  bib: bibliography(title: none, "/assets/sources.bib"),
 )
 
 #title-slide()
@@ -26,7 +27,7 @@ A slide with a motivation.
 
 == Modeling
 
-A slide with *important information* and a citation //@Woittennek2013 and another @Mayer2025
+A slide with *important information* and a citation @netwok2020.
 
 
 = Controller
@@ -65,4 +66,8 @@ A slide with admonitions
 #example[Test]
 
 #hint[Test]
+
+== References
+
+#magic.bibliography(title: none)
 
