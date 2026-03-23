@@ -13,6 +13,7 @@
     - lecture
     - poster
     - report
+    - slides
     - workbook
 
 ## Example
@@ -24,6 +25,7 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 - [example/lecture.typ](example/lecture.typ) for the corresponding lecture notes Typst file.
 - [example/poster.typ](example/poster.typ) for the corresponding poster Typst file.
 - [example/report.typ](example/report.typ) for the corresponding report Typst file.
+- [example/slides.typ](example/slides.typ) for the corresponding slide Typst file, see [Github Pages](https://umit-iace.github.io/typst-umit-tirol-bmim) for an example output.
 - [example/workbook.typ](example/workbook.typ) for the corresponding workbook Typst file.
 
 ## Usage
