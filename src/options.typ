@@ -12,9 +12,6 @@
   task-wrap-counter: none,
   font: ("New Computer Modern",),
   size: 12pt,
-  aspect-ratio: "16-9",
-  align: horizon,
-  outline-align: top,
 ))
 
 #let option-set(dict) = {

@@ -7,7 +7,7 @@
 #let item-cnt = counter("item-counter")
 
 #let bmim-common-slides(body) = context {
-  let opts = options.final()
+  let opts = slide-options.final()
   set text(
     lang: opts.lang,
     font: opts.font,
@@ -22,11 +22,11 @@
         set std.align(top)
         utils.call-or-display(self, self.store.header)
       },
-      // footer: self => {
-      //   set std.align(bottom)
-      //   set text(size: .5em)
-      //   utils.call-or-display(self, self.store.footer)
-      // },
+      footer: self => {
+        set std.align(bottom)
+        set text(size: .5em)
+        utils.call-or-display(self, self.store.footer)
+      },
       header-ascent: 0em,
       footer-descent: 0em,
       margin: (top: 2em, bottom: 1.25em, x: 1.5em),
@@ -78,14 +78,13 @@
     config-store(
       aspect-ratio: opts.aspect-ratio,
       align: opts.align,
-      wUmitLogo: true,
       lang: opts.lang,
       outline-align: opts.outline-align,
       alpha: 20%,
       title: self => utils.display-current-heading(depth: self.slide-level),
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
-      header: (header.slides),
-      footer: (footer.slides),
+      header: self => (header-slides-colored(title: utils.call-or-display(self, self.store.title))),
+      footer: self => (footer-slides(pagenum: utils.call-or-display(self, self.store.footer-pagenum))),
       quotes: (
         left: "« ",
         right: " »",
@@ -447,17 +446,10 @@
 }}
 
 #let slides(
-  title: none, // either [Title] , or ([Title], [Short Title])
-  subtitle: none, // str or content
-  conference: none, // str or content
-  authors: none, // array of str or content
-  institution: none, // str or content
-  date: datetime.today(), // datetime or content
   ..chosen,
 ) = { body => {
-  option-set(
+  option-slide-set(
     chosen.named()
-    + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
   )
 
   show: bmim-common-slides

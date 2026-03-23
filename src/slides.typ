@@ -1,6 +1,18 @@
 #import "@preview/touying:0.6.3": *
+#import "colors.typ": *
+#import "data.typ": *
+#import "utils.typ": translatedMonth
 
-#let config-info = (
+#let slide-options = state("bmim-slide-options", (
+  theme: color-theme.blue,
+  lang: "de", // "de", "en"
+  spell: i18n.de,
+  logo-with-text: false,
+  font: ("New Computer Modern",),
+  size: 12pt,
+  aspect-ratio: "16-9",
+  align: horizon,
+  outline-align: top,
   title: none,
   short-title: none,
   subtitle: none,
@@ -8,7 +20,24 @@
   conference: none,
   institution: none,
   date: none,
-)
+))
+
+
+#let option-slide-set(dict) = {
+  slide-options.update(o => {
+    for (key, val) in dict {
+      if key not in o {
+        let known = o.keys().filter(k => k != "spell")
+        panic(
+          "Unknown option: " + key +
+          ". Known options: " + known.join(", ")
+        )
+      }
+      o.at(key) = (val)
+    }
+    return o
+  })
+}
 
 #let slide(
   title: auto,
@@ -49,11 +78,10 @@
 })
 
 #let title-slide(
-  config: (:),
   ..args) = touying-slide-wrapper(self => {
-  let new-config = config
-  new-config = utils.merge-dicts(
-    config,
+  let opts = slide-options.final()
+  let new-config = utils.merge-dicts(
+    opts,
     config-page(
       footer: none,
       margin: (top: 4em, left: 1em),
@@ -63,19 +91,11 @@
 
   self = utils.merge-dicts(self, new-config)
 
-  let info = self.info + args.named()
-
-  info.authors = {
-    let authors = if "authors" in info {
-      info.authors
+  self.authors = {
+    if type(self.authors) == array {
+      self.authors
     } else {
-      info.author
-    }
-
-    if type(authors) == array {
-      authors
-    } else {
-      (authors,)
+      (self.authors,)
     }
   }
 
@@ -87,63 +107,61 @@
       radius: 0.5em,
       breakable: false,
       {
-        text(size: 1.4em, fill: self.colors.primary, weight: "bold", info.title)
-        if info.subtitle != none {
+        text(size: 1.4em, fill: self.colors.primary, weight: "bold", self.title.at(0))
+        if self.subtitle != none {
           parbreak()
-          text(size: 1.0em, fill: self.colors.primary, weight: "bold", info.subtitle)
+          text(size: 1.0em, fill: self.colors.primary, weight: "bold", self.subtitle)
         }
       },
     )
     // authors
     grid(
-      columns: (1fr,) * calc.min(info.authors.len(), 3),
+      columns: (1fr,) * calc.min(self.authors.len(), 3),
       column-gutter: 1em,
       row-gutter: 1em,
-      ..info.authors.map(author => text(fill: black, author)),
+      ..self.authors.map(author => text(fill: black, author)),
     )
     v(0.5em)
     // institution
-    if info.institution != none {
+    if self.institution != none {
       parbreak()
-      text(size: 0.7em, fill: self.colors.primary, weight: "bold", info.institution)
+      text(size: 0.7em, fill: self.colors.primary, weight: "bold", self.institution)
     }
     // conference
-    // if info.conference != none {
-    //   parbreak()
-    //   text(size: 1.0em, info.conference)
-    //   linebreak()
-    // }
+    if self.conference != none {
+      parbreak()
+      text(size: 1.0em, self.conference)
+      linebreak()
+    }
     // date
-    if info.date != none {
-      if info.conference == none {
+    if self.date != none {
+      if self.conference == none {
         parbreak()
       }
-      if type(utils.display-info-date(self)) == datetime {
-        text(size: 1.0em, utils.display-info-date(self))
-      } else {
-        text(size: 1.0em, utils.display-info-date(self))
-      }
+      text(size: 1.0em,
+        if opts.lang == "de" {
+          [#opts.date.day(). #translatedMonth(opts.date, opts.lang) #opts.date.year()]
+        } else {
+          [#translatedMonth(opts.date, opts.lang) #opts.date.day(), #opts.date.year()]
+        }
+      )
     }
-
   }
 
   touying-slide(self: self, body)
 })
 
 #let outline-slide(
-  config: (:),
   ..args) = touying-slide-wrapper(self => {
-  let new-config = config
-  new-config = utils.merge-dicts(
-    config,
+  let opts = slide-options.final()
+  let new-config = utils.merge-dicts(
+    opts,
     config-page(
       margin: (top: 2em, left: 1em),
     ),
   )
 
   self = utils.merge-dicts(self, new-config)
-
-  let info = self.info + args.named()
 
   let cntOutline = counter("outline")
 
@@ -186,13 +204,12 @@
 })
 
 #let new-section-slide(
-  config: (:),
   level: 1,
   numbered: true,
   ..args) = touying-slide-wrapper(self => {
-  let new-config = config
-  new-config = utils.merge-dicts(
-    config,
+  let opts = slide-options.final()
+  let new-config = utils.merge-dicts(
+    opts,
     config-page(
       margin: (top: 4em, left: 1em),
     ),
@@ -200,8 +217,6 @@
 
   self = utils.merge-dicts(self, new-config)
   self.store.title = ""
-
-  let info = self.info + args.named()
 
   let body = {
     show: align.with(center + horizon)
