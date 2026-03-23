@@ -35,6 +35,7 @@
       slide-fn: slide,
       title-slide-fn: title-slide,
       new-section-slide-fn: new-section-slide,
+      show-bibliography-as-footnote: opts.bib,
     ),
     config-methods(
       alert: utils.alert-with-primary-color,
