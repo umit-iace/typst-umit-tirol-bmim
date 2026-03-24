@@ -97,4 +97,4 @@ It is important to remember Newton's third law @newton-third, and Hook's law
 
 #hint[Test]
 
-#bibliography("/assets/sources.bib", title: "Literatur")
+#bibliography("sources.bib", title: "Literatur")

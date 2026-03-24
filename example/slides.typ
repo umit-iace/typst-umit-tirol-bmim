@@ -8,7 +8,7 @@
   institution: "Institut für Automatisierungs und Regelungstechnik",
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   date: datetime(day: 1, month: 3, year: 2024),
-  bib: bibliography(title: none, "/assets/sources.bib"),
+  bib: bibliography(title: none, "sources.bib"),
 )
 
 #title-slide()
