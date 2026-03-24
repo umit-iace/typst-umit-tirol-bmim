@@ -257,38 +257,47 @@
   },
   slides: (authors:none, title:none, date:none, pagenum:none) => context {
     let opts = options.final()
-    box(
-      stroke: opts.theme.highlight,
-      inset: (x: 2em, top: -0.3em ,bottom: 0.5em),
-      grid(
-        columns: (25%, 50%, 1fr, 5em),
-        rows: (1.5em, auto),
-        grid.cell(
-          align: left,
-          if authors.len() > 1 {
-            let lastname = (authors,).flatten().at(0).split().at(-1)
-            [#lastname et al.]
-          } else {
-            (authors,).flatten().at(0)
-          },
-        ),
-        grid.cell(
-          title.at(1),
-        ),
-        grid.cell(
-          align: center,
-          if opts.lang == "de" {
-            [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
-          } else {
-            [#translatedMonth(date, opts.lang) #date.day(), #date.year()]
-          }
-        ),
-        grid.cell(
-          align: right,
-          pagenum
-        ),
-      )
+    block(
+      [
+        #block(
+          inset: (bottom: -3em),
+          components.progress-bar(height: 1.75em, rgb(200, 183, 118).lighten(80%), white)
+        )
+        #box(
+          stroke: opts.theme.highlight,
+          inset: (x: 2em, top: -0.3em ,bottom: 0.5em),
+          grid(
+            columns: (25%, 50%, 1fr, 5em),
+            rows: (1.5em, auto),
+            grid.cell(
+              align: left,
+              if authors.len() > 1 {
+                let lastname = (authors,).flatten().at(0).split().at(-1)
+                [#lastname et al.]
+              } else {
+                (authors,).flatten().at(0)
+              },
+            ),
+            grid.cell(
+              title.at(1),
+            ),
+            grid.cell(
+              align: center,
+              if opts.lang == "de" {
+                [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
+              } else {
+                [#translatedMonth(date, opts.lang) #date.day(), #date.year()]
+              }
+            ),
+            grid.cell(
+              align: right,
+              pagenum
+            ),
+          ),
+        )
+      ]
     )
+    //
   },
   workbook: (course) => context {
     let opts = options.final()
