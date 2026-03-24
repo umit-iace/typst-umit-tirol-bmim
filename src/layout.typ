@@ -77,37 +77,6 @@
   )
 }
 
-#let footer-slides(date:none, pagenum:none) = context{
-  let opts = slide-options.final()
-  box(
-    stroke: opts.theme.highlight,
-    inset: (x: 2em, top: -0.3em ,bottom: 0.5em),
-    grid(
-      columns: (25%, 50%, 1fr, 5em),
-      rows: (1.5em, auto),
-      grid.cell(
-        align: left,
-        opts.authors.at(0),
-      ),
-      grid.cell(
-        opts.title.at(1),
-      ),
-      grid.cell(
-        align: center,
-        if opts.lang == "de" {
-          [#opts.date.day(). #translatedMonth(opts.date, opts.lang) #opts.date.year()]
-        } else {
-          [#translatedMonth(opts.date, opts.lang) #opts.date.day(), #opts.date.year()]
-        }
-      ),
-      grid.cell(
-        align: right,
-        pagenum
-      ),
-    )
-  )
-}
-
 #let header-colored(title:none) = context {
   let opts = options.final()
   pad(
@@ -285,6 +254,36 @@
     align(
       if calc.odd(here().page()) { right } else {left},
       counter(page).display("1")
+    )
+  },
+  slides: (date:none, pagenum:none) => context {
+    let opts = slide-options.final()
+    box(
+      stroke: opts.theme.highlight,
+      inset: (x: 2em, top: -0.3em ,bottom: 0.5em),
+      grid(
+        columns: (25%, 50%, 1fr, 5em),
+        rows: (1.5em, auto),
+        grid.cell(
+          align: left,
+          opts.authors.at(0),
+        ),
+        grid.cell(
+          opts.title.at(1),
+        ),
+        grid.cell(
+          align: center,
+          if opts.lang == "de" {
+            [#opts.date.day(). #translatedMonth(opts.date, opts.lang) #opts.date.year()]
+          } else {
+            [#translatedMonth(opts.date, opts.lang) #opts.date.day(), #opts.date.year()]
+          }
+        ),
+        grid.cell(
+          align: right,
+          pagenum
+        ),
+      )
     )
   },
   workbook: (course) => context {
