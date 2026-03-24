@@ -360,17 +360,21 @@
   subtitle: none,
   conference: none,
   institution: none,
+  location: none,
   authors: none,
+  mainAuthorIdx: none,
   date: none,
   bib: none,
   aspect-ratio: "16-9",
+  font: "CMU Sans Serif",
   align: horizon,
   outline-align: top,
   size: 18pt,
   ..chosen,
 ) = { body => context {
   option-set(
-    (size: size)
+    (size: size) +
+    (font: font)
     + chosen.named()
   )
   let opts = options.final()
@@ -401,9 +405,11 @@
       title: title,
       subtitle: subtitle,
       authors: authors,
+      mainAuthorIdx: mainAuthorIdx,
       date: date,
       institution: institution,
       conference: conference,
+      location: location,
     ),
     config-common(
       new-section-slide-fn: new-section-slide,
