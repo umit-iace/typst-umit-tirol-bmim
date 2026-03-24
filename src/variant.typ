@@ -56,13 +56,7 @@
 
         show strong: self.methods.alert.with(self: self)
 
-        show quote: it => _custom-quote(
-          it,
-          self.store.quotes.at("left"),
-          self.store.quotes.at("right"),
-          self.store.quotes.at("outset"),
-          self.store.quotes.at("margin-top"),
-        )
+        show quote: it => slides-quote(it, self.store.quotes)
 
         show bibliography: set text(size: 15pt)
         show bibliography: set par(spacing: 0.5em, leading: 0.4em)
@@ -86,12 +80,7 @@
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
       header: self => (header.slides)(title: utils.call-or-display(self, self.store.title)),
       footer: self => (footer.slides)(pagenum: utils.call-or-display(self, self.store.footer-pagenum)),
-      quotes: (
-        left: "« ",
-        right: " »",
-        outset: 0.5em,
-        margin-top: 0em,
-      ),
+      quotes: ("« ", " »"),
     ),
   )
   body
