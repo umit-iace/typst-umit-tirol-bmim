@@ -36,47 +36,6 @@
   )
 }
 
-#let header-slides-colored(title:none) = context {
-  let opts = options.final()
-  pad(
-    top: 0.6em,
-    grid(
-      columns: (7%, 10%, 62.25%, 13.5%, 10%),
-      banner(slide: true),
-      pad(
-        top: -8pt,
-        left: -7pt,
-        image("./../assets/iace.svg")
-      ),
-      pad(
-        left: -3pt,
-        block(
-          width: 100%,
-          height: 0.9em,
-          fill: opts.theme.highlight,
-          place(
-            left + horizon,
-            text(
-              fill: white,
-              weight: "bold",
-              size: 0.8em,
-              title,
-            ),
-            dx: 0.5em,
-            dy: -0.5pt,
-          ),
-          below: 0.25em,
-        )
-      ),
-      pad(
-        left: 5pt,
-            image("./../assets/logo_umit_de.svg", height: 1.4em)
-      ),
-      banner(slide: true),
-    )
-  )
-}
-
 #let header-colored(title:none) = context {
   let opts = options.final()
   pad(
@@ -143,12 +102,52 @@
 }
 
 #let header = (
-  lab: header-colored(),
   exam: header-colored(),
   exercise: header-colored(),
-  report: header-colored(),
-  poster: header-colored(),
+  lab: header-colored(),
   lecture: header-colored(),
+  poster: header-colored(),
+  report: header-colored(),
+  slides: (title: none) => context {
+    let opts = options.final()
+    pad(
+      top: 0.6em,
+      grid(
+        columns: (7%, 10%, 62.25%, 13.5%, 10%),
+        banner(slide: true),
+        pad(
+          top: -8pt,
+          left: -7pt,
+          image("./../assets/iace.svg")
+        ),
+        pad(
+          left: -3pt,
+          block(
+            width: 100%,
+            height: 0.9em,
+            fill: opts.theme.highlight,
+            place(
+              left + horizon,
+              text(
+                fill: white,
+                weight: "bold",
+                size: 0.8em,
+                title,
+              ),
+              dx: 0.5em,
+              dy: -0.5pt,
+            ),
+            below: 0.25em,
+          )
+        ),
+        pad(
+          left: 5pt,
+              image("./../assets/logo_umit_de.svg", height: 1.4em)
+        ),
+        banner(slide: true),
+      )
+    )
+  },
   workbook: context {
     if page-is-chap-start() {
       none
