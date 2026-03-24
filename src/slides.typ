@@ -19,47 +19,67 @@
   self = utils.merge-dicts(self, new-config)
 
   let authors = (self.info.authors,).flatten()
+  let mainAuthorIdx = self.info.mainAuthorIdx
   let title = (self.info.title,).flatten()
   let subtitle = self.info.subtitle
   let institution = self.info.institution
   let conference = self.info.conference
+  let location = self.info.location
   let date = self.info.date
 
   let bold(size, body) = text(size: size, fill:self.colors.primary, weight: "bold", body)
 
   let body = {
     set align(center + horizon)
+    v(-3.0em)
     block(
       fill: self.colors.background,
       inset: 1.5em,
       radius: 0.5em,
       breakable: false,
       {
-        bold(1.4em, title.at(0, default:none))
+        bold(1.75em, title.at(0, default:none))
         if subtitle != none {
           parbreak()
           bold(1.0em, subtitle)
         }
       },
     )
+    v(0.5em)
     // authors
     grid(
       columns: (1fr,) * calc.min(authors.len(), 3),
       column-gutter: 1em,
       row-gutter: 1em,
-      ..authors.map(author => text(fill: black, author)),
+        ..authors.enumerate().map(((idx, author)) => {
+          if mainAuthorIdx != none {
+            if mainAuthorIdx == idx {
+              $text(font: opts.font, fill: black, author)^(star)$
+            } else {
+              text(fill: black, author)
+            }
+          } else {
+            text(fill: black, author)
+          }
+        }
+      )
     )
-    v(0.5em)
+    v(1em)
     // institution
     if institution != none {
       parbreak()
-      bold(0.7em, institution)
+      text(size: 0.7em, fill:self.colors.primary, institution)
     }
+    v(1em)
     // conference
     if conference != none {
       parbreak()
       text(size: 1.0em, conference)
       linebreak()
+    }
+    let locStr = ""
+    if location != none {
+      locStr = [, #location]
     }
     // date
     if date != none {
@@ -68,9 +88,9 @@
       }
       text(size: 1.0em,
         if opts.lang == "de" {
-          [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
+          [#date.day(). #translatedMonth(date, opts.lang) #date.year()#locStr]
         } else {
-          [#translatedMonth(date, opts.lang) #date.day(), #date.year()]
+          [#translatedMonth(date, opts.lang) #date.day(), #date.year()#locStr]
         }
       )
     }
