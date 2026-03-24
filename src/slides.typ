@@ -151,6 +151,12 @@
   touying-slide(self: self, body)
 })
 
+#let overlay(img, color) = layout(bounds => {
+  let size = measure(img, ..bounds)
+  img
+  place(top + left, block(..size, fill: color))
+})
+
 #let new-section-slide(
   level: 1,
   numbered: true,
@@ -159,36 +165,26 @@
   let new-config = utils.merge-dicts(
     opts,
     config-page(
-      margin: (top: 4em, left: 1em),
+      margin: (top: 4em, left: 0em, right: 0em),
+      header: none,
+      footer: none,
+      background: image("./../assets/bg_clean.jpg"),
     ),
   )
 
   self = utils.merge-dicts(self, new-config)
   self.store.title = ""
 
+  set image(width: 100%, height: auto)
+
   let body = {
-    show: align.with(center + horizon)
-    show: pad.with(20%)
+    show: align.with(center + top)
     set text(size: 1.5em, fill: self.colors.neutral-lightest, weight: "bold")
-    stack(
-      block(
-        height: 2pt,
-        width: 100%,
-        spacing: 0pt,
-        components.progress-bar(height: 2pt, self.colors.primary, self.colors.primary-light),
-      ),
-      v(0.5em),
-      block(
-        fill: self.colors.neutral-light,
-        radius: 8pt,
-        move(dx: -4pt, dy: -4pt, block(
-          width: 100%,
-          fill: self.colors.primary,
-          inset: (x: 1em, y: .8em),
-          radius: 8pt,
-          utils.display-current-heading(level: level, numbered: numbered)
-        ))
-      ),
+    block(
+      width: 100%,
+      fill: self.colors.primary.transparentize(10%),
+      inset: (x: 1em, y: .8em),
+      [#align(left)[#h(1em)#utils.display-current-heading(level: level, numbered: numbered)]]
     )
   }
 
