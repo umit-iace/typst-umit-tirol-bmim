@@ -20,26 +20,20 @@
 
 #let underline-space(fraction) = box(height: -1pt, line(length: fraction))
 
-#let banner(slide: false, ..args) = {
+#let banner(..args) = {
   let opts = options.final()
-  if slide {
-    box(
-      width: 100%, height: 0.9em,
-      fill: opts.theme.highlight,
-    )
-  } else {
-    box(
-      width: 100%, height: 1.5em,
-      fill: opts.theme.highlight,
-      if args.pos().len() != 0 {
-        set align(horizon)
-        // set text(1.2em, white)
-        set text(opts.theme.neutral-lightest)
-        // show: strong
-        pad(x:1.5em, ..args.pos())
-      }
-    )
-  }
+  let height = if args.named().at("slide", default: false) {0.9em} else {1.5em}
+  box(
+    width: 100%, height: height,
+    fill: opts.theme.highlight,
+    if args.pos().len() != 0 {
+      set align(horizon)
+      // set text(1.2em, white)
+      set text(opts.theme.neutral-lightest)
+      // show: strong
+      pad(x:1.5em, ..args.pos())
+    }
+  )
 }
 
 #let header-slides-colored(title:none) = context {
