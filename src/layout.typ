@@ -134,8 +134,8 @@
                 size: 0.8em,
                 heading,
               ),
-              dx: 0.5em,
-              dy: -0.5pt,
+              dx: 1em,
+              dy: -1.5pt,
             ),
             below: 0.25em,
           )
@@ -265,7 +265,12 @@
         rows: (1.5em, auto),
         grid.cell(
           align: left,
-          (authors,).flatten().at(0),
+          if authors.len() > 1 {
+            let lastname = (authors,).flatten().at(0).split().at(-1)
+            [#lastname et al.]
+          } else {
+            (authors,).flatten().at(0)
+          },
         ),
         grid.cell(
           title.at(1),
