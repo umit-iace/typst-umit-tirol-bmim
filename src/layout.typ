@@ -108,7 +108,7 @@
   lecture: header-colored(),
   poster: header-colored(),
   report: header-colored(),
-  slides: (title: none) => context {
+  slides: (heading: none) => context {
     let opts = options.final()
     pad(
       top: 0.6em,
@@ -132,7 +132,7 @@
                 fill: white,
                 weight: "bold",
                 size: 0.8em,
-                title,
+                heading,
               ),
               dx: 0.5em,
               dy: -0.5pt,
@@ -255,8 +255,8 @@
       counter(page).display("1")
     )
   },
-  slides: (date:none, pagenum:none) => context {
-    let opts = slide-options.final()
+  slides: (authors:none, title:none, date:none, pagenum:none) => context {
+    let opts = options.final()
     box(
       stroke: opts.theme.highlight,
       inset: (x: 2em, top: -0.3em ,bottom: 0.5em),
@@ -265,17 +265,17 @@
         rows: (1.5em, auto),
         grid.cell(
           align: left,
-          opts.authors.at(0),
+          (authors,).flatten().at(0),
         ),
         grid.cell(
-          opts.title.at(1),
+          title.at(1),
         ),
         grid.cell(
           align: center,
           if opts.lang == "de" {
-            [#opts.date.day(). #translatedMonth(opts.date, opts.lang) #opts.date.year()]
+            [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
           } else {
-            [#translatedMonth(opts.date, opts.lang) #opts.date.day(), #opts.date.year()]
+            [#translatedMonth(date, opts.lang) #date.day(), #date.year()]
           }
         ),
         grid.cell(
