@@ -53,21 +53,3 @@
     return value == none
   }
 }
-
-#let _custom-quote(it, lquote, rquote, outset, margin-top) = {
-  v(margin-top)
-  box(
-    fill: luma(220),
-    outset: outset,
-    width: 100%,
-    lquote
-      + it.body
-      + rquote
-      + if it.attribution != none {
-        set text(size: 0.8em)
-        linebreak()
-        h(1fr)
-        (it.attribution)
-      },
-  )
-}

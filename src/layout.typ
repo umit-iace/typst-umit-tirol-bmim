@@ -573,3 +573,18 @@
     ),
   )
 }
+
+#let slides-quote(it, quotes, outset: 0.5em) = {
+  box(
+    fill: luma(220),
+    outset: outset,
+    width: 100%,
+    quotes.at(0) + it.body + quotes.at(1)
+    + if it.attribution != none {
+      set text(size: 0.8em)
+      linebreak()
+      h(1fr)
+      it.attribution
+    },
+  )
+}
