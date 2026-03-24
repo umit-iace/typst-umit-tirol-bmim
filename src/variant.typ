@@ -85,7 +85,7 @@
       title: self => utils.display-current-heading(depth: self.slide-level),
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
       header: self => (header-slides-colored(title: utils.call-or-display(self, self.store.title))),
-      footer: self => (footer-slides(pagenum: utils.call-or-display(self, self.store.footer-pagenum))),
+      footer: self => (footer.slides)(pagenum: utils.call-or-display(self, self.store.footer-pagenum)),
       quotes: (
         left: "« ",
         right: " »",
