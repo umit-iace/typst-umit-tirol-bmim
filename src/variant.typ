@@ -6,86 +6,6 @@
 
 #let item-cnt = counter("item-counter")
 
-#let bmim-common-slides(body) = context {
-  let opts = slide-options.final()
-  set text(
-    lang: opts.lang,
-    font: opts.font,
-    spacing: .5em,
-    size: opts.size,
-  )
-
-  show: touying-slides.with(
-    config-page(
-      paper: "presentation-" + opts.aspect-ratio,
-      header: self => {
-        set std.align(top)
-        utils.call-or-display(self, self.store.header)
-      },
-      footer: self => {
-        set std.align(bottom)
-        set text(size: .5em)
-        utils.call-or-display(self, self.store.footer)
-      },
-      header-ascent: 0em,
-      footer-descent: 0em,
-      margin: (top: 2em, bottom: 1.25em, x: 1.5em),
-    ),
-    config-common(
-      slide-fn: slide,
-      title-slide-fn: title-slide,
-      new-section-slide-fn: new-section-slide,
-      show-bibliography-as-footnote: opts.bib,
-    ),
-    config-methods(
-      alert: utils.alert-with-primary-color,
-
-      init: (self: none, body) => {
-        set text(size: 18pt)
-        set list(marker: text(size: 1.25em, baseline: -0.075em, fill: self.colors.primary, sym.triangle.filled.r))
-        show figure.caption: set text(size: 0.6em)
-        show footnote.entry: set text(size: 0.6em)
-        set footnote.entry(gap: 0.2em)
-        show heading: set text(fill: self.colors.primary)
-        show link: it => if type(it.dest) == str {
-          set text(fill: self.colors.primary)
-          it
-        } else {
-          it
-        }
-
-        show strong: self.methods.alert.with(self: self)
-
-        show quote: it => slides-quote(it, self.store.quotes)
-
-        show bibliography: set text(size: 15pt)
-        show bibliography: set par(spacing: 0.5em, leading: 0.4em)
-
-        show figure.where(kind: table): set figure.caption(position: top)
-
-        body
-      },
-    ),
-    config-colors(
-      ..opts.theme,
-      neutral-lightest: white,
-    ),
-    config-store(
-      aspect-ratio: opts.aspect-ratio,
-      align: opts.align,
-      lang: opts.lang,
-      outline-align: opts.outline-align,
-      alpha: 20%,
-      title: self => utils.display-current-heading(depth: self.slide-level),
-      footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
-      header: self => (header.slides)(title: utils.call-or-display(self, self.store.title)),
-      footer: self => (footer.slides)(pagenum: utils.call-or-display(self, self.store.footer-pagenum)),
-      quotes: ("« ", " »"),
-    ),
-  )
-  body
-}
-
 #let bmim-common(body) = context {
   let opts = options.final()
   set text(
@@ -436,14 +356,107 @@
 }}
 
 #let slides(
+  title: none,
+  subtitle: none,
+  conference: none,
+  institution: none,
+  authors: none,
+  date: none,
+  bib: none,
+  aspect-ratio: "16-9",
+  align: horizon,
+  outline-align: top,
+  size: 18pt,
   ..chosen,
-) = { body => {
-  option-slide-set(
-    chosen.named()
+) = { body => context {
+  option-set(
+    (size: size)
+    + chosen.named()
+  )
+  let opts = options.final()
+  set text(
+    lang: opts.lang,
+    font: opts.font,
+    spacing: .5em,
+    size: opts.size,
   )
 
-  show: bmim-common-slides
+  show: touying-slides.with(
+    config-page(
+      paper: "presentation-" + aspect-ratio,
+      header: self => {
+        set std.align(top)
+        utils.call-or-display(self, self.store.header)
+      },
+      footer: self => {
+        set std.align(bottom)
+        set text(size: .5em)
+        utils.call-or-display(self, self.store.footer)
+      },
+      header-ascent: 0em,
+      footer-descent: 0em,
+      margin: (top: 2em, bottom: 1.25em, x: 1.5em),
+    ),
+    config-info(
+      title: title,
+      subtitle: subtitle,
+      authors: authors,
+      date: date,
+      institution: institution,
+      conference: conference,
+    ),
+    config-common(
+      new-section-slide-fn: new-section-slide,
+      show-bibliography-as-footnote: bib,
+    ),
+    config-methods(
+      alert: utils.alert-with-primary-color,
 
+      init: (self: none, body) => {
+        set std.align(align)
+        set text(size: opts.size)
+        set list(marker: text(size: 1.25em, baseline: -0.075em, fill: self.colors.primary, sym.triangle.filled.r))
+        show figure.caption: set text(size: 0.6em)
+        show footnote.entry: set text(size: 0.6em)
+        set footnote.entry(gap: 0.2em)
+        show heading: set text(fill: self.colors.primary)
+        show link: it => if type(it.dest) == str {
+          set text(fill: self.colors.primary)
+          it
+        } else {
+          it
+        }
+
+        show strong: self.methods.alert.with(self: self)
+
+        show quote: it => slides-quote(it, self.store.quotes)
+
+        show bibliography: set text(size: 15pt)
+        show bibliography: set par(spacing: 0.5em, leading: 0.4em)
+
+        show figure.where(kind: table): set figure.caption(position: top)
+
+        body
+      },
+    ),
+    config-colors(
+      ..opts.theme,
+      neutral-lightest: white,
+    ),
+    config-store(
+      alpha: 20%,
+      heading: self => utils.display-current-heading(depth: self.slide-level),
+      footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
+      header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading)),
+      footer: self => (footer.slides)(
+        authors: authors,
+        title: title,
+        date: date,
+        pagenum: utils.call-or-display(self, self.store.footer-pagenum),
+      ),
+      quotes: ("« ", " »"),
+    ),
+  )
   body
 
 }}
