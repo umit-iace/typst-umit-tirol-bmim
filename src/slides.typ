@@ -5,7 +5,8 @@
 #import "options.typ": options
 
 #let title-slide(
-  ..args) = touying-slide-wrapper(self => {
+  ..args,
+) = touying-slide-wrapper(self => {
   let opts = options.final()
   let new-config = utils.merge-dicts(
     opts,
@@ -100,7 +101,8 @@
 })
 
 #let outline-slide(
-  ..args) = touying-slide-wrapper(self => {
+  ..args,
+) = touying-slide-wrapper(self => {
   let opts = options.final()
   let new-config = utils.merge-dicts(
     opts,
@@ -160,7 +162,8 @@
 #let new-section-slide(
   level: 1,
   numbered: true,
-  ..args) = touying-slide-wrapper(self => {
+  ..args,
+) = touying-slide-wrapper(self => {
   let opts = options.final()
   let new-config = utils.merge-dicts(
     opts,
