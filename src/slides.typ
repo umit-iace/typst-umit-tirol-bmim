@@ -168,7 +168,7 @@
       margin: (top: 4em, left: 0em, right: 0em),
       header: none,
       footer: none,
-      background: image("./../assets/bg_clean.jpg"),
+      background: image("./../assets/bg-umit.jpg"),
     ),
   )
 
