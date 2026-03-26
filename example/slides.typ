@@ -1,12 +1,15 @@
 #import "@local/typst-umit-tirol-bmim:0.2.0" as bmim: *
 
 #show: bmim.slides(
-  title: ("Sehr sehr langer Titel", "Kurztitel"),
-  subtitle: "Mit besonderen Datenpunkten",
-  lang: "de",
-  conference: "Conference Test",
-  institution: "Institut für Automatisierungs und Regelungstechnik",
-  authors: ("John Doe", "Jane Doe", "Max Mustermann"),
+  title: ("Control design stratgies for better results",
+  "Control it better"),
+  subtitle: "Reactions are bad",
+  lang: "en",
+  conference: "94th Conference of Applied Mathematics and Health Care",
+  institution: "Institut für Automatisierungs und Regelungstechnik\n UMIT TIROL, Hall in Tirol, Österreich",
+  location: "Irgendwo",
+  authors: ("John Doel", "Jane Doe", "Max Mustermann"),
+  mainAuthorIdx: 1,
   date: datetime(day: 1, month: 3, year: 2024),
   bib: bibliography(title: none, "sources.bib"),
 )
