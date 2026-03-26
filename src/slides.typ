@@ -168,7 +168,7 @@
   let new-config = utils.merge-dicts(
     opts,
     config-page(
-      margin: (top: 4em, left: 0em, right: 0em),
+      margin: 0pt,
       header: none,
       footer: none,
       background:
@@ -181,13 +181,13 @@
   self.store.title = ""
 
   let body = {
-    show: align.with(center + top)
     set text(size: 1.5em, fill: self.colors.neutral-lightest, weight: "bold")
+    v(-4em)
     block(
       width: 100%,
       fill: self.colors.primary.transparentize(10%),
-      inset: (x: 1em, y: .8em),
-      [#align(left)[#h(1em)#utils.display-current-heading(level: level, numbered: numbered)]]
+      inset: (x: 2em, y: .8em),
+      utils.display-current-heading(level: level, numbered: numbered)
     )
   }
 
