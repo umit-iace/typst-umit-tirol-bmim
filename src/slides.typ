@@ -171,14 +171,14 @@
       margin: (top: 4em, left: 0em, right: 0em),
       header: none,
       footer: none,
-      background: image("./../assets/bg-umit.jpg"),
+      background:
+        place(image("./../assets/bg-umit.jpg"))
+        + box(fill: white.transparentize(25%), height:100%, width: 100%)
     ),
   )
 
   self = utils.merge-dicts(self, new-config)
   self.store.title = ""
-
-  set image(width: 100%, height: auto)
 
   let body = {
     show: align.with(center + top)
