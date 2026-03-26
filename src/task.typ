@@ -37,7 +37,7 @@
       sym.space.nobreak.narrow
       spell.page
       sym.space.nobreak.narrow
-      str(loc.page())
+      str(counter(page).at(loc).first())
     }
     [_Lösung auf #link(loc, msg)._]
   }
