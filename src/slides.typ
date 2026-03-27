@@ -108,6 +108,11 @@
     opts,
     config-page(
       margin: (top: 2em, left: 1em),
+      header: none,
+      footer: none,
+      background:
+        place(image("./../assets/bg-umit.jpg"))
+        + box(fill: self.colors.primary.transparentize(15%).lighten(75%), height:100%, width: 100%)
     ),
   )
 
@@ -122,17 +127,32 @@
       cntOutline.step()
 
       link(it.element.location(), grid(
-        columns: (auto, auto, auto),
-        gutter: 10pt,
+        columns: (-5em, 1fr),
+        gutter: 10em,
+        // block(
+        //   fill: self.colors.primary,
+        //   inset: 4pt,
+        //   strong(context text(
+        //     fill: white,
+        //     cntOutline.display()),
+        //   ),
+        // ),
+        grid.cell(""),
         block(
-          fill: self.colors.primary,
-          inset: 4pt,
-          strong(context text(
-            fill: white,
-            cntOutline.display()),
+          fill: gradient.linear(
+            self.colors.primary,
+            self.colors.primary.transparentize(100%),
+            relative: "parent",
           ),
+          width: 75%,
+          inset: 6pt,
+          strong(text(
+            fill: white,
+            it.indented(it.prefix(), it.body())
+          ))
         ),
-        strong(it.indented(it.prefix(), it.body()))))
+      ))
+      v(1em)
     }
 
     components.adaptive-columns(
@@ -173,7 +193,7 @@
       footer: none,
       background:
         place(image("./../assets/bg-umit.jpg"))
-        + box(fill: white.transparentize(25%), height:100%, width: 100%)
+        + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
     ),
   )
 
