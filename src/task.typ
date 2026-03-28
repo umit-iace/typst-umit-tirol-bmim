@@ -13,12 +13,12 @@
 #let t-label-sol(lbl) = label("bmim-"+str(lbl)+"-sol")
 
 
-#let style-heading(lbl, tasknum, name, points, task, lvl:1) = context [
+#let style-heading(lbl, tasknum, name, points, task, lvl:1) = [
   #let opts = options.final()
   #let spell = opts.spell
+
   #let msg = {
-    [#spell.task #numbering("1.1.a", ..t-count.get())
-    ]
+    [#spell.task #context numbering("1.1.a", ..t-count.get())]
     if name != none { h(1em) + name }
     h(1fr)
     if opts.task-show-points [#spell.poi: #points]
@@ -26,12 +26,12 @@
 
   #show heading: set block(above: 0pt)
   #block(above:1.2em, below:0pt,sticky:true, lbl)
-
   #heading(level:lvl, msg, numbering: none)
 
   #task#parbreak()
   #if opts.show-solution == "bottom" {
-    let loc = locate(t-label-sol(tasknum))
+    let find = query(t-label-sol(tasknum))
+    let loc = if find.len() == 0 { here() } else { find.first().location() }
     let msg = {
       sym.arrow.r.hook
       sym.space.nobreak.narrow
@@ -73,7 +73,8 @@
 
 #let solution-bottom = context [
   = Lösungen <bmim:nonumber>
-  #for (num, solution) in t-solutions.final().enumerate(start:1) [
+  #for (num, solution) in t-solutions.final().enumerate(start:0) [
+
     #show heading: set block(above: 0pt)
     #block(above:1.2em, below:0pt,sticky:true, [#t-mark#t-label-sol(num)])
     == Lösung zu #ref(t-label(num)) <bmim:nonumber>
@@ -112,16 +113,17 @@
   }
   t-count.step(level: wrap.lvl+1)
   t-points.update(p => { p.push(points-or-empty); return p });
-  context {
+  if is-super {
+    // store points
+    for (sub, arg) in args.pos().slice(1).enumerate() {
+      t-points.update(p => {p.last().push(arg.points); return p})
+    }
+  }
+
+  {
     let tasknum = t-points.get().len()
 
-    if is-super {
-      // store points
-      for (sub, arg) in args.pos().slice(1).enumerate() {
-        t-points.update(p => {p.last().push(arg.points); return p})
-      }
-    }
-    let points = t-points.final().at(tasknum - 1, default:())
+    let points = t-points.final().at(tasknum, default:())
     let description = if is-super [
           #args.pos().first()
 
@@ -133,8 +135,7 @@
 
     // show descriptions
     (opts.task-show)(
-      [#t-mark#t-label(tasknum)] +
-      if lbl != none [#t-mark#lbl],
+      [#t-mark#t-label(tasknum)] + if lbl != none [#t-mark#lbl],
       tasknum,
       args.named().at("name", default: none),
       points.sum(default:0),
@@ -152,11 +153,13 @@
 
     let sol-style = if is-super { (it, p) => [+ #it \ #show-points(p) ] }
                     else { (it, p) => [#it \ #show-points(p) ] }
-    let solution = (if is-super {
-      args.pos().slice(1).map(sub => sub.solution).zip(points)
-    } else {(
-      (args.named().solution, points.first(default:0)),
-    )}).map(tmp => sol-style(..tmp)).join()
+    let solution = (
+      if is-super {
+        args.pos().slice(1).map(sub => sub.solution).zip(points)
+      } else {(
+        (args.named().solution, points.first(default:0)),
+      )}
+    ).map(tmp => sol-style(..tmp)).join()
 
     // inline solutions
     if opts.show-solution == "inline" {
