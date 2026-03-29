@@ -370,6 +370,8 @@
   align: horizon,
   outline-align: top,
   size: 18pt,
+  handout: false,
+  notes: none,
   ..chosen,
 ) = { body => context {
   option-set(
@@ -414,6 +416,8 @@
     config-common(
       new-section-slide-fn: new-section-slide,
       show-bibliography-as-footnote: bib,
+      handout: handout,
+      show-notes-on-second-screen: notes,
     ),
     config-methods(
       alert: utils.alert-with-primary-color,

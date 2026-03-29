@@ -1,4 +1,5 @@
-#import "@local/typst-umit-tirol-bmim:0.2.0" as bmim: *
+#import "@preview/touying:0.6.3": *
+#import "@local/typst-umit-tirol-bmim:0.2.0" as bmim: example, tip, hint
 
 #show: bmim.slides(
   title: ("Control design stratgies for better results",
@@ -12,9 +13,11 @@
   mainAuthorIdx: 1,
   date: datetime(day: 1, month: 3, year: 2024),
   bib: bibliography(title: none, "sources.bib"),
+  handout: false,
+  notes: none,
 )
 
-#title-slide()
+#bmim.title-slide()
 
 = Motivation <touying:skip>
 
@@ -24,7 +27,7 @@ A slide with a motivation.
 
 #lorem(50)
 
-#outline-slide(title: "")
+#bmim.outline-slide(title: "")
 
 = Modeling
 
@@ -61,6 +64,11 @@ green)[highlighted in green]. This is #highlight(fill: red)[highlighted in red].
 == Summary
 
 - Next Steps
+
+#speaker-note[
+  + This is a speaker note.
+  + You won't see it unless you use `config-common(show-notes-on-second-screen: right)`
+]
 
 == Admonitions
 

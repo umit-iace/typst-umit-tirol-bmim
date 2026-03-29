@@ -173,12 +173,6 @@
   touying-slide(self: self, body)
 })
 
-#let overlay(img, color) = layout(bounds => {
-  let size = measure(img, ..bounds)
-  img
-  place(top + left, block(..size, fill: color))
-})
-
 #let new-section-slide(
   level: 1,
   numbered: true,
