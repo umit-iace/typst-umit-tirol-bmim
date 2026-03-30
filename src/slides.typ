@@ -103,7 +103,7 @@
       footer: none,
       background:
         place(image("./../assets/bg-umit.jpg"))
-        + box(fill: self.colors.primary.transparentize(15%).lighten(75%), height:100%, width: 100%)
+        + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
     ),
   )
 
@@ -158,7 +158,11 @@
     v(-4em)
     block(
       width: 100%,
-      fill: self.colors.primary.transparentize(10%),
+      fill: gradient.linear(
+        self.colors.primary,
+        self.colors.primary.transparentize(100%),
+        relative: "parent",
+      ),
       inset: (x: 2em, y: .8em),
       utils.display-current-heading(level: level, numbered: numbered)
     )
