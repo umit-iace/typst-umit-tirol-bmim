@@ -115,11 +115,15 @@
       grid(
         columns: (7%, 10%, 62.25%, 13.5%, 10%),
         banner(slide: true),
-        pad(
-          top: -8pt,
-          left: -7pt,
-          image("./../assets/iace.svg")
-        ),
+        if opts.logo-left == none {
+          pad(
+            top: -8pt,
+            left: -7pt,
+            image("./../assets/iace.svg")
+          )
+        } else{
+          opts.logo-left
+        },
         pad(
           left: -3pt,
           block(
@@ -140,10 +144,14 @@
             below: 0.25em,
           )
         ),
-        pad(
-          left: 5pt,
-              image("./../assets/logo_umit_de.svg", height: 1.4em)
-        ),
+        if opts.logo-right == none {
+          pad(
+            left: 5pt,
+            image("./../assets/logo_umit_de.svg", height: 1.4em)
+          )
+        } else {
+          opts.logo-right
+        },
         banner(slide: true),
       )
     )
