@@ -368,7 +368,6 @@
   aspect-ratio: "16-9",
   font: "CMU Sans Serif",
   align: horizon,
-  outline-align: top,
   size: 18pt,
   handout: false,
   notes: none,
