@@ -5,4 +5,4 @@
 #import "list.typ": enum-label, wrapped-enum-numbering
 #import "layout.typ": poster-box
 #import "colors.typ": color
-#import "slides.typ": title-slide, outline-slide, new-section-slide
+#import "slides.typ": title-slide, outline-slide
