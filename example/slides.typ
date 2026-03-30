@@ -10,6 +10,7 @@
   institution: "Institut für Automatisierungs und Regelungstechnik\n UMIT TIROL, Hall in Tirol, Österreich",
   location: "Irgendwo",
   authors: ([John Doel], [Jane Doe$zwj^(star)$], [Max Mustermann]),
+  authors-short: [Doel et al.],
   date: datetime(day: 1, month: 3, year: 2024),
   bib: bibliography(title: none, "sources.bib"),
   handout: false,
