@@ -255,7 +255,7 @@
       counter(page).display("1")
     )
   },
-  slides: (authors:none, title:none, date:none, pagenum:none) => context {
+  slides: (author:none, title:none, date:none, pagenum:none) => context {
     let opts = options.final()
     block(
       [
@@ -271,12 +271,7 @@
             rows: (1.5em, auto),
             grid.cell(
               align: left,
-              if authors.len() > 1 {
-                let lastname = (authors,).flatten().at(0).split().at(-1)
-                [#lastname et al.]
-              } else {
-                (authors,).flatten().at(0)
-              },
+              author,
             ),
             grid.cell(
               title.at(1),

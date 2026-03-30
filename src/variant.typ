@@ -362,14 +362,15 @@
   institution: none,
   location: none,
   authors: none,
+  authors-short: none,
   date: none,
   bib: none,
   aspect-ratio: "16-9",
   font: "CMU Sans Serif",
   align: horizon,
   size: 18pt,
-  handout: false,
-  notes: none,
+  handout: false, // render as handout: false, true
+  notes: none, // show speaker notes: none, right, bottom; sh
   ..chosen,
 ) = { body => context {
   option-set(
@@ -405,6 +406,7 @@
       title: title,
       subtitle: subtitle,
       authors: authors,
+      authors-short: authors-short,
       date: date,
       institution: institution,
       conference: conference,
@@ -456,7 +458,7 @@
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
       header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading)),
       footer: self => (footer.slides)(
-        authors: authors,
+        author: if authors-short == none [#authors.at(0)] else [#authors-short],
         title: title,
         date: date,
         pagenum: utils.call-or-display(self, self.store.footer-pagenum),
