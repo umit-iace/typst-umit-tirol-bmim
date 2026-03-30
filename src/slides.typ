@@ -20,7 +20,6 @@
   self = utils.merge-dicts(self, new-config)
 
   let authors = (self.info.authors,).flatten()
-  let mainAuthorIdx = self.info.mainAuthorIdx
   let title = (self.info.title,).flatten()
   let subtitle = self.info.subtitle
   let institution = self.info.institution
@@ -53,7 +52,7 @@
       column-gutter: 1em,
       row-gutter: 1em,
         ..authors.enumerate().map(((idx, author)) => {
-          author + if mainAuthorIdx == idx [$zwj^star$]
+          author
         }
       )
     )
