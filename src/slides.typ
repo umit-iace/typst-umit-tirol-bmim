@@ -110,56 +110,24 @@
 
   self = utils.merge-dicts(self, new-config)
 
-  let cntOutline = counter("outline")
-
   let body = {
     show: align.with(horizon)
-
     show outline.entry.where(level: 1): it => {
-      cntOutline.step()
-
-      link(it.element.location(), grid(
-        columns: (-5em, 1fr),
-        gutter: 10em,
-        // block(
-        //   fill: self.colors.primary,
-        //   inset: 4pt,
-        //   strong(context text(
-        //     fill: white,
-        //     cntOutline.display()),
-        //   ),
-        // ),
-        grid.cell(""),
-        block(
+      let style(entry) = block(
           fill: gradient.linear(
             self.colors.primary,
             self.colors.primary.transparentize(100%),
             relative: "parent",
           ),
-          width: 75%,
+          width: 100%,
           inset: 6pt,
-          strong(text(
-            fill: white,
-            it.indented(it.prefix(), it.body())
-          ))
-        ),
-      ))
+          strong(text( fill: white, entry ))
+        )
+      link(it.element.location(), style( it.body() ))
       v(1em)
     }
 
-    components.adaptive-columns(
-      start: text(
-        1.2em,
-        fill: self.colors.primary,
-        weight: "bold",
-        utils.call-or-display(self, none),
-      ),
-      text(
-        fill: self.colors.primary,
-        outline(title: none, indent: 1em, depth: 1, ..args),
-      ),
-    )
-    show: pad.with(x: 1.6em)
+    pad(x: 5em, outline(depth: 1, ..args))
   }
 
   touying-slide(self: self, body)
