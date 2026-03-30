@@ -53,15 +53,7 @@
       column-gutter: 1em,
       row-gutter: 1em,
         ..authors.enumerate().map(((idx, author)) => {
-          if mainAuthorIdx != none {
-            if mainAuthorIdx == idx {
-              $text(font: opts.font, fill: black, author)^(star)$
-            } else {
-              text(fill: black, author)
-            }
-          } else {
-            text(fill: black, author)
-          }
+          author + if mainAuthorIdx == idx [$zwj^star$]
         }
       )
     )
