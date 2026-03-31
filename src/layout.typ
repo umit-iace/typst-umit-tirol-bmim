@@ -23,15 +23,14 @@
 #let banner(..args) = {
   let opts = options.final()
   let height = if args.named().at("slide", default: false) {0.9em} else {1.5em}
+  let size = args.named().at("size", default: 1em)
   box(
     width: 100%, height: height,
     fill: opts.theme.highlight,
     if args.pos().len() != 0 {
       set align(horizon)
-      // set text(1.2em, white)
-      set text(opts.theme.neutral-lightest)
-      // show: strong
-      pad(x:1.5em, ..args.pos())
+      show text: set text(size: size, fill: opts.theme.neutral-lightest)
+      pad(x:1em, ..args.pos())
     }
   )
 }
@@ -110,47 +109,42 @@
   report: header-colored(),
   slides: (heading: none) => context {
     let opts = options.final()
+    let logo-left = if type(opts.logo) == dictionary {
+      opts.logo.at("left", default: auto)
+    } else {
+      opts.logo
+    }
+    let logo-right = if type(opts.logo) == dictionary {
+      opts.logo.at("right", default: auto)
+    } else {
+      opts.logo
+    }
+    set text(weight: "bold")
     pad(
       top: 0.6em,
       grid(
-        columns: (7%, 10%, 62.25%, 13.5%, 10%),
+        columns: (7%, auto, 1fr, auto, 7%),
         banner(slide: true),
-        if opts.logo-left == none {
+        if logo-left == auto {
           pad(
             top: -8pt,
             left: -7pt,
-            image("./../assets/iace.svg")
+            right: -2pt,
+            image("./../assets/iace.svg", height: 1.7em)
           )
-        } else{
-          opts.logo-left
+        } else {
+          logo-left
         },
-        pad(
-          left: -3pt,
-          block(
-            width: 100%,
-            height: 0.9em,
-            fill: opts.theme.highlight,
-            place(
-              left + horizon,
-              text(
-                fill: white,
-                weight: "bold",
-                size: 0.8em,
-                heading,
-              ),
-              dx: 1em,
-              dy: -1.5pt,
-            ),
-            below: 0.25em,
-          )
+        pad( x: -1pt,
+          banner(slide: true, size: 0.8em, move(dy: -1.5pt, heading))
         ),
-        if opts.logo-right == none {
+        if logo-right == auto {
           pad(
-            left: 5pt,
+            x: 5pt,
             image("./../assets/logo_umit_de.svg", height: 1.4em)
           )
         } else {
-          opts.logo-right
+          logo-right
         },
         banner(slide: true),
       )
