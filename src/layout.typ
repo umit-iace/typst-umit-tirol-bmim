@@ -273,7 +273,7 @@
             align: (left, auto, center, right),
             rows: 1.5em,
             author,
-            title.at(1),
+            title,
             if opts.lang == "de" {
               [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
             } else {

@@ -356,16 +356,16 @@
 }}
 
 #let slides(
-  title: none,
-  subtitle: none,
-  conference: none,
-  institution: none,
-  location: none,
-  authors: none,
-  authors-short: none,
-  date: none,
-  bib: none,
-  aspect-ratio: "16-9",
+  title: none, // [Title] or ([Long Title], [Short Title])
+  subtitle: none, // str or content or none
+  conference: none, // str or content or none
+  institution: none, // str or content or none
+  location: none, // str or content or none
+  authors: none, // [Author] or ([List], [of], [authors])
+  authors-short: none, // none or [short author]
+  date: none, // datetime
+  bib: none, // none or "path/to/bibfile"
+  aspect-ratio: "16-9", // "16-9" or "4-3"
   font: "CMU Sans Serif",
   align: horizon,
   size: 18pt,
@@ -458,8 +458,12 @@
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
       header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading)),
       footer: self => (footer.slides)(
-        author: if authors-short == none [#authors.at(0)] else [#authors-short],
-        title: title,
+        author: if authors-short == none {
+          if type(authors) != array {authors} else {authors.at(0)}
+        } else {
+          authors-short
+        },
+        title: if type(title) != array { title } else { title.at(1) },
         date: date,
         pagenum: utils.call-or-display(self, self.store.footer-pagenum),
       ),
