@@ -142,7 +142,7 @@
   let new-config = utils.merge-dicts(
     opts,
     config-page(
-      margin: 0pt,
+      margin: (top: 2em, left: 1em),
       header: none,
       footer: none,
       background:
@@ -154,7 +154,7 @@
   self = utils.merge-dicts(self, new-config)
   self.store.title = ""
 
-  let body = {
+  let body = pad(x:5em, {
     set text(size: 1.5em, fill: self.colors.neutral-lightest, weight: "bold")
     v(-4em)
     block(
@@ -164,10 +164,10 @@
         self.colors.primary.transparentize(100%),
         relative: "parent",
       ),
-      inset: (x: 2em, y: .8em),
+      inset: 0.6em,
       utils.display-current-heading(level: level, numbered: numbered)
     )
-  }
+  })
 
   touying-slide(self: self, body)
 })
