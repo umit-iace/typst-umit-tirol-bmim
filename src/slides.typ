@@ -27,10 +27,11 @@
   let location = self.info.location
   let date = self.info.date
 
-  let bold(size, body) = text(size: size, fill:self.colors.primary, weight: "bold", body)
+  let bold(size, body) = strong(text(size: size, body))
 
   let body = {
     set align(center + horizon)
+    set text(fill: self.colors.primary)
     v(-3.0em)
     block(
       fill: self.colors.background,
@@ -60,7 +61,7 @@
     // institution
     if institution != none {
       parbreak()
-      text(size: 0.7em, fill:self.colors.primary, institution)
+      text(size: 0.7em, institution)
     }
     v(1em)
     // conference

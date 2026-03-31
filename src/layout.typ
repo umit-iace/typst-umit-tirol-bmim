@@ -276,31 +276,20 @@
           inset: (x: 2em, top: -0.3em ,bottom: 0.5em),
           grid(
             columns: (25%, 50%, 1fr, 5em),
-            rows: (1.5em, auto),
-            grid.cell(
-              align: left,
-              author,
-            ),
-            grid.cell(
-              title.at(1),
-            ),
-            grid.cell(
-              align: center,
-              if opts.lang == "de" {
-                [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
-              } else {
-                [#translatedMonth(date, opts.lang) #date.day(), #date.year()]
-              }
-            ),
-            grid.cell(
-              align: right,
-              pagenum
-            ),
+            align: (left, auto, center, right),
+            rows: 1.5em,
+            author,
+            title.at(1),
+            if opts.lang == "de" {
+              [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
+            } else {
+              [#translatedMonth(date, opts.lang) #date.day(), #date.year()]
+            },
+            pagenum,
           ),
         )
       ]
     )
-    //
   },
   workbook: (course) => context {
     let opts = options.final()
