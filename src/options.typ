@@ -12,6 +12,7 @@
   task-wrap-counter: none,
   font: ("New Computer Modern",),
   size: 12pt,
+  logo: auto, // none, auto, (left: // , right: //)
 ))
 
 #let option-set(dict) = {

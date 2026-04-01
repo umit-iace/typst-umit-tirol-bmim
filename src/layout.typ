@@ -1,6 +1,7 @@
 #import "task.typ"
 #import "utils.typ": *
 #import "options.typ": *
+#import "slides.typ": *
 
 #let heading-colored(it) = context {
   let opts = options.final()
@@ -21,15 +22,15 @@
 
 #let banner(..args) = {
   let opts = options.final()
+  let height = if args.named().at("slide", default: false) {0.9em} else {1.5em}
+  let size = args.named().at("size", default: 1em)
   box(
-    width: 100%, height: 1.5em,
+    width: 100%, height: height,
     fill: opts.theme.highlight,
     if args.pos().len() != 0 {
       set align(horizon)
-      // set text(1.2em, white)
-      set text(opts.theme.neutral-lightest)
-      // show: strong
-      pad(x:1.5em, ..args.pos())
+      show text: set text(size: size, fill: opts.theme.neutral-lightest)
+      pad(x:1em, ..args.pos())
     }
   )
 }
@@ -100,19 +101,55 @@
 }
 
 #let header = (
-  lab: header-colored(),
   exam: header-colored(),
   exercise: header-colored(),
-  report: header-colored(),
-  poster: header-colored(),
+  lab: header-colored(),
   lecture: header-colored(),
-  slides: header-colored(title:
-        context if opts.variant == "slides" {
-          let list = query(heading.where(level:1).before(here()))
-          if list.len() != 0 {
-            list.last().body
-          }
-        }),
+  poster: header-colored(),
+  report: header-colored(),
+  slides: (heading: none) => context {
+    let opts = options.final()
+    let logo-left = if type(opts.logo) == dictionary {
+      opts.logo.at("left", default: auto)
+    } else {
+      opts.logo
+    }
+    let logo-right = if type(opts.logo) == dictionary {
+      opts.logo.at("right", default: auto)
+    } else {
+      opts.logo
+    }
+    set text(weight: "bold")
+    pad(
+      top: 0.6em,
+      grid(
+        columns: (7%, auto, 1fr, auto, 7%),
+        banner(slide: true),
+        if logo-left == auto {
+          pad(
+            top: -8pt,
+            left: -7pt,
+            right: -2pt,
+            image("./../assets/iace.svg", height: 1.7em)
+          )
+        } else {
+          logo-left
+        },
+        pad( x: -1pt,
+          banner(slide: true, size: 0.8em, move(dy: -1.5pt, heading))
+        ),
+        if logo-right == auto {
+          pad(
+            x: 5pt,
+            image("./../assets/logo_umit_de.svg", height: 1.4em)
+          )
+        } else {
+          logo-right
+        },
+        banner(slide: true),
+      )
+    )
+  },
   workbook: context {
     if page-is-chap-start() {
       none
@@ -220,7 +257,33 @@
       counter(page).display("1")
     )
   },
-  slides: () => context {
+  slides: (author:none, title:none, date:none, pagenum:none) => context {
+    let opts = options.final()
+    block(
+      [
+        #block(
+          inset: (bottom: -3em),
+          components.progress-bar(height: 1.75em, rgb(200, 183, 118).lighten(80%), white)
+        )
+        #box(
+          stroke: opts.theme.highlight,
+          inset: (x: 2em, top: -0.3em ,bottom: 0.5em),
+          grid(
+            columns: (25%, 50%, 1fr, 5em),
+            align: (left, auto, center, right),
+            rows: 1.5em,
+            author,
+            title,
+            if opts.lang == "de" {
+              [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
+            } else {
+              [#translatedMonth(date, opts.lang) #date.day(), #date.year()]
+            },
+            pagenum,
+          ),
+        )
+      ]
+    )
   },
   workbook: (course) => context {
     let opts = options.final()
@@ -421,7 +484,7 @@
 
     })
   ),
-  slides:   (course, title, authors, date) => context { },
+  slides: () => context {},
   workbook: (course, authors, date) => context {
     let opts = options.final()
     let course = if type(course) == array { course.at(0) } else { course }
@@ -508,5 +571,20 @@
       inset: 0.3em,
       sol,
     ),
+  )
+}
+
+#let slides-quote(it, quotes, outset: 0.5em) = {
+  box(
+    fill: luma(220),
+    outset: outset,
+    width: 100%,
+    quotes.at(0) + it.body + quotes.at(1)
+    + if it.attribution != none {
+      set text(size: 0.8em)
+      linebreak()
+      h(1fr)
+      it.attribution
+    },
   )
 }
