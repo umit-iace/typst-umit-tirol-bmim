@@ -1,4 +1,4 @@
-#import "@preview/touying:0.6.3": *
+#import "@preview/touying:0.7.0": *
 #import "@local/typst-umit-tirol-bmim:0.2.0" as bmim: example, tip, hint
 
 #show: bmim.slides(
