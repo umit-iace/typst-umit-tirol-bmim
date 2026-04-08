@@ -1,4 +1,4 @@
-#import "@local/typst-umit-tirol-bmim:0.2.0" as bmim: poster-box
+#import "@local/umit-tirol-bmim:0.2.0" as bmim: poster-box
 
 #show: bmim.poster(
   title:[],

@@ -1,5 +1,5 @@
 [package]
-name = "typst-umit-tirol-bmim"
+name = "umit-tirol-bmim"
 version = "0.2.0"
 entrypoint = "src/lib.typ"
 authors = ["IACE <https://github.com/umit-iace>"]

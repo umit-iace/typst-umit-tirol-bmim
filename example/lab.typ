@@ -1,4 +1,4 @@
-#import "@local/typst-umit-tirol-bmim:0.2.0" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, important, tip, example, hint
+#import "@local/umit-tirol-bmim:0.2.0" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, important, tip, example, hint
 
 #show: bmim.lab(
   title: ("Title"),
