@@ -1,6 +1,6 @@
 # typst-umit-tirol-bmim
 
-**typst-umit-tirol-bmim** is a theme for creating exams/practicals/... in [Typst](https://github.com/typst/typst) with the corporate design of [UMIT TIROL](https://www.umit-tirol.at/).
+**typst-umit-tirol-bmim** is a template for creating exams/practicals/... in [Typst](https://github.com/typst/typst) with the corporate design of [UMIT TIROL](https://www.umit-tirol.at/).
 
 ## Features
 
