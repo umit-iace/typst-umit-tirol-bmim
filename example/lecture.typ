@@ -1,10 +1,11 @@
 #import "@local/typst-umit-tirol-bmim:0.2.0" as bmim
 
 #show: bmim.lecture(
-  course: ([Advanced Control],[AC]),
-  authors: ("Author1", "Author3", "Author3"),
-  lang: "en",
+  lang: "de",
+  course: ("Vorlesung", "VL"),
+  authors: ("John Doe", "Jane Doe", "Max Mustermann"),
+  date: datetime(day: 1, month: 3, year: 2024),
 )
 
-= Normalformen
+= Kapitel
 

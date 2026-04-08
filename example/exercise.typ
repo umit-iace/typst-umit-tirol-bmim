@@ -1,26 +1,27 @@
 #import "@local/typst-umit-tirol-bmim:0.2.0" as bmim: task
 
-
 #show: bmim.exercise(
   title: "Übung 1",
-  course: ([Advanced Control],[AC]),
-  authors: ("Author1", "Author3", "Author3"),
+  course: ([Vorlesung],[VL]),
+  authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   show-solution: "inline",
   lang: "de",
 )
+
+#set math.equation(numbering: "(1.1)")
 
 #task(
   label: <task:main>,
   [
     Das Eingangs-Ausgangsverhalten eines Systems wird durch die Übertragungsfunktion
     $
-    G(s) & = frac(s+2, 2 s^(2) - 2 s + 1)
+      G(s) & = frac(s + 2, 2 s^(2) - 2 s + 1)
     $
     beschrieben.
   ],
   (
     points: 10,
-    label: <task:sub>,
+    label: <task:sub1>,
     description: [
       Geben Sie eine Realisierung der Übertragungsfunktion in
       Regelungsnormalform an.
@@ -28,35 +29,37 @@
     solution: [
       Regelungsnormalform:
       $
-      dot(bold(x)) & = mat(0, 1; -frac(1,2), 1) bold(x) + mat(0; 1) u \
-      y & = mat(1, frac(1, 2)) bold(x)
+        dot(bold(x))(t) & = mat(0, 1; -frac(1,2), 1) bold(x)(t) + mat(0; 1) u(t) \
+        y(t) & = mat(1, frac(1, 2)) bold(x)(t)
       $
     ]
   ),
   (
     points: 30,
+    label: <task:sub2>,
     description: [
       Ist die interne Dynamik des Systems stabil?
       Begründen Sie Ihre Antwort.
     ],
     solution: [
       Die Eigenwerte der internen Dynamik entsprechen den Zählernullstellen.
-      Diese sind durch die Lösungen von $s+2=0$ durch $s=-2$ gegeben und somit ist die interne Dynamik in Folge des negativen Realteils stabil.
+      Diese sind durch die Lösungen von $s + 2 = 0$ durch $s = -2$ gegeben und somit ist die interne Dynamik in Folge des negativen Realteils stabil.
     ]
   )
 )
+
 #task(
   [
 
     Betrachtet wird das System
     $
-    dot(x)_1 = x_2, #h(5em)
-    dot(x)_2 = x_3, #h(5em)
-    dot(x)_3 = x_2 - x_3 + u
+      dot(x)_1(t) = x_2(t), #h(5em)
+      dot(x)_2(t) = x_3(t), #h(5em)
+      dot(x)_3(t) = x_2(t) - x_3(t) + u(t)
     $
     mit dem Ausgang
     $
-    y & = x_1 + 2 x_2 + x_3.
+      y(t) & = x_1(t) + 2 x_2(t) + x_3(t).
     $
 
   ],
@@ -80,7 +83,7 @@
       Dies kann entweder direkt aus der Ausgangsmatrix $c^(sans(upright(T)))=(1,1,1)$ abgelesen werden oder aber durch Differentiation des
       Ausgangs:
       $
-      dot(y) & = dot(x)_1 + 2 dot(x)_2 + dot(x)_3 = x_2 + 2 x_3 + x_2 - x_3 + u = 2 x_2 + x_3 + u.
+        dot(y)(t) & = dot(x)_1(t) + 2 dot(x)_2(t) + dot(x)_3(t) = x_2(t) + 2 x_3(t) + x_2(t) - x_3(t) + u(t) = 2 x_2(t) + x_3(t) + u(t).
       $
     ]
   )
@@ -89,9 +92,7 @@
 #task(
   points: 5,
   description: [ single points task description referencing @task:main and also
-  @task:sub],
-  solution: [ this is how to also reference from solution @task:sub],
+  @task:sub1],
+  solution: [ this is how to also reference from solution @task:sub2],
 )
-
-
 

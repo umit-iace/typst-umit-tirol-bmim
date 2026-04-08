@@ -1,13 +1,15 @@
 #import "@local/typst-umit-tirol-bmim:0.2.0" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, important, tip, example, hint
 
 #show: bmim.lab(
-  title: ("Parameteridentifikation", "Motor mit Drehlast"),
+  title: ("Title"),
   lang: "de",
-  course: ("Advanced Control", "AC"),
+  course: ("Vorlesung", "VL"),
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   date: datetime(day: 1, month: 3, year: 2024),
   show-solution: "inline",
 )
+
+#set math.equation(numbering: "(1.1)")
 
 #outline()
 
@@ -20,14 +22,41 @@
 #lorem(10)
 
 #task(
-  points: 10,
-  description: [
-    Test Problem
+  label: <task:main1>,
+  [
+    Test Problem with a equation
+    $
+      p & = s + 4
+    $<eq:main1>
+    and @netwok2020.
+  ],
+  (
+    points: 10,
+    label: <task:sub1>,
+    description: [
+      Test Problem
 
-    Take a look in the solution
-  ], solution: [
-    Lösung steht hier ganz fett mit $1+1=2$.
-  ])
+      Take a look in the solution
+    ],
+    solution: [
+      Solution is $1+1=2$.
+      w/e @task:main1 before @task:sub2
+    ]
+  ),
+  (
+    points: 10,
+    label: <task:sub2>,
+    description: [
+      Test Problem
+
+      Take a look in the solution
+    ],
+    solution: [
+      Solution is $1+1=2$.
+      w/e @task:main1 before @task:sub1 with @eq:main1.
+    ]
+  )
+)
 
 === First Subsubsection
 
@@ -70,14 +99,21 @@ It is important to remember Newton's third law @newton-third, and Hook's law
 #lorem(20) @netwok2020
 
 #task(
-  points: 20,
+  points: 10,
+  label: <task:main2>,
   description: [
-    Test Problem 2
+    Test Problem with a equation
+    $
+      p & = s + 4
+    $<eq:main2>
+    and @netwok2020.
 
     Take a look in the solution
-  ], solution: [
-    Lösung steht hier ganz fett mit $1+5=6$.
-  ])
+  ],
+  solution: [
+    Solution of @task:main2 is $1+1=2$.
+  ]
+)
 
 #show: backmatter
 
@@ -97,4 +133,4 @@ It is important to remember Newton's third law @newton-third, and Hook's law
 
 #hint[Test]
 
-#bibliography("sources.bib", title: "Literatur")
+#bibliography("sources.bib", title: "Bibliography")

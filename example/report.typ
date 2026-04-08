@@ -2,10 +2,7 @@
 
 #show: bmim.report(
   title: [Laborbericht],
-  authors: (
-    [Max Mustermann],
-    [Eva Musterfrau],
-  ),
+  authors: ("John Doe", "Jane Doe"),
 )
 
 = Kurzzusammenfassung
@@ -22,6 +19,7 @@
 = Last Section
 
 #lorem(30)
+
 = Section
 
 - element
@@ -55,6 +53,7 @@
 = Last Section
 
 #lorem(30)
+
 = Section
 
 - element

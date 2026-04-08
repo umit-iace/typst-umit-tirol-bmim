@@ -1,66 +1,88 @@
 #import "@local/typst-umit-tirol-bmim:0.2.0" as bmim: task, hint
 
 #show: bmim.workbook(
-  course: [VU Modellbildung und Simulation 1],
-  authors: ([Luca Mayer], [Frank Woittennek]),
+  course: [Vorlesung],
+  authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   lang:"de",
+  show-solution: "inline",
 )
 
 #set math.equation(numbering: "(1.1)")
 
-= Dynamische Systeme
+= Systems
 
-// #[
-// #set heading(offset: 1)
 #task(
-	name: [Fliehkraftregler],
-	label: <task:fkr>,
-[zeigt den mechanischen Teil eines Fliehkraftreglers. Darin bezeichnen das Drehmoment M(t), die
-Winkelgeschwindigkeit ω(t) und der Winkel α(t) die Systemgrößen. Die Masse m, die Länge ℓ und die
-Erdbeschleunigung g sind konstante Parameter. Die nichtlinearen Modellgleichungen für das betrachtete
-System seien durch
-$
-m l^2 ( dot(omega) (t) sin^2(alpha (t)) + omega(t) dot(alpha)(t) sin(2 alpha(t))) &= M(t)\
-2 l dot.double(alpha)(t) - l omega^2(t) sin(2 alpha(t)) &= -2g sin(alpha(t))
-$ <eq:fliehkraftregler>
-gegeben.
-],
-(
-	points: 0,
-	label: <task:sub>,
-	description: [
-		Wählen Sie das Drehmoment $M(t)$ als Eingang, den Winkel
-		$alpha(t)$ als Ausgang und gegben Sie eine Zustandsdarstellung des
-		nichtlinearen Systems zu diesem Eingang an.
-	],
-	solution: [],
-),
-(
-	points: 0,
-	description: [
-		Geben Sie sämtliche Ruhelagen $(dash(alpha), dash(M), dash(omega))$ des
-		Systems @eq:fliehkraftregler an.
-		#hint(plural: false)[$sin(2alpha) = 2sin(alpha)cos(alpha)$]
-		w/e @task:fkr before @task:sub
-	],
-	solution: [],
-),
+  label: <task:main1>,
+  [
+    Test Problem with a equation
+    $
+      p & = s + 4
+    $<eq:main1>
+    and @netwok2020.
+  ],
+  (
+    points: 10,
+    label: <task:sub1>,
+    description: [
+      Test Problem
+
+      Take a look in the solution
+    ],
+    solution: [
+      Solution is $1+1=2$.
+      w/e @task:main1 before @task:sub2
+    ]
+  ),
+  (
+    points: 10,
+    label: <task:sub2>,
+    description: [
+      Test Problem
+
+      Take a look in the solution
+    ],
+    solution: [
+      Solution is $1+1=2$.
+      w/e @task:main1 before @task:sub1 with @eq:main1.
+    ]
+  )
 )
 
+#task(
+  points: 10,
+  label: <task:main2>,
+  description: [
+    Test Problem with a equation
+    $
+      p & = s + 4
+    $<eq:main2>
+    and @netwok2020.
+
+    Take a look in the solution
+  ],
+  solution: [
+    Solution of @task:main2 is $1+1=2$.
+  ]
+)
 
 == first subs
+
 #lorem(30)
+
 == second subs
+
 #lorem(30)
-// ]
 
 #pagebreak()
 
 #lorem(30)
 
 = Second
+
 #lorem(30)
 
 #pagebreak()
 
 #lorem(30)
+
+#bibliography("sources.bib", title: "References")

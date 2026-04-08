@@ -2,8 +2,8 @@
 
 #show: bmim.exam(
   title: "Eingangstest",
-  course: ([Advanced Control],[AC]),
-  authors: ("Author1", "Author3", "Author3"),
+  course: ([Vorlesung],[VL]),
+  authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   show-solution: "bottom",
   empty-sheets: auto,
   total-time: [90min],
@@ -11,90 +11,57 @@
   lang: "de",
 )
 
+#set math.equation(numbering: "(1.1)")
+
 #task(
-  label: <task:main>,
+  label: <task:main1>,
   [
-    Das Eingangs-Ausgangsverhalten eines Systems wird durch die Übertragungsfunktion
+    Test Problem with a equation
     $
-    G(s) & = frac(s+2, 2 s^(2) - 2 s + 1)
-    $
-    beschrieben.
+      p & = s + 4
+    $<eq:main1>
   ],
   (
     points: 10,
     label: <task:sub1>,
     description: [
-      Geben Sie eine Realisierung der Übertragungsfunktion in
-      Regelungsnormalform an.
+      Test Problem
+
+      Take a look in the solution
     ],
     solution: [
-      Regelungsnormalform:
-      $
-      dot(bold(x)) & = mat(0, 1; -frac(1,2), 1) bold(x) + mat(0; 1) u \
-      y & = mat(1, frac(1, 2)) bold(x)
-      $
+      Solution is $1+1=2$.
+      w/e @task:main1 before @task:sub2
     ]
   ),
   (
-    points: 30,
+    points: 10,
     label: <task:sub2>,
     description: [
-      Ist die interne Dynamik des Systems stabil?
-      Begründen Sie Ihre Antwort.
+      Test Problem
+
+      Take a look in the solution
     ],
     solution: [
-      Die Eigenwerte der internen Dynamik entsprechen den Zählernullstellen.
-      Diese sind durch die Lösungen von $s+2=0$ durch $s=-2$ gegeben und somit ist die interne Dynamik in Folge des negativen Realteils stabil.
+      Solution is $1+1=2$.
+      w/e @task:main1 before @task:sub1 with @eq:main1.
     ]
   )
 )
+
 #task(
-  [
+  points: 10,
+  label: <task:main2>,
+  description: [
+    Test Problem with a equation
+    $
+      p & = s + 4
+    $<eq:main2>
+    and a reference to @eq:main1 in @task:main2.
 
-    Betrachtet wird das System
-    $
-    dot(x)_1 = x_2, #h(5em)
-    dot(x)_2 = x_3, #h(5em)
-    dot(x)_3 = x_2 - x_3 + u
-    $
-    mit dem Ausgang
-    $
-    y & = x_1 + 2 x_2 + x_3.
-    $
-
+    Take a look in the solution
   ],
-  (
-    points: 20,
-    description: [
-      Wie heißt die spezielle Zustandsdarstellung in der das System gegeben ist?
-    ],
-    solution: [
-      Das System liegt in Regelungsnormalform vor.
-    ]
-  ),
-  (
-    points: 20,
-    description: [
-      Welchen relativen Grad besitzt das System?
-      Begründen Sie Ihre Antwort.
-    ],
-    solution: [
-      Der relative Grad des Systems ist eins.
-      Dies kann entweder direkt aus der Ausgangsmatrix $c^(sans(upright(T)))=(1,1,1)$ abgelesen werden oder aber durch Differentiation des
-      Ausgangs:
-      $
-      dot(y) & = dot(x)_1 + 2 dot(x)_2 + dot(x)_3 = x_2 + 2 x_3 + x_2 - x_3 + u = 2 x_2 + x_3 + u.
-      $
-    ]
-  )
+  solution: [
+    Solution of @task:main2 is $1+1=2$.
+  ]
 )
-
-#task(
-  points: 5,
-  description: [ single points task description referencing @task:main and also
-  @task:sub1],
-  solution: [ this is how to also reference from solution @task:sub2],
-)
-
-
-
