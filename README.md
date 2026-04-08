@@ -5,7 +5,7 @@
 ## Features
 
 - **Admonitions** (with localization and plural support).
-- Subset of predefined colors (see [colors.typ](colors.typ)).
+- Subset of predefined colors (see [colors.typ](src/colors.typ)).
 - Variants:
     - exams
     - exercise
