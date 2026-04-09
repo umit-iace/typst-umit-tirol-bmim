@@ -1,4 +1,4 @@
-#import "@local/umit-tirol-bmim:0.2.0" as bmim
+#import "/src/lib.typ" as bmim
 
 #show: bmim.report(
   title: [Laborbericht],

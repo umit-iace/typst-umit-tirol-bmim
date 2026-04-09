@@ -1,4 +1,4 @@
-#import "@local/umit-tirol-bmim:0.2.0" as bmim: task, hint
+#import "/src/lib.typ" as bmim: task, hint
 
 #show: bmim.workbook(
   course: [Vorlesung],
