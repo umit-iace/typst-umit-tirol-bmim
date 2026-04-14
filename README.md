@@ -1,6 +1,6 @@
-# bmim-suite
+# ratsch-bmim
 
-**bmim-suite** is a template for creating exams/practicals/... in [Typst](https://github.com/typst/typst) with the corporate design of [UMIT TIROL](https://www.umit-tirol.at/).
+**ratsch-bmim** is a template for creating exams/practicals/... in [Typst](https://github.com/typst/typst) with the corporate design of [UMIT TIROL](https://www.umit-tirol.at/).
 
 ## Features
 
@@ -33,8 +33,8 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 Create a new typst project based on this template locally.
 
 ```bash
-typst init @preview/bmim-suite
-cd bmim-suite
+typst init @preview/ratsch-bmim
+cd ratsch-bmim
 ```
 
 Or create a project on the typst web app based on this template.
@@ -55,5 +55,5 @@ This will watch your file and recompile it to a pdf when the file is saved.
 
 ### Install locally
 
-- Store the package in `~/.local/share/typst/packages/local/bmim-suite/0.2.0`
-- Import from it with `#import "@local/bmim-suite:0.2.0": *`
+- Store the package in `~/.local/share/typst/packages/local/ratsch-bmim/0.2.0`
+- Import from it with `#import "@local/ratsch-bmim:0.2.0": *`
