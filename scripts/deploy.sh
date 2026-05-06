@@ -35,6 +35,7 @@ files=$(git ls-files -- . ':!:.github/'  ':!:.typstignore'  ':!:.gitignore' ':!:
 cp --parents $files $dest
 
 find $dest/example/ -name "*.typ" -exec sed -i "s|/src/lib.typ|@preview/ratsch-bmim:$v|" {} +
+find $dest/template/ -name "*.typ" -exec sed -i "s|/src/lib.typ|@preview/ratsch-bmim:$v|" {} +
 
 cd $dest
 git add .
