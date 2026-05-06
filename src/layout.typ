@@ -36,7 +36,7 @@
 }
 
 #let header-colored(title:none) = context {
-  let opts = options.final()
+let opts = options.final()
   pad(
     bottom: 0.25em,
     left: -5%,
@@ -105,6 +105,12 @@
   exercise: header-colored(),
   lab: header-colored(),
   lecture: header-colored(),
+  letter: () => context {
+    image(
+      "./../assets/logo_umit_de.svg",
+      width: 35%
+    )
+  },
   poster: header-colored(),
   report: header-colored(),
   slides: (heading: none) => context {
@@ -231,6 +237,12 @@
     }
   },
   lecture: () => context {
+  },
+  letter: () => context {
+    image(
+      "./../assets/footer-umit.png",
+      width: 100%
+    )
   },
   poster: (event,date,location,contact, ..args) => context {
     set text(font: "CMU Typewriter Text")
@@ -462,6 +474,39 @@
     )
   },
   lecture: () => context {
+  },
+  letter: (sender-pro, sender-name, sender-address, author-name, author-tel, author-email, author-pos, location, date, subject) => context {
+    let department = text(gray, size: 8pt)[department für biomedizinische informatik und mechatronik]
+    let institut = text(gray, size: 8pt)[institut für automatisierungs und regelungstechnik]
+    place(top + left, dx: 0.0cm, dy: 0cm, [
+        #department \
+        #institut \
+        #sender-pro \
+        #sender-name \
+        #sender-address
+    ])
+
+    place(top + right, dx: 0.0cm, dy: 0cm, [
+      #align(left)[
+        #text(gray, size: 8pt)[#sym.zwj] \
+        #text(gray, size: 8pt)[#author-pos]\
+        #author-name \
+        T #author-tel\
+        E #author-email
+      ]
+    ])
+
+    v(9.25em)
+
+    align(right)[
+      #location, #print-date(date)
+    ]
+
+    v(1em)
+    if subject != none {
+      subject
+      v(2em)
+    }
   },
   poster:   (title, authors) => context {
     place(top+center, float: true, scope: "parent",[
