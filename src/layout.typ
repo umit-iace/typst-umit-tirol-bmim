@@ -537,11 +537,13 @@
     set align(center)
     set block(
       width: 100%,
-      outset: 0.4em,
+      inset: 0.4em,
       fill: opts.theme.highlight,
+      stroke: opts.theme.highlight + 0.1em,
       radius: (
         top: 0.4em
       ),
+      below: 0pt,
     )
     it
   }
@@ -549,8 +551,7 @@
   block(
     width: 100%,
     height: if height == none { auto } else { height },
-    outset: (x:0.4em, y: 0.2em),
-    inset: (x: 0.4em, y:0.2em),
+    inset: 0.4em,
     fill: opts.theme.highlight.lighten(90%),
     stroke: opts.theme.highlight + 0.1em,
 
