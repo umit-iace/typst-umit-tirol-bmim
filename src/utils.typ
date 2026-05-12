@@ -56,10 +56,11 @@
 
 #let show-marks(m, ys) = context {
   if m == none { return }
+  let y = if type(ys) == array { ys } else { (ys,) }
   let p = m.pages
   if p != "both" and ((p == "odd") != calc.odd(counter(page).get().first())) {
     return
   }
   let l = line(length: m.length, stroke: m.stroke)
-  for y in ys { place(top + left, dx: m.xdist, dy: y, l) }
+  for _y in y { place(top + left, dx: m.xdist, dy: _y, l) }
 }
