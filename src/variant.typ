@@ -228,15 +228,15 @@
 }}
 
 #let letter(
-  sender-name: [],
-  sender-address: [],
-  sender-pro: [],
+  recipient-name: [],
+  recipient-address: [],
+  recipient-pro: [],
   sign: none,
   location: none,
-  author-name: [],
-  author-pos: [],
-  author-tel: [],
-  author-email: [],
+  sender-name: [],
+  sender-pos: [],
+  sender-tel: [],
+  sender-email: [],
   subject: none,
   date: datetime.today(), // datetime or content
   ..chosen
@@ -266,7 +266,7 @@
       show-marks(hole-punch-marks, (148.5mm,))
     },
   )
-  (titleblock.letter)(sender-pro, sender-name, sender-address, author-name, author-tel, author-email, author-pos, location, date, subject)
+  (titleblock.letter)(recipient-pro, recipient-name, recipient-address, sender-name, sender-tel, sender-email, sender-pos, location, date, subject)
 
   body
 
@@ -279,7 +279,7 @@
   } else {
     v(4em)
   }
-  author-name
+  sender-name
 }}
 
 #let poster(

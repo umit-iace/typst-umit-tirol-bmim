@@ -36,7 +36,7 @@
 }
 
 #let header-colored(title:none) = context {
-let opts = options.final()
+  let opts = options.final()
   pad(
     bottom: 0.25em,
     left: -5%,
@@ -475,24 +475,24 @@ let opts = options.final()
   },
   lecture: () => context {
   },
-  letter: (sender-pro, sender-name, sender-address, author-name, author-tel, author-email, author-pos, location, date, subject) => context {
+  letter: (recipient-pro, recipient-name, recipient-address, sender-name, sender-tel, sender-email, sender-pos, location, date, subject) => context {
     let department = text(gray, size: 8pt)[department für biomedizinische informatik und mechatronik]
     let institut = text(gray, size: 8pt)[institut für automatisierungs und regelungstechnik]
     place(top + left, dx: 0.0cm, dy: 0cm, [
         #department \
         #institut \
-        #sender-pro \
-        #sender-name \
-        #sender-address
+        #recipient-pro \
+        #recipient-name \
+        #recipient-address
     ])
 
     place(top + right, dx: 0.0cm, dy: 0cm, [
       #align(left)[
         #text(gray, size: 8pt)[#sym.zwj] \
-        #text(gray, size: 8pt)[#author-pos]\
-        #author-name \
-        T #author-tel\
-        E #author-email
+        #text(gray, size: 8pt)[#sender-pos]\
+        #sender-name \
+        T #sender-tel\
+        E #sender-email
       ]
     ])
 
