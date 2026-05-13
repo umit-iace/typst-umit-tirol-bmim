@@ -228,18 +228,19 @@
 }}
 
 #let letter(
-  recipient-name: [],
-  recipient-address: [],
-  recipient-pro: [],
-  sign: none,
+  recipient-name: none,
+  recipient-institution: none,
+  recipient-address: none,
+  recipient-pro: none,
   location: none,
-
-  sender-department: [],
-  sender-institute: [], 
-  sender-name: [],
-  sender-pos: [],
-  sender-tel: [],
-  sender-email: [],
+  sender-department: none,
+  sender-institute: none,
+  sender-name: none,
+  sender-pos: none,
+  sender-tel: none,
+  sender-fax: none,
+  sender-email: none,
+  sender-sign: none,
   subject: none,
   date: datetime.today(), // datetime or content
   lang: "de",
@@ -248,7 +249,7 @@
   set text(
     lang: lang,
     font: "Bitstream Vera Sans", // free font that looks like Arial
-    size: 11pt,
+    size: 10pt,
   )
   set par( // from 2020 CD
     leading: 0.65em, spacing: 1.5em, justify: false,
@@ -265,7 +266,7 @@
     left: 20mm,
     right: 25mm,
     bottom: 36.5mm,
-    top: 55mm, // make the recipient-address appear in windowed envelope
+    top: 50mm, // make the recipient-address appear in windowed envelope
     rest: 20mm,
   )
   set std.page(
@@ -283,29 +284,23 @@
       recipient-pro,
       recipient-name,
       recipient-address,
+      recipient-institution,
       sender-department,
       sender-institute,
       sender-pos,
       sender-name,
       sender-tel,
+      sender-fax,
       sender-email,
       location,
       date,
       subject,
   )
+
   body
-  v(1em)
-  text[Mit freundlichen Grüßen] // TODO i18n ?
-  if sign != none {
-    v(0.25em)
-    sign
-    v(0.25em)
-  } else {
-    v(4em)
-  }
-  [UMIT TRIOL]
-  linebreak()
-  sender-name
+
+  (finalblock.letter)(sender-name, sender-sign)
+
 }}
 
 #let poster(

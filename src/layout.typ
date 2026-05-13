@@ -323,6 +323,27 @@
   },
 )
 
+#let finalblock = (
+  lecture: () => context {
+  },
+  letter: (sender-name, sign) => context {
+    let opts = options.final()
+
+    v(2em)
+    opts.spell.regards
+    if sign != none {
+      v(0.25em)
+      sign
+      v(0.25em)
+    } else {
+      v(4em)
+    }
+    "UMIT TRIOL"
+    linebreak()
+    sender-name
+  },
+)
+
 #let titleblock = (
   exam:     (course, title, authors, date, total-time, show-hints) => context {
     let opts = options.final()
@@ -476,20 +497,22 @@
   lecture: () => context {
   },
   letter: (
-    recipient-pro, 
-    recipient-name, 
-    recipient-address, 
-    sender-department, 
-    sender-institute, 
-    sender-pos, 
-    sender-name, 
-    sender-tel, 
-    sender-email, 
-    location, 
-    date, 
+    recipient-pro,
+    recipient-name,
+    recipient-address,
+    recipient-institution,
+    sender-department,
+    sender-institute,
+    sender-pos,
+    sender-name,
+    sender-tel,
+    sender-fax,
+    sender-email,
+    location,
+    date,
     subject
   ) => context {
-    let head_text(body) = {
+    let headText(body) = {
       set text(gray, size: 8pt)
       if body != none {
         lower(body)
@@ -498,8 +521,12 @@
     }
     // left block
     place(top + left, [
-        #head_text(sender-department)
-        #head_text(sender-institute)
+        #set text(size: 10pt)
+        #headText(sender-department)
+        #headText(sender-institute)
+        #if recipient-institution != none {
+          [#recipient-institution #linebreak()]
+        }
         #recipient-pro \
         #recipient-name \
         #recipient-address
@@ -507,23 +534,27 @@
     // right block
     place(top + right, [
       #align(left)[
+        #set text(size: 8pt)
         #if sender-department != none {
-          head_text(sym.zwj)
+          headText(sym.zwj)
         }
-        #head_text(sender-pos)
+        #headText(sender-pos)
         #sender-name \
-        T #sender-tel\
+        T #sender-tel \
+        #if sender-fax != none {
+          [F #sender-fax #linebreak()]
+        }
         E #sender-email
       ]
     ])
     // date block
-    v(8em)  
+    v(10.5em)
     align(right)[
       #location, #print-date(date)
     ]
-    // subject line 
+    // subject line
     // (should appear above the first fold)
-    v(1em)
+    v(1.5em)
     if subject != none {
       text(weight: "bold")[#subject]
       v(2em)
