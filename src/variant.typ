@@ -233,15 +233,26 @@
   recipient-pro: [],
   sign: none,
   location: none,
+
+  sender-department: [],
+  sender-institute: [], 
   sender-name: [],
   sender-pos: [],
   sender-tel: [],
   sender-email: [],
   subject: none,
   date: datetime.today(), // datetime or content
+  lang: "de",
   ..chosen
 ) = { body => {
-  show: bmim-common
+  set text(
+    lang: lang,
+    font: "Bitstream Vera Sans", // free font that looks like Arial
+    size: 11pt,
+  )
+  set par( // from 2020 CD
+    leading: 0.65em, spacing: 1.5em, justify: false,
+  )
 
   let marks-default = (
     pages: "both",
@@ -251,27 +262,40 @@
   let folding-marks = marks-default + (length: 3mm)
   let hole-punch-marks = marks-default + (length: 5mm)
   let margin = (
-    left: 25mm,
+    left: 20mm,
     right: 25mm,
     bottom: 36.5mm,
-    top: 32.5mm,
+    top: 55mm, // make the recipient-address appear in windowed envelope
     rest: 20mm,
   )
   set std.page(
     margin: margin,
     header: (header.letter)(),
+    header-ascent: 55%,
     footer: (footer.letter)(),
+    footer-descent: 35%,
     background: {
       show-marks(folding-marks, (105mm, 210mm))
       show-marks(hole-punch-marks, (148.5mm,))
     },
   )
-  (titleblock.letter)(recipient-pro, recipient-name, recipient-address, sender-name, sender-tel, sender-email, sender-pos, location, date, subject)
-
+  (titleblock.letter)(
+      recipient-pro,
+      recipient-name,
+      recipient-address,
+      sender-department,
+      sender-institute,
+      sender-pos,
+      sender-name,
+      sender-tel,
+      sender-email,
+      location,
+      date,
+      subject,
+  )
   body
-
-  v(3em)
-  text[Mit freundlichen Grüßen]
+  v(1em)
+  text[Mit freundlichen Grüßen] // TODO i18n ?
   if sign != none {
     v(0.25em)
     sign
@@ -279,6 +303,8 @@
   } else {
     v(4em)
   }
+  [UMIT TRIOL]
+  linebreak()
   sender-name
 }}
 

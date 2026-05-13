@@ -108,7 +108,7 @@
   letter: () => context {
     image(
       "./../assets/logo_umit_de.svg",
-      width: 35%
+      width: 33%
     )
   },
   poster: header-colored(),
@@ -475,36 +475,57 @@
   },
   lecture: () => context {
   },
-  letter: (recipient-pro, recipient-name, recipient-address, sender-name, sender-tel, sender-email, sender-pos, location, date, subject) => context {
-    let department = text(gray, size: 8pt)[department für biomedizinische informatik und mechatronik]
-    let institut = text(gray, size: 8pt)[institut für automatisierungs und regelungstechnik]
-    place(top + left, dx: 0.0cm, dy: 0cm, [
-        #department \
-        #institut \
+  letter: (
+    recipient-pro, 
+    recipient-name, 
+    recipient-address, 
+    sender-department, 
+    sender-institute, 
+    sender-pos, 
+    sender-name, 
+    sender-tel, 
+    sender-email, 
+    location, 
+    date, 
+    subject
+  ) => context {
+    let head_text(body) = {
+      set text(gray, size: 8pt)
+      if body != none {
+        lower(body)
+        linebreak()
+      }
+    }
+    // left block
+    place(top + left, [
+        #head_text(sender-department)
+        #head_text(sender-institute)
         #recipient-pro \
         #recipient-name \
         #recipient-address
     ])
-
-    place(top + right, dx: 0.0cm, dy: 0cm, [
+    // right block
+    place(top + right, [
       #align(left)[
-        #text(gray, size: 8pt)[#sym.zwj] \
-        #text(gray, size: 8pt)[#sender-pos]\
+        #if sender-department != none {
+          head_text(sym.zwj)
+        }
+        #head_text(sender-pos)
         #sender-name \
         T #sender-tel\
         E #sender-email
       ]
     ])
-
-    v(9.25em)
-
+    // date block
+    v(8em)  
     align(right)[
       #location, #print-date(date)
     ]
-
+    // subject line 
+    // (should appear above the first fold)
     v(1em)
     if subject != none {
-      subject
+      text(weight: "bold")[#subject]
       v(2em)
     }
   },
