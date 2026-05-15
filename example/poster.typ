@@ -5,127 +5,104 @@
 #let possibly-apply(maybe-func) = if type(maybe-func) == function { maybe-func() } else { maybe-func }
 
 #let split(hor, ..args) = {
-  let splits = (1fr,)*args.pos().len()
-  let layout = if hor {(columns: splits, rows: 1fr)} else {(rows: splits,
-  columns: 1fr)}
+  let splits = args.named().at("cuts", default: (1fr,)*args.pos().len())
+  let layout = if hor {(columns: splits, rows: 1fr)} else {(rows: splits, columns: 1fr)}
   grid(
     ..layout,
     stroke: .1pt,
-  // ..args.named(),
     ..for arg in args.pos() {
       (possibly-apply(arg),)
     }
   )
 }
 
+/// create layout using horizontal and vertical splits
+/// optional named argument 'cut' is passed on to `grid`, refer to https://typst.app/docs/reference/layout/grid/#track-size
 #let hs(..args) = split(true, ..args)
 #let vs(..args) = split(false, ..args)
 
-
-#let pbox(..args) = box(
-  inset: 5pt,
-  if args.pos().len() != 0 or args.named() != (:) {
-    args.pos().first()
-  } else {
-    layout(l =>
-      [
-        #metadata(l)<bmim-poster-box>
-        #box(fill:blue, width:1pt, height:1pt)
-      ]
-    )
+/// placeholder for poster box content. used as leaf node in layout definition.
+/// takes `label` for order-independent content definition at a later point
+/// takes _no_ argument, for order-dependent content definition at a later point
+#let box(..args) = std.box(inset: 5pt, layout(sz => {
+  let meta = metadata(sz)
+  if args.pos().len() == 0 [
+    #meta<bmim-poster-box>
+    #return
+  ]
+  let arg = args.pos().first()
+  if type(arg) == label [
+    #meta#arg
+  ] else {
+    panic("unexpected argument type: " + repr(type(arg)))
   }
-)
+}))
 
+/// counter for automatic order-dependent poster box content definition
 #let pcount = counter("bmim-poster-box-counter")
 
-#let put(body) = context {
-  pcount.step()
-  let meta = query(<bmim-poster-box>).at(pcount.get().first())
+/// takes (label, content) for order-independent content definition
+/// or (content) for order-dependent content definition
+#let box-content(..args) = context {
+  let body = args.pos().last()
+  let meta = none
+  if args.pos().len() == 1 {
+    pcount.step()
+    meta = query(<bmim-poster-box>).at(pcount.get().first())
+  } else {
+    let lbl = args.pos().first()
+    meta = query(lbl).first(default: none)
+    if meta == none {
+      panic("label: <"+str(lbl)+ "> not assigned to empty poster box")
+    }
+  }
+
   let size = meta.value
   let where = meta.location().position()
-  // panic(size)
   place(top+left, dx: where.x - page.margin, dy: where.y - page.margin,
-    box(..size, body)
-)
-
+    std.box(..size, body)
+  )
 }
 
 #let layout = vs(
+  cuts: (1fr, 2fr, 1fr),
   hs(
-    pbox, pbox, pbox
-    // pbox[a], pbox[b], pbox[c]
-    // pbox[lorem or smth], pbox[ipsum]
+    cuts: (1fr, 2fr, 1fr),
+    box(<mylabel>), box, box
   ),
-  pbox,
-  hs(pbox, pbox)
-  // pbox[haha],
+  box,
+  hs(box, box)
 )
 
 #layout
-// #panic(layout)
 
 
-#put[
+#box-content[
 = First
 #lorem(20)
 ]
-#put[
+#box-content[
 = Second
 #lorem(20)
 ]
-#put[
+#box-content(<mylabel>)[
 = Third
 #lorem(20)
 ]
-#put[
+#box-content[
 = Fourth
 #lorem(20)
 ]
-#put[
+#box-content[
 = Fifth
 #lorem(20)
 ]
-#put[
+#box-content[
 = Sixth
 #lorem(20)
 ]
-// #put[
+// #box-content(<undef>)[
 // = Seventh
 // #lorem(20)
 // ]
 
-// #show: bmim.poster(
-//   title:[],
-//   authors:(
-//     [John Doe & Jane Doe],
-//     [Max Mustermann]
-//   ),
-//   contact: [`iace.office@umit-tirol.at`],
-//   event: [Wichtiges Event],
-//   location: [UMIT TIROL, Hall in Tirol],
-//   // orientation: "landscape",
-//   orientation: "portrait",
-//   // layout: layout,
-// )
-
-// #poster-box[A Box][
-//   Hey!
-
-//   #lorem(30)
-// ]
-
-// #poster-box(height:1fr)[Another Box][
-//   Do try @tab:try.
-//   #figure(
-//     table(
-//       columns: 4,
-//       ..(context{counter("a").step(); str(counter("a").get().first())},)*8,
-//     ),
-//     caption: [Try me! #lorem(20)],
-//   ) <tab:try>
-// ]
-// #colbreak()
-
-// #poster-box[Oh, a box][
-//   #lorem(30)
-// ]
