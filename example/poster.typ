@@ -43,7 +43,7 @@
 
 /// takes (label, content) for order-independent content definition
 /// or (content) for order-dependent content definition
-#let box-content(..args) = context {
+#let box-content(margin: (:), ..args) = context {
   let body = args.pos().last()
   let meta = none
   if args.pos().len() == 1 {
@@ -60,7 +60,7 @@
   let size = meta.value
   let where = meta.location().position()
   place(top+left, dx: where.x - page.margin, dy: where.y - page.margin,
-    std.box(..size, body)
+    std.box(..size, inset: margin, body)
   )
 }
 
@@ -77,7 +77,7 @@
 #layout
 
 
-#box-content[
+#box-content(margin: (x:10pt))[
 = First
 #lorem(20)
 ]
