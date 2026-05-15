@@ -26,15 +26,11 @@
 /// takes _no_ argument, for order-dependent content definition at a later point
 #let box(..args) = std.box(inset: 5pt, layout(sz => {
   let meta = metadata(sz)
-  if args.pos().len() == 0 [
-    #meta<bmim-poster-box>
-    #return
-  ]
-  let arg = args.pos().first()
-  if type(arg) == label [
-    #meta#arg
+  let lbl = args.pos().first(default: <bmim-poster-box>)
+  if type(lbl) == label [
+    #meta#lbl
   ] else {
-    panic("unexpected argument type: " + repr(type(arg)))
+    panic("unexpected argument type: " + repr(type(lbl)))
   }
 }))
 
