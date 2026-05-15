@@ -64,37 +64,37 @@
   cuts: (1fr, 2fr, 1fr),
   hs(
     cuts: (1fr, 2fr, 1fr),
-    box(<mylabel>), box, box
+    box, box(<labeled>), box
   ),
-  box,
+  box(<other>),
   hs(box, box)
 )
 
 #layout
 
+#box-content(margin: (x:10pt), <labeled>)[
+= Explicit Label
+#lorem(20)
+]
 
-#box-content(margin: (x:10pt))[
-= First
+#box-content[
+= First Auto
 #lorem(20)
 ]
 #box-content[
-= Second
+= Second Auto
 #lorem(20)
 ]
-#box-content(<mylabel>)[
-= Third
-#lorem(20)
-]
-#box-content[
-= Fourth
+#box-content(<other>)[
+= `<other>` Label
 #lorem(20)
 ]
 #box-content[
-= Fifth
+= Third Auto
 #lorem(20)
 ]
 #box-content[
-= Sixth
+= Fourth Auto
 #lorem(20)
 ]
 // #box-content(<undef>)[
