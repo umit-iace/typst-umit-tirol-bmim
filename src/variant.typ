@@ -299,7 +299,11 @@
 
   body
 
-  (finalblock.letter)(sender-name, sender-sign)
+  (finalblock.letter)(
+    sender-name,
+    sender-pos,
+    sender-sign
+  )
 
 }}
 

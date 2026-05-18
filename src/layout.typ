@@ -326,7 +326,7 @@
 #let finalblock = (
   lecture: () => context {
   },
-  letter: (sender-name, sign) => context {
+  letter: (sender-name, sender-pos, sign) => context {
     let opts = options.final()
 
     v(2em)
@@ -338,9 +338,9 @@
     } else {
       v(4em)
     }
-    "UMIT TRIOL"
-    linebreak()
     sender-name
+    linebreak()
+    sender-pos
   },
 )
 
@@ -521,30 +521,32 @@
     }
     // left block
     place(top + left, [
-        #set text(size: 10pt)
         #headText(sender-department)
         #headText(sender-institute)
-        #if recipient-institution != none {
-          [#recipient-institution #linebreak()]
-        }
-        #recipient-pro \
-        #recipient-name \
-        #recipient-address
+        #text(size: 10pt)[
+          #if recipient-institution != none {
+            [#recipient-institution #linebreak()]
+          }
+          #recipient-pro \
+          #recipient-name \
+          #recipient-address
+        ]
     ])
     // right block
     place(top + right, [
       #align(left)[
-        #set text(size: 8pt)
         #if sender-department != none {
           headText(sym.zwj)
         }
         #headText(sender-pos)
-        #sender-name \
-        T #sender-tel \
-        #if sender-fax != none {
-          [F #sender-fax #linebreak()]
-        }
-        E #sender-email
+        #text(size: 8pt)[
+          #sender-name \
+          T #sender-tel \
+          #if sender-fax != none {
+            [F #sender-fax #linebreak()]
+          }
+          E #sender-email
+        ]
       ]
     ])
     // date block
