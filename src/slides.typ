@@ -1,4 +1,4 @@
-#import "@preview/touying:0.7.1": *
+#import "@preview/touying:0.7.3": *
 #import "colors.typ": *
 #import "data.typ": *
 #import "utils.typ": translatedMonth
