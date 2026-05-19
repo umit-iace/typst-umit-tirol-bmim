@@ -3,10 +3,10 @@
 #show: bmim.letter(
   lang: "de",
   recipient-institution: [Maier und Schmidt AG],
-  recipient-name: [John Mustermann],
+  recipient-name: none,
   recipient-address: [Auenweg 3\ 6060 Hall in Tirol],
-  recipient-pro: [Herrn],
-  sender-department: [],
+  recipient-pro: none,
+  sender-department: none,
   sender-institute: [Institut für Automatisierungs- und Regelungstechnik],
   sender-pos: [Universitätsassistent],
   sender-name: [Dipl.-Ing. Max Doe],

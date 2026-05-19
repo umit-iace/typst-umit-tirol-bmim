@@ -521,16 +521,22 @@
     }
     // left block
     place(top + left, [
-        #headText(sender-department)
-        #headText(sender-institute)
-        #text(size: 10pt)[
-          #if recipient-institution != none {
-            [#recipient-institution #linebreak()]
-          }
-          #recipient-pro \
-          #recipient-name \
-          #recipient-address
+      #if sender-department != none {
+        headText(sender-department)
+      }
+      #headText(sender-institute)
+      #text(size: 10pt)[
+        #if recipient-institution != none [
+          #recipient-institution \
         ]
+        #if recipient-pro != none [
+          #recipient-pro \
+        ]
+        #if recipient-name != none [
+          #recipient-name \
+        ]
+        #recipient-address
+      ]
     ])
     // right block
     place(top + right, [
