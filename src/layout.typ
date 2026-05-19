@@ -530,7 +530,7 @@
           #recipient-institution \
         ]
         #if recipient-pro != none [
-          #recipient-pro \
+          #recipient-pro
         ]
         #if recipient-name != none [
           #recipient-name \
