@@ -103,7 +103,7 @@
       header: none,
       footer: none,
       background:
-        place(image("./../assets/bg-umit.jpg"))
+        place(image("./../assets/background_umit.jpg"))
         + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
     ),
   )
@@ -146,7 +146,7 @@
       header: none,
       footer: none,
       background:
-        place(image("./../assets/bg-umit.jpg"))
+        place(image("./../assets/background_umit.jpg"))
         + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
     ),
   )

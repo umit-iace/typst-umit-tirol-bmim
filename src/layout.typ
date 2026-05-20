@@ -49,7 +49,7 @@
           left: -0.6em,
           right: -0.2em,
           bottom: -0.43em,
-          image("./../assets/iace.svg", height: 2.65em)
+          image("./../assets/logo_iace.svg", height: 2.65em)
         )
       ),
       grid.cell(
@@ -65,12 +65,12 @@
             width: 9.55em,
             if opts.logo-with-text {
               if opts.lang == "en" {
-                "./../assets/logo_umit_eng.svg"
+                "./../assets/logo_umit_blue_en.png"
               } else {
-                "./../assets/logo_umit_de.svg"
+                "./../assets/logo_umit_blue_gr.png"
               }
             } else {
-              "./../assets/logo_umit_wo.svg"
+              "./../assets/logo_umit_blue_wo.png"
             }
           )
         )
@@ -107,7 +107,7 @@
   lecture: header-colored(),
   letter: () => context {
     image(
-      "./../assets/logo_umit_de.svg",
+      "./../assets/logo_umit_blue_gr.png",
       width: 33%
     )
   },
@@ -136,7 +136,7 @@
             top: -8pt,
             left: -7pt,
             right: -2pt,
-            image("./../assets/iace.svg", height: 1.7em)
+            image("./../assets/logo_iace.svg", height: 1.7em)
           )
         } else {
           logo-left
@@ -147,7 +147,13 @@
         if logo-right == auto {
           pad(
             x: 5pt,
-            image("./../assets/logo_umit_de.svg", height: 1.4em)
+            image(height: 1.4em,
+              if opts.lang == "en" {
+                "./../assets/logo_umit_blue_en.png"
+              } else {
+                "./../assets/logo_umit_blue_gr.png"
+              }
+            )
           )
         } else {
           logo-right
@@ -240,7 +246,7 @@
   },
   letter: () => context {
     image(
-      "./../assets/footer-umit.png",
+      "./../assets/footer_umit_gr.png",
       width: 100%
     )
   },
@@ -623,7 +629,7 @@
             pad(
               left: -0.6em,
               right: -0.2em,
-              image("./../assets/iace.svg", height: 2.65em)
+              image("./../assets/logo_iace.svg", height: 2.65em)
             )
           )
         )
