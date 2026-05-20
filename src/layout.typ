@@ -105,6 +105,12 @@
   exercise: header-colored(),
   lab: header-colored(),
   lecture: header-colored(),
+  letter: () => context {
+    image(
+      "./../assets/logo_umit_de.svg",
+      width: 33%
+    )
+  },
   poster: header-colored(),
   report: header-colored(),
   slides: (heading: none) => context {
@@ -232,6 +238,12 @@
   },
   lecture: () => context {
   },
+  letter: () => context {
+    image(
+      "./../assets/footer-umit.png",
+      width: 100%
+    )
+  },
   poster: (event,date,location,contact, ..args) => context {
     set text(font: "CMU Typewriter Text")
     let opts = options.final()
@@ -308,6 +320,27 @@
       #h(1fr)
       #foot
     ]
+  },
+)
+
+#let finalblock = (
+  lecture: () => context {
+  },
+  letter: (sender-name, sender-pos, signature) => context {
+    let opts = options.final()
+
+    v(2em)
+    opts.spell.regards
+    if signature != none {
+      v(0.25em)
+      signature
+      v(0.25em)
+    } else {
+      v(4em)
+    }
+    sender-name
+    linebreak()
+    sender-pos
   },
 )
 
@@ -462,6 +495,78 @@
     )
   },
   lecture: () => context {
+  },
+  letter: (
+    recipient-pro,
+    recipient-name,
+    recipient-address,
+    recipient-institution,
+    sender-department,
+    sender-institute,
+    sender-pos,
+    sender-name,
+    sender-tel,
+    sender-fax,
+    sender-email,
+    location,
+    date,
+    subject
+  ) => context {
+    let headText(body) = {
+      set text(gray, size: 8pt)
+      if body != none {
+        lower(body)
+        linebreak()
+      }
+    }
+    // left block
+    place(top + left, [
+      #if sender-department != none {
+        headText(sender-department)
+      }
+      #headText(sender-institute)
+      #text(size: 10pt)[
+        #if recipient-institution != none [
+          #recipient-institution \
+        ]
+        #if recipient-pro != none [
+          #recipient-pro
+        ]
+        #if recipient-name != none [
+          #recipient-name \
+        ]
+        #recipient-address
+      ]
+    ])
+    // right block
+    place(top + right, [
+      #align(left)[
+        #if sender-department != none {
+          headText(sym.zwj)
+        }
+        #headText(sender-pos)
+        #text(size: 8pt)[
+          #sender-name \
+          T #sender-tel \
+          #if sender-fax != none {
+            [F #sender-fax #linebreak()]
+          }
+          E #sender-email
+        ]
+      ]
+    ])
+    // date block
+    v(10.5em)
+    align(right)[
+      #location, #print-date(date)
+    ]
+    // subject line
+    // (should appear above the first fold)
+    v(1.5em)
+    if subject != none {
+      text(weight: "bold")[#subject]
+      v(2em)
+    }
   },
   poster:   (title, authors) => context {
     place(top+center, float: true, scope: "parent",[

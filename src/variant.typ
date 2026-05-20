@@ -227,6 +227,87 @@
   body
 }}
 
+#let letter(
+  subject: none,
+  date: datetime.today(), // datetime or content
+  location: none,
+  recipient-institution: none,
+  recipient-pro: none,
+  recipient-name: none,
+  recipient-address: none,
+  sender-department: none,
+  sender-institute: none,
+  sender-name: none,
+  sender-pos: none,
+  sender-tel: none,
+  sender-fax: none,
+  sender-email: none,
+  sender-signature: none,
+  ..chosen
+) = { body => {
+  option-set(
+    chosen.named()
+  )
+  set text(
+    font: "Bitstream Vera Sans", // free font that looks like Arial
+    size: 10pt,
+  )
+  set par( // from 2020 CD
+    leading: 0.65em, spacing: 1.5em, justify: false,
+  )
+
+  let marks-default = (
+    pages: "both",
+    stroke: 0.25pt,
+    xdist: 5mm
+  )
+  let folding-marks = marks-default + (length: 3mm)
+  let hole-punch-marks = marks-default + (length: 5mm)
+  let margin = (
+    left: 20mm,
+    right: 25mm,
+    bottom: 36.5mm,
+    top: 50mm, // make the recipient-address appear in windowed envelope
+    rest: 20mm,
+  )
+  set std.page(
+    margin: margin,
+    header: (header.letter)(),
+    header-ascent: 55%,
+    footer: (footer.letter)(),
+    footer-descent: 35%,
+    background: {
+      show-marks(folding-marks, (105mm, 210mm))
+      show-marks(hole-punch-marks, (148.5mm,))
+    },
+  )
+  (titleblock.letter)(
+      recipient-pro,
+      recipient-name,
+      recipient-address,
+      recipient-institution,
+      sender-department,
+      sender-institute,
+      sender-pos,
+      sender-name,
+      sender-tel,
+      sender-fax,
+      sender-email,
+      location,
+      date,
+      subject,
+  )
+
+  body
+
+  (finalblock.letter)(
+    sender-name,
+    sender-pos,
+    sender-signature,
+  )
+
+}}
+
 #let poster(
   title: none, // str or content
   authors: none, // array of str or content

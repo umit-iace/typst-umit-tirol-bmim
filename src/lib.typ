@@ -1,4 +1,4 @@
-#import "variant.typ": exam, lab, poster, report, workbook, lecture, exercise, slides
+#import "variant.typ": exam, lab, poster, report, workbook, lecture, letter, exercise, slides
 #import "admonition.typ": hint, important, tip, example
 #import "task.typ": task
 #import "utils.typ": backmatter, heading-prefix-numbering
