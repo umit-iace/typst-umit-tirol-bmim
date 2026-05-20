@@ -326,14 +326,14 @@
 #let finalblock = (
   lecture: () => context {
   },
-  letter: (sender-name, sender-pos, sign) => context {
+  letter: (sender-name, sender-pos, signature) => context {
     let opts = options.final()
 
     v(2em)
     opts.spell.regards
-    if sign != none {
+    if signature != none {
       v(0.25em)
-      sign
+      signature
       v(0.25em)
     } else {
       v(4em)

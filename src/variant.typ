@@ -228,11 +228,13 @@
 }}
 
 #let letter(
-  recipient-name: none,
-  recipient-institution: none,
-  recipient-address: none,
-  recipient-pro: none,
+  subject: none,
+  date: datetime.today(), // datetime or content
   location: none,
+  recipient-institution: none,
+  recipient-pro: none,
+  recipient-name: none,
+  recipient-address: none,
   sender-department: none,
   sender-institute: none,
   sender-name: none,
@@ -240,14 +242,13 @@
   sender-tel: none,
   sender-fax: none,
   sender-email: none,
-  sender-sign: none,
-  subject: none,
-  date: datetime.today(), // datetime or content
-  lang: "de",
+  sender-signature: none,
   ..chosen
 ) = { body => {
+  option-set(
+    chosen.named()
+  )
   set text(
-    lang: lang,
     font: "Bitstream Vera Sans", // free font that looks like Arial
     size: 10pt,
   )
@@ -302,7 +303,7 @@
   (finalblock.letter)(
     sender-name,
     sender-pos,
-    sender-sign
+    sender-signature,
   )
 
 }}
