@@ -30,7 +30,7 @@ done
 
 git commit -m"bump version"
 
-shortlog=$(git shortlog v$v..HEAD)
+shortlog=$(git shortlog $v..HEAD)
 tagmsg=$(printf "Release version %s\n\n%s" "$new" "$shortlog")
 
 git tag -a $new -e -m "$tagmsg"
