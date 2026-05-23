@@ -371,6 +371,26 @@
   body
 }}
 
+#let thesis(
+  program: "PhD", // PhD, Master, Bachelor
+  university: "LFUI", // UMIT, LFUI
+  study: "Mech", // BauUmwelt, Elek, Mech, Bau, Umwelt, Doktorat
+  explanation: false, // todo
+  title: [Thesis],
+  subtitle: [],
+  author: [Jane Doe],
+  date: datetime.today().display("[month repr:long] [year]"),
+  advisor: ((
+    name: [Prof. John],
+    university: [Uni name],
+    department: [Department],
+    unit: [Working Group],
+  ),),
+) = { body => {
+
+  body
+}}
+
 #let workbook(
   course: none,
   authors: none,

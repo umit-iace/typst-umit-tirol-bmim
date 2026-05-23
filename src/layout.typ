@@ -156,6 +156,8 @@
       )
     )
   },
+  thesis: (heading: none) => context {
+  },
   workbook: context {
     if page-is-chap-start() {
       none
@@ -296,6 +298,8 @@
         )
       ]
     )
+  },
+  thesis: () => context {
   },
   workbook: (course) => context {
     let opts = options.final()
@@ -590,6 +594,7 @@
     })
   ),
   slides: () => context {},
+  thesis: () => context {},
   workbook: (course, authors, date) => context {
     let opts = options.final()
     let course = if type(course) == array { course.at(0) } else { course }
