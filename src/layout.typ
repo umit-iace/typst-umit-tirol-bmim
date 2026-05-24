@@ -326,21 +326,21 @@
 #let finalblock = (
   lecture: () => context {
   },
-  letter: (sender-name, sender-pos, signature) => context {
+  letter: (sender) => context {
     let opts = options.final()
 
     v(2em)
     opts.spell.regards
-    if signature != none {
+    if sender.signature != none {
       v(0.25em)
-      signature
+      sender.signature
       v(0.25em)
     } else {
       v(4em)
     }
-    sender-name
+    sender.name
     linebreak()
-    sender-pos
+    sender.pos
   },
 )
 
@@ -497,17 +497,8 @@
   lecture: () => context {
   },
   letter: (
-    recipient-pro,
-    recipient-name,
-    recipient-address,
-    recipient-institution,
-    sender-department,
-    sender-institute,
-    sender-pos,
-    sender-name,
-    sender-tel,
-    sender-fax,
-    sender-email,
+    recipient,
+    sender,
     location,
     date,
     subject
@@ -521,37 +512,37 @@
     }
     // left block
     place(top + left, [
-      #if sender-department != none {
-        headText(sender-department)
+      #if sender.department != none {
+        headText(sender.department)
       }
-      #headText(sender-institute)
+      #headText(sender.institute)
       #text(size: 10pt)[
-        #if recipient-institution != none [
-          #recipient-institution \
+        #if recipient.institution != none [
+          #recipient.institution \
         ]
-        #if recipient-pro != none [
-          #recipient-pro
+        #if recipient.pro != none [
+          #recipient.pro
         ]
-        #if recipient-name != none [
-          #recipient-name \
+        #if recipient.name != none [
+          #recipient.name \
         ]
-        #recipient-address
+        #recipient.address
       ]
     ])
     // right block
     place(top + right, [
       #align(left)[
-        #if sender-department != none {
+        #if sender.department != none {
           headText(sym.zwj)
         }
-        #headText(sender-pos)
+        #headText(sender.pos)
         #text(size: 8pt)[
-          #sender-name \
-          T #sender-tel \
-          #if sender-fax != none {
-            [F #sender-fax #linebreak()]
+          #sender.name \
+          T #sender.tel \
+          #if sender.fax != none {
+            [F #sender.fax #linebreak()]
           }
-          E #sender-email
+          E #sender.email
         ]
       ]
     ])

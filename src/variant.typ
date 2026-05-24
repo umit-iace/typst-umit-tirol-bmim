@@ -231,18 +231,22 @@
   subject: none,
   date: datetime.today(), // datetime or content
   location: none,
-  recipient-institution: none,
-  recipient-pro: none,
-  recipient-name: none,
-  recipient-address: none,
-  sender-department: none,
-  sender-institute: none,
-  sender-name: none,
-  sender-pos: none,
-  sender-tel: none,
-  sender-fax: none,
-  sender-email: none,
-  sender-signature: none,
+  recipient: (
+    name: none,
+    address: none,
+    pro: none,
+    institution: none,
+  ),
+  sender: (
+    name: none,
+    pos: none,
+    institute: none,
+    department: none,
+    tel: none,
+    fax: none,
+    email: none,
+    signature: none,
+  ),
   ..chosen
 ) = { body => {
   option-set(
@@ -282,17 +286,8 @@
     },
   )
   (titleblock.letter)(
-      recipient-pro,
-      recipient-name,
-      recipient-address,
-      recipient-institution,
-      sender-department,
-      sender-institute,
-      sender-pos,
-      sender-name,
-      sender-tel,
-      sender-fax,
-      sender-email,
+      recipient,
+      sender,
       location,
       date,
       subject,
@@ -301,9 +296,7 @@
   body
 
   (finalblock.letter)(
-    sender-name,
-    sender-pos,
-    sender-signature,
+    sender,
   )
 
 }}
