@@ -157,7 +157,7 @@
     )
   },
   thesis: context {
-    page-number(store:"push")
+    get-page-number(store:"push")
     if page-is-chap-start() { return }
     let chapter = query(selector(heading.where(level: 1)).before(here()))
     if chapter.len() == 0 { return }
@@ -167,7 +167,7 @@
     if calc.even(here().page()) {
       // even page headers
       {
-        page-number()
+        get-page-number()
         h(1fr)
         if chapter.len() == 0 { return }
         let cnt = counter(heading).at(here())
@@ -177,7 +177,7 @@
       }
     } else {
       // odd page headers
-      if sub.len() == 0 { return align(right, page-number()) }
+      if sub.len() == 0 { return align(right, get-page-number()) }
       let this-sub = sub.last()
       let nbr = this-sub.numbering
       if nbr != none {
@@ -185,7 +185,7 @@
         numbering(nbr, ..cnt.slice(0,count:2))+[.~] }
         smallcaps(this-sub.body)
         h(1fr)
-        page-number()
+        get-page-number()
       }
   },
   workbook: context {
@@ -331,7 +331,7 @@
   },
   thesis: context {
     if not page-is-chap-start() { return }
-    align(right, page-number(store:"get"))
+    align(right, get-page-number(store:"get"))
   },
   workbook: (course) => context {
     let opts = options.final()
@@ -379,7 +379,13 @@
       #grid(
         columns:(35%, 15%, 50%),
         [
-          #location.at(lower(university))
+          #if university == "LFUI" [
+            Innsbruck
+          ] else if university == "UMIT" [
+            Hall in Tirol
+          ] else {
+            panic("The used university is not implemented yet!")
+          }
           am #box(width:1fr, repeat(gap:0.5em)[.])
         ],
         [],
@@ -656,10 +662,9 @@
   ),
   slides: () => context {},
   thesis: (program, university, study, title, subtitle, author, date, advisor) => context {
-    let location = (
-      lfui: [Innsbruck],
-      umit: [Hall in Tirol],
-    )
+    let opts = options.final()
+    let degree = if program == "Bachelor" [Bachelor of Science] else if program == "Master" [Diplomingenieur]
+    let work = if program == "Bachelor" [Bachelorarbeit] else if program == "Master" [Masterarbeit]
     pad(left: 10mm, {
       set text(12pt)
       let large(content) = text(12pt, content)
@@ -672,17 +677,17 @@
       {
         set text(11.3pt, font: "Nimbus Sans")
         if university =="LFUI" [
-          #set text(fill: color.lfui.gray)
-          #pad(left: -14.6mm, image("assets/logo_lfui.svg", width:75mm))
+          #set text(fill: cmyk(0%,0%,0%,90%))
+          #pad(left: -14.6mm, image("./../assets/logo_lfui.svg", width:75mm))
           Fakultät für Technische\ Wissenschaften
         ] else {
-          set text(fill: color.umit.brown)
+          set text(fill: rgb(0, 0, 0))
           if opts.lang == "de" {
-            image("assets/logo_umit_de.svg", width: 75mm)
+            image("./../assets/logo_umit_de.svg", width: 75mm)
             [Department für Biomedizinische Informatik und Mechatronik]
           }
           else {
-            image("assets/logo_umit_eng.svg", width: 75mm)
+            image("./../assets/logo_umit_eng.svg", width: 75mm)
             [Department for Biomedical Informatics and Mechatronics]
           }
         }
@@ -700,7 +705,13 @@
     par(text(1.1em, author))
     bigskip
     large[
-      #location.at(lower(uni)), #date
+      #if university == "LFUI" [
+        Innsbruck
+      ] else if university == "UMIT" [
+        Hall in Tirol
+      ] else {
+        panic("The used university is not implemented yet!")
+      }
     ]
 
     // align the rest to bottom
@@ -713,11 +724,22 @@
       ] else if program == "Master" [
         Masterstudienprogramms
       ] else {panic("what")}
-      von LFUI und UMIT -- Joint Degree Programme
+      von LFUI und UMIT TIROL -- Joint Degree Programme
     ]
     bigskip
     par[
-      eingereicht an der #university.at(lower(uni))\ zur Erlangung
+      eingereicht an der 
+      #if university == "LFUI" [
+        Leopold-Franzens-Universität Innsbruck,\
+        Fakultät für Technische Wissenschaften \
+      ] else if university == "UMIT" [
+        UMIT TIROL – Private Universität für Gesundheitswissenschaften,
+        Medizinische Informatik und Technik,\
+        Department für Biomedizinische Informatik und Mechatronik \
+      ] else {
+        panic("The used university is not implemented yet!")
+      }
+      zur Erlangung
       des akademischen Grades
     ]
     bigskip

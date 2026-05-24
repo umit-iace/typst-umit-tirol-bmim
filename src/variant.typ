@@ -114,26 +114,6 @@
     ),
   )
 
-  let page-is-chap-start() = query(heading.where(level: 1))
-    .map(it => it.location().page())
-    .contains(here().page())
-  let page-number(store:"ignore") = {
-    let _store = state("pgnum", none)
-    if store == "get" {
-      _store.get()
-    } else {
-      let nbr = here().page-numbering()
-      let ret = if nbr == none { nbr } else {
-        numbering(nbr, ..counter(page).get())
-      }
-      if store == "push" {
-        _store.update( ret )
-      } else { //ignore
-        ret
-      }
-    }
-  }
-
   show math.equation: set text(font: "New Computer Modern Math")
   show math.equation: set block(spacing:1.2em)
 
@@ -548,6 +528,11 @@
     (size: size)
   )
   show: bmim-thesis
+
+  set document(
+    title: title,
+    author: author.text,
+  )
 
   set std.page(
     header: header.thesis,

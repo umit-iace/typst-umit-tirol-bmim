@@ -8,18 +8,40 @@
   content
 }
 
+#let page-is-chap-start() = query(heading.where(level: 1))
+  .map(it => it.location().page())
+  .contains(here().page())
+
+#let get-page-number(store:"ignore") = {
+  let _store = state("pgnum", none)
+  if store == "get" {
+    _store.get()
+  } else {
+    let nbr = here().page-numbering()
+    let ret = if nbr == none { nbr } else {
+      numbering(nbr, ..counter(page).get())
+    }
+    if store == "push" {
+      _store.update( ret )
+    } else { //ignore
+      ret
+    }
+  }
+}
+
 #let frontmatter(content) = {
   set heading(numbering: none, bookmarked: true, outlined: false)
   set page(numbering: "i")
   content
 }
 #let mainmatter(content) = context {
+  let opts = options.final()
   {
     set page(header: none, numbering: none)
     pagebreak(to: "odd", weak:true)
   }
   set heading(numbering: "1.1", bookmarked: auto, outlined: true)
-  show heading.where(level: 1): set heading(supplement: opts.get().i18n.chap)
+  show heading.where(level: 1): set heading(supplement: opts.spell.chap)
   set page(numbering: "1")
   counter(page).update(1)
   content

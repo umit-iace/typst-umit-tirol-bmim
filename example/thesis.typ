@@ -3,7 +3,7 @@
 #show: bmim.thesis(
   program: "Master",
   lang: "de",
-  university: "UMIT TIROL",
+  university: "UMIT",
   title: [
     Steuerung und Regelung \
     von \
