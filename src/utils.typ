@@ -8,6 +8,23 @@
   content
 }
 
+#let frontmatter(content) = {
+  set heading(numbering: none, bookmarked: true, outlined: false)
+  set page(numbering: "i")
+  content
+}
+#let mainmatter(content) = context {
+  {
+    set page(header: none, numbering: none)
+    pagebreak(to: "odd", weak:true)
+  }
+  set heading(numbering: "1.1", bookmarked: auto, outlined: true)
+  show heading.where(level: 1): set heading(supplement: opts.get().i18n.chap)
+  set page(numbering: "1")
+  counter(page).update(1)
+  content
+}
+
 #let translatedMonth(dt, lang) = {
   if lang == "de" {
     months.at(dt.month() - 1)

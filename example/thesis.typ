@@ -1,8 +1,8 @@
-#import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, important, tip, example, hint
+#import "/src/lib.typ" as bmim: frontmatter, mainmatter, backmatter
 
 #show: bmim.thesis(
   program: "Master",
-  lang: "en",
+  lang: "de",
   university: "UMIT TIROL",
   title: [
     Steuerung und Regelung \
@@ -36,8 +36,6 @@
     ),
   ),
 )
-
-#set math.equation(numbering: "(1.1)")
 
 = Kurzfassung
 

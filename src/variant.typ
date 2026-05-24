@@ -89,6 +89,161 @@
   body
 }
 
+
+#let bmim-thesis(body) = context {
+  let opts = options.final()
+  set text(
+    lang: opts.lang,
+    font: opts.font,
+    spacing: .5em,
+    size: opts.size,
+  )
+  set par(
+    leading: 0.55em, spacing: 0.55em, justify: true,
+    justification-limits: (
+      tracking: (min: -0.01em, max: 0.02em),
+    )
+  )
+  set page(
+    "a4",
+    margin: (
+      left: 37.125mm,
+      right: 37.125mm,
+      bottom: 35.5mm,
+      top: 37.5mm,
+    ),
+  )
+
+  let page-is-chap-start() = query(heading.where(level: 1))
+    .map(it => it.location().page())
+    .contains(here().page())
+  let page-number(store:"ignore") = {
+    let _store = state("pgnum", none)
+    if store == "get" {
+      _store.get()
+    } else {
+      let nbr = here().page-numbering()
+      let ret = if nbr == none { nbr } else {
+        numbering(nbr, ..counter(page).get())
+      }
+      if store == "push" {
+        _store.update( ret )
+      } else { //ignore
+        ret
+      }
+    }
+  }
+
+  show math.equation: set text(font: "New Computer Modern Math")
+  show math.equation: set block(spacing:1.2em)
+
+  show figure.caption: text.with(size:0.9em)
+  show figure.caption.where(kind: image): set align(left)
+
+  show figure.where(kind: table): set figure.caption(position: top)
+  set figure(
+    // placement: top,
+    numbering: (..n) => {
+      let hdr = counter(heading).get().first()
+      let num = query(
+        selector(heading.where(level:1)).before(here())
+      ).last().numbering
+      numbering(num+"a", hdr, ..n)
+    },
+  )
+
+  set math.equation(supplement: none, numbering: (..n) => {
+    let hdr = counter(heading).get().first()
+    let num = query(
+      selector(heading.where(level:1)).before(here())
+    ).last().numbering
+    numbering("(" + num + "a)", hdr, ..n)
+  })
+
+  show heading.where(level: 1): hdr => {
+    counter(figure.where(kind:image)).update(0)
+    counter(figure.where(kind:table)).update(0)
+    counter(math.equation).update(0)
+    place.flush()
+    set text(1.65em)
+    context {
+      let cnt = counter(heading).display()
+      let loc = here()
+      let w = measure([#cnt]).width
+
+      if hdr.numbering != none {
+        place(dx: -w - 0.7em, [#cnt])
+      }
+      block(smallcaps(hdr.body))
+    }
+    v(2em)
+  }
+
+  let headings-on-odd-page(it) = {
+    show heading.where(level: 1): it => {
+      {
+        set page(header: none, numbering: none)
+        pagebreak(to: "odd")
+      }
+      it
+    }
+    it
+  }
+
+  set outline(depth: 2)
+
+  show outline.entry: it => context {
+    set block(spacing: par.spacing)
+    let pg-total = measure(strong(str(counter(page).final().first()))).width
+    let pg-here = measure(it.page()).width
+    let fill = box(
+      width: 1fr,
+      align(
+        right,
+        repeat(justify: false, gap: 0.5em)[.]
+      )
+    )
+    layout(l => {
+      let prefix = {
+        show i18n.at(lang).fig: h(0pt, weak:true)
+        show i18n.at(lang).tab: h(0pt, weak:true)
+        it.prefix()
+      }
+
+      let pref = measure(it.indented(prefix,[]))
+      let content = box(width: l.width - pref.width - pg-total - 1em,
+        par(justify: true,
+          it.body()
+          + h(0.25em)
+          + fill
+        )
+      )
+      let cont = measure(content)
+      link(
+        it.element.location(),
+        it.indented(box(height:cont.height, align(top,prefix)), {
+          content + h(1em + pg-total - pg-here) + it.page()
+        })
+      )
+    })
+  }
+
+  show outline.entry.where(
+    level: 1,
+  ): it => {
+    if it.element.func() != heading {
+      return it
+    }
+    set block(above:1.5em)
+    strong(link(
+      it.element.location(),
+      it.indented(it.prefix(), {it.body(); h(1fr); it.page()}),
+    ))
+  }
+
+  body
+}
+
 #let exam(
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   title: none, // str or content
@@ -386,9 +541,26 @@
     department: [Department],
     unit: [Working Group],
   ),),
+  size: 11pt,
+  ..chosen,
 ) = { body => {
+  option-set(
+    (size: size)
+  )
+  show: bmim-thesis
+
+  set std.page(
+    header: header.thesis,
+    footer: footer.thesis,
+  )
+
+  (titleblock.thesis)(program, university, study, title, subtitle, author, date, advisor)
+
+  outline()
 
   body
+
+  (finalblock.thesis)(author, university)
 }}
 
 #let workbook(

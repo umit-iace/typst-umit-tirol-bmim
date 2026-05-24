@@ -18,7 +18,8 @@
     tab: "Tab.",
     task: "Task",
     with: "with",
-    regards: "Best regards,"
+    regards: "Best regards,",
+    chap: "Chapter",
   ),
   de: (
     date: "Datum",
@@ -39,7 +40,8 @@
     tab: "Tab.",
     task: "Aufgabe",
     with: "mit",
-    regards: "Mit freundlichen Grüßen"
+    regards: "Mit freundlichen Grüßen",
+    chap: "Kapitel",
   )
 )
 

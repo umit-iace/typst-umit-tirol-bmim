@@ -156,7 +156,37 @@
       )
     )
   },
-  thesis: (heading: none) => context {
+  thesis: context {
+    page-number(store:"push")
+    if page-is-chap-start() { return }
+    let chapter = query(selector(heading.where(level: 1)).before(here()))
+    if chapter.len() == 0 { return }
+    let sub = query(selector(heading.where(level: 2)).after(chapter.last().location()))
+    sub = sub.filter(el => el.location().page() <= here().page())
+
+    if calc.even(here().page()) {
+      // even page headers
+      {
+        page-number()
+        h(1fr)
+        if chapter.len() == 0 { return }
+        let cnt = counter(heading).at(here())
+        let nbr = chapter.last().numbering
+        if nbr != none { numbering(nbr, cnt.first())+[.~] }
+        smallcaps(chapter.last().body)
+      }
+    } else {
+      // odd page headers
+      if sub.len() == 0 { return align(right, page-number()) }
+      let this-sub = sub.last()
+      let nbr = this-sub.numbering
+      if nbr != none {
+        let cnt = counter(heading).at(this-sub.location())
+        numbering(nbr, ..cnt.slice(0,count:2))+[.~] }
+        smallcaps(this-sub.body)
+        h(1fr)
+        page-number()
+      }
   },
   workbook: context {
     if page-is-chap-start() {
@@ -299,7 +329,9 @@
       ]
     )
   },
-  thesis: () => context {
+  thesis: context {
+    if not page-is-chap-start() { return }
+    align(right, page-number(store:"get"))
   },
   workbook: (course) => context {
     let opts = options.final()
@@ -328,7 +360,36 @@
 )
 
 #let finalblock = (
-  lecture: () => context {
+  thesis: (author, university) => context {
+    set page(numbering: none)
+    set heading(numbering: none, outlined: false, bookmarked: false)
+    [
+      = Verpflichtungs- und\ Einverständniserklärung
+
+      Ich erkläre hiermit an Eides statt durch meine eigenhändige Unterschrift,
+      dass ich die vorliegende Arbeit selbständig verfasst und keine anderen als
+      die angegebenen Quellen und Hilfsmittel verwendet habe. Alle Stellen, die
+      wörtlich oder inhaltlich den angegebenen Quellen entnommen wurden, sind
+      als solche kenntlich gemacht.
+
+      Die vorliegende Arbeit wurde bisher in gleicher oder ähnlicher Form noch
+      nicht als wissenschaftliche Arbeit eingereicht.
+
+      #v(3em)
+      #grid(
+        columns:(35%, 15%, 50%),
+        [
+          #location.at(lower(university))
+          am #box(width:1fr, repeat(gap:0.5em)[.])
+        ],
+        [],
+        [
+          #set align(right)
+          #box(width:1fr, repeat(gap:0.5em)[.])\
+          #author
+        ]
+      )
+    ]
   },
   letter: (sender-name, sender-pos, signature) => context {
     let opts = options.final()
@@ -594,7 +655,103 @@
     })
   ),
   slides: () => context {},
-  thesis: () => context {},
+  thesis: (program, university, study, title, subtitle, author, date, advisor) => context {
+    let location = (
+      lfui: [Innsbruck],
+      umit: [Hall in Tirol],
+    )
+    pad(left: 10mm, {
+      set text(12pt)
+      let large(content) = text(12pt, content)
+      let Large(content) = text(14pt, content)
+      let LARGE(content) = text(17pt, content)
+      let bigskip = v(12pt)
+      let smallskip = v(3pt)
+      v(1em - 27mm)
+      // logo
+      {
+        set text(11.3pt, font: "Nimbus Sans")
+        if university =="LFUI" [
+          #set text(fill: color.lfui.gray)
+          #pad(left: -14.6mm, image("assets/logo_lfui.svg", width:75mm))
+          Fakultät für Technische\ Wissenschaften
+        ] else {
+          set text(fill: color.umit.brown)
+          if opts.lang == "de" {
+            image("assets/logo_umit_de.svg", width: 75mm)
+            [Department für Biomedizinische Informatik und Mechatronik]
+          }
+          else {
+            image("assets/logo_umit_eng.svg", width: 75mm)
+            [Department for Biomedical Informatics and Mechatronics]
+          }
+        }
+      }
+      // text
+      bigskip
+      block(height: 3cm, above:1.25cm,
+      {
+        show std.title: LARGE
+        std.title()
+        Large(subtitle)
+      }
+    )
+    bigskip
+    par(text(1.1em, author))
+    bigskip
+    large[
+      #location.at(lower(uni)), #date
+    ]
+
+    // align the rest to bottom
+    v(1fr)
+    par(Large(work))
+    bigskip
+    par[
+      verfasst im Rahmen eines gemeinsamen #if program == "Bachelor" [
+        Bachelorstudienprogramms
+      ] else if program == "Master" [
+        Masterstudienprogramms
+      ] else {panic("what")}
+      von LFUI und UMIT -- Joint Degree Programme
+    ]
+    bigskip
+    par[
+      eingereicht an der #university.at(lower(uni))\ zur Erlangung
+      des akademischen Grades
+    ]
+    bigskip
+    par(Large(degree))
+    bigskip
+
+    bigskip
+    par[Beurteiler:]
+    smallskip
+    let adv = advisor.at(0)
+    adv.name
+    smallskip
+    adv.department
+    linebreak()
+    adv.unit
+  })
+  { // advisors
+    pagebreak(to: "odd")
+    v(1fr)
+    let adv = advisor.at(0)
+    let z= h(0pt, weak:true)
+    grid(
+      columns:(1fr, 3.2fr), gutter:1.2em,
+      [Betreuer:],
+      [#adv.name#z,#linebreak() #adv.university#z,#linebreak() #adv.department#z,#linebreak() #adv.unit],
+      ..if advisor.len() > 1 {
+        let adv = advisor.at(1)
+        (align(top,[Mitbetreuer:]),
+        [#adv.name#z,#linebreak() #adv.university#z,#linebreak() #adv.department#z,#linebreak() #adv.unit])
+      }
+    )
+    pagebreak()
+  }
+  },
   workbook: (course, authors, date) => context {
     let opts = options.final()
     let course = if type(course) == array { course.at(0) } else { course }
