@@ -322,18 +322,17 @@
   let margin = (x: 1.5em, y: 4em)
   set std.page(
     paper: page,
-    columns: if orientation == "landscape" { 3 } else { 2 },
+    // columns: if orientation == "landscape" { 3 } else { 2 },
     flipped: orientation == "landscape",
     margin: margin,
     header: header.poster,
     footer: (footer.poster)(event,date,location,contact),
+    // footer-descent: 00%,
   )
-
-  set heading(numbering: "1.")
 
   (titleblock.poster)(title, authors)
 
-  body
+  block(height:1fr, body)
 }}
 
 #let report(
