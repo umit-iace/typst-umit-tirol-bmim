@@ -57,14 +57,12 @@
       ),
       align(top,
         pad(
-          left: 0.2em,
-          right: 0.2em,
+          left: 0.5em,
+          right: 0.5em,
           top: 0.7225em,
           bottom: -1em,
           image(
-            fit: "contain",
             width: 9.55em,
-            height: 1.75em,
             if opts.logo-with-text {
               if opts.lang == "en" {
                 "./../assets/logo_umit_blue_en.png"
@@ -148,7 +146,7 @@
         ),
         if logo-right == auto {
           pad(
-            x: 5pt,
+            x: 7.5pt,
             image(height: 1.4em,
               if opts.lang == "en" {
                 "./../assets/logo_umit_blue_en.png"
