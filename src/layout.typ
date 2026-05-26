@@ -26,7 +26,7 @@
   let size = args.named().at("size", default: 1em)
   box(
     width: 100%, height: height,
-    fill: opts.theme.highlight,
+    fill: opts.theme.meanlight,
     if args.pos().len() != 0 {
       set align(horizon)
       show text: set text(size: size, fill: opts.theme.neutral-lightest)
@@ -59,10 +59,12 @@
         pad(
           left: 0.2em,
           right: 0.2em,
-          top: 0.72em,
+          top: 0.7225em,
           bottom: -1em,
           image(
+            fit: "contain",
             width: 9.55em,
+            height: 1.75em,
             if opts.logo-with-text {
               if opts.lang == "en" {
                 "./../assets/logo_umit_blue_en.png"

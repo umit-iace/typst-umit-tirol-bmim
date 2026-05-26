@@ -5,7 +5,7 @@
   theme: color-theme.blue,
   lang: "de", // "de", "en"
   spell: i18n.de,
-  logo-with-text: false,
+  logo-with-text: true,
   show-solution: none, // none, "inline", "bottom"
   task-show: (..args) => {},
   task-show-points: true,

@@ -1,6 +1,8 @@
 #let color = (
   link: rgb(118, 50, 55),
-  blue: rgb(0, 53, 103),
+  blue: rgb(0, 66, 104),
+  darkblue: rgb(0, 58, 91),
+  meanblue: rgb(0, 119, 165),
   gray: rgb(156, 156, 156),
   grey: rgb("717788"),
   green: rgb("006e43"),
@@ -13,8 +15,9 @@
   blue:
   (
     primary: color.blue,
-    highlight: color.blue.lighten(20%),
+    highlight: color.darkblue,
     lolight: color.blue.lighten(80%),
+    meanlight: color.meanblue,
     secondary: color.red,
     background: white,
     neutral-lightest: white,
