@@ -3,12 +3,88 @@
 #import "options.typ": *
 #import "slides.typ": *
 
+
+#let header-A() = context {
+  // Weißer Kopfbereich darunter ne Linie
+  let opts = options.final()
+  let header_pad = 8mm      // Innenabstand
+  stack(
+    spacing: 0pt,
+  )[
+    // Weißer Bereich mit Logos
+    #pad(
+      top: header_pad,
+      bottom: header_pad,
+    )[
+      #grid(
+        columns: (auto, 1fr, auto),
+        gutter: 0pt,
+        // fill: blue,
+        align(right+top, image("./../assets/logo_umit_blue_gr.png", height: 10mm)),
+        [], // Spacer
+        align(left+top, pad(top: -2mm, image("./../assets/logo_iace_blue.svg", height: 10mm))),
+      )
+      // Linie unten als Akzent
+      #line(length: 100%, stroke: 0.1mm+opts.theme.tertiary)
+    ]
+  ]
+}
+
+#let header-B() = context {
+  // Balken in Primärfarbe, Logos invertiert
+  let opts = options.final()
+  let header_pad = 10mm      // Innenabstand
+  let logo_height = 7mm      // 
+  pad(
+    left: -header_pad,
+    right: -header_pad,
+    box(
+      fill: opts.theme.primary,
+      // fill: gradient.linear(opts.theme.primary, opts.theme.tertiary, angle: 90deg),
+      inset: (left: header_pad, right: header_pad, top: 1mm, bottom: 1mm),
+    )[
+      #grid(
+        columns: (auto, 1fr, auto),
+        gutter: 0pt,
+        align(left+top, pad(top: -0mm, image("./../assets/logo_iace_white.svg", height: logo_height))),
+        [], // Spacer
+        align(right+top, image("./../assets/logo_umit_de_white.svg", height: logo_height)),
+      )
+    ]
+  )
+}
+
+#let header-C() = context {
+  // Balken in Primärfarbe, Logos invertiert
+  let opts = options.final()
+  let header_pad = 5mm      // Innenabstand
+  let logo_height = 7mm      // 
+  pad(
+    left: -header_pad,
+    right: -header_pad,
+  )[
+    #line(length: 100%, stroke: 0.25mm+opts.theme.primary)
+    #box(
+      // fill: opts.theme.primary,
+      inset: (left: header_pad, right: header_pad, top: -1mm, bottom: -1mm),
+    )[
+      #grid(
+        columns: (auto, 1fr, auto),
+        gutter: 0pt,
+        align(left+top, pad(top: -0mm, image("./../assets/logo_iace_blue.svg", height: logo_height))),
+        [], // Spacer
+        align(right+top, image("./../assets/logo_umit_blue_gr.png", height: logo_height)),
+      )
+    ]
+    #line(length: 100%, stroke: 0.5mm+opts.theme.primary)
+]
+}
+
+
 #let heading-colored(it) = context {
   let opts = options.final()
   set block(
     width: 100%,
-    fill: opts.theme.lolight,
-    inset: 4pt,
   )
   place(hide(it))
   if it.numbering == none [
@@ -16,6 +92,7 @@
   ] else [
     #block(counter(heading).display(it.numbering)  + h(1em) + it.body)
   ]
+  // line(length: 100%, stroke: .5pt+opts.theme.primary)
 }
 
 #let underline-space(fraction) = box(height: -1pt, line(length: fraction))
@@ -26,14 +103,18 @@
   let size = args.named().at("size", default: 1em)
   box(
     width: 100%, height: height,
-    fill: opts.theme.meanlight,
+    // fill: opts.theme.primary.lighten(90%),
+    fill: opts.theme.primary,
     if args.pos().len() != 0 {
       set align(horizon)
       show text: set text(size: size, fill: opts.theme.neutral-lightest)
       pad(x:1em, ..args.pos())
     }
   )
+  // v(-2.1mm)
+  // line( length: 100%, stroke: .5mm+opts.theme.primary)
 }
+
 
 #let header-colored(title:none) = context {
   let opts = options.final()
@@ -97,12 +178,15 @@
   } else {
     pagenum; h(1fr); head
   }
-  line(length: 100%, stroke: 0.5pt)
+  line(length: 100%, stroke: 0.25mm)
 }
 
 #let header = (
   exam: header-colored(),
   exercise: header-colored(),
+  // exercise: header-A(),
+  // exercise: header-B(),
+  // exercise: header-C(),
   lab: header-colored(),
   lecture: header-colored(),
   letter: () => context {
@@ -176,7 +260,7 @@
     let opts = options.final()
     let course = if type(course) == array { course.at(1) } else { course }
     set text(size: 11pt)
-    line(length: 100%, stroke: 0.5pt)
+    line(length: 100%, stroke: 0.25mm)
     let foot = [
       #opts.spell.exam - #course
       #if opts.show-solution != none [

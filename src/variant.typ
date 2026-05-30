@@ -24,9 +24,10 @@
     margin: (
       left: 2cm,
       right: 2cm,
-      top: 1.9cm,
+      top: 2.5cm,
       bottom: 2.5cm,
     ),
+    // header-ascent: 0mm,
   )
   show raw: set text(font: "CMU Typewriter Text", size: opts.size)
 
