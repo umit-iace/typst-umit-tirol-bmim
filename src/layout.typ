@@ -115,6 +115,70 @@
   // line( length: 100%, stroke: .5mm+opts.theme.primary)
 }
 
+#let banner-D(..args) = {
+  let opts = options.final()
+  let height = if args.named().at("slide", default: false) {0.9em} else {1.5em}
+  let size = args.named().at("size", default: 1em)
+  box(
+    width: 100%, height: height,
+    stroke: (
+      bottom: .5mm+opts.theme.primary,
+      top: .5mm+opts.theme.primary,
+    ),
+    fill: opts.theme.primary.lighten(90%),
+    if args.pos().len() != 0 {
+      set align(horizon)
+      show text: set text(size: size, fill: opts.theme.primary)
+      pad(x:1em, ..args.pos())
+    }
+  )
+}
+
+#let header-D(title:none) = context {
+  let opts = options.final()
+  pad(
+    bottom: 0.25em,
+    left: -5%,
+    right: -5%,
+    grid(
+      columns: (5%, auto, 1fr, auto, 5%),
+      banner-D(),
+      grid.cell(
+        pad(
+          left: -0.6em,
+          right: -0.2em,
+          bottom: -0.43em,
+          image("./../assets/logo_iace_blue.svg", height: 2.65em)
+        )
+      ),
+      grid.cell(
+        banner-D(title)
+      ),
+      align(top,
+        pad(
+          left: 0.5em,
+          right: 0.5em,
+          top: 0.7225em,
+          bottom: -1em,
+          image(
+            width: 9.55em,
+            if opts.logo-with-text {
+              if opts.lang == "en" {
+                "./../assets/logo_umit_blue_en.png"
+              } else {
+                "./../assets/logo_umit_blue_gr.png"
+              }
+            } else {
+              "./../assets/logo_umit_blue_wo.png"
+            }
+          )
+        )
+      ),
+      banner-D(),
+    )
+  )
+}
+
 
 #let header-colored(title:none) = context {
   let opts = options.final()
@@ -130,7 +194,7 @@
           left: -0.6em,
           right: -0.2em,
           bottom: -0.43em,
-          image("./../assets/logo_iace.svg", height: 2.65em)
+          image("./../assets/logo_iace_black.svg", height: 2.65em)
         )
       ),
       grid.cell(
@@ -183,10 +247,11 @@
 
 #let header = (
   exam: header-colored(),
-  exercise: header-colored(),
+  // exercise: header-colored(),
   // exercise: header-A(),
   // exercise: header-B(),
   // exercise: header-C(),
+  exercise: header-D(),
   lab: header-colored(),
   lecture: header-colored(),
   letter: () => context {
@@ -214,19 +279,19 @@
       top: 0.6em,
       grid(
         columns: (7%, auto, 1fr, auto, 7%),
-        banner(slide: true),
+        banner-D(slide: true),
         if logo-left == auto {
           pad(
             top: -8pt,
             left: -7pt,
             right: -2pt,
-            image("./../assets/logo_iace.svg", height: 1.7em)
+            image("./../assets/logo_iace_blue.svg", height: 1.7em)
           )
         } else {
           logo-left
         },
         pad( x: -1pt,
-          banner(slide: true, size: 0.8em, move(dy: -1.5pt, heading))
+          banner-D(slide: true, size: 0.8em, move(dy: -1.5pt, heading))
         ),
         if logo-right == auto {
           pad(
@@ -242,7 +307,7 @@
         } else {
           logo-right
         },
-        banner(slide: true),
+        banner-D(slide: true),
       )
     )
   },
@@ -713,7 +778,7 @@
             pad(
               left: -0.6em,
               right: -0.2em,
-              image("./../assets/logo_iace.svg", height: 2.65em)
+              image("./../assets/logo_iace_black.svg", height: 2.65em)
             )
           )
         )
