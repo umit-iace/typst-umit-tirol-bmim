@@ -482,7 +482,7 @@
       },
       header-ascent: 0em,
       footer-descent: 0em,
-      margin: (top: 2em, bottom: 1.25em, x: 1.5em),
+      margin: (top: 2.25em, bottom: 1.25em, x: 1.5em),
     ),
     config-info(
       title: title,

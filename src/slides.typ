@@ -12,7 +12,7 @@
     opts,
     config-page(
       footer: none,
-      margin: (top: 4em, left: 1em),
+      background: box(fill: self.colors.primary, height:100%, width: 100%)
     ),
     config-common(freeze-slide-counter:true),
   )
@@ -31,18 +31,18 @@
 
   let body = {
     set align(center + horizon)
-    set text(fill: self.colors.primary)
+    set text(fill: self.colors.background)
     v(-3.0em)
     block(
-      fill: self.colors.background,
+      fill: self.colors.primary.lighten(5%),
       inset: 1.5em,
       radius: 0.5em,
       breakable: false,
       {
-        bold(1.75em, title.at(0, default:none))
+        bold(1.75em, text(fill: self.colors.background)[#title.at(0, default:none)])
         if subtitle != none {
           parbreak()
-          bold(1.0em, subtitle)
+          bold(1.0em, text(fill: self.colors.background)[#subtitle])
         }
       },
     )
@@ -96,6 +96,11 @@
   ..args,
 ) = touying-slide-wrapper(self => {
   let opts = options.final()
+  let bgImage = if type(opts.bgImage) == dictionary {
+    opts.bgImage.at("outline", default: auto)
+  } else {
+    opts.bgImage
+  }
   let new-config = utils.merge-dicts(
     opts,
     config-page(
@@ -103,8 +108,11 @@
       header: none,
       footer: none,
       background:
-        place(image("./../assets/background_umit.jpg"))
-        + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
+        if bgImage == auto {
+            place(image("./../assets/background_umit.jpg")) + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
+        } else {
+          background-image
+        }
     ),
   )
 
@@ -139,6 +147,12 @@
   ..args,
 ) = touying-slide-wrapper(self => {
   let opts = options.final()
+  let bgImage = if type(opts.bgImage) == dictionary {
+    opts.bgImage.at("section", default: auto)
+  } else {
+    opts.bgImage
+  }
+
   let new-config = utils.merge-dicts(
     opts,
     config-page(
@@ -146,8 +160,11 @@
       header: none,
       footer: none,
       background:
-        place(image("./../assets/background_umit.jpg"))
-        + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
+        if bgImage == auto {
+            place(image("./../assets/background_umit.jpg")) + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
+        } else {
+          background-image
+        }
     ),
   )
 

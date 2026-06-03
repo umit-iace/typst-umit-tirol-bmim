@@ -13,6 +13,7 @@
   font: ("New Computer Modern",),
   size: 12pt,
   logo: auto, // none, auto, (left: // , right: //)
+  bgImage: auto, // none, auto, (section: // , outline: //)
 ))
 
 #let option-set(dict) = {

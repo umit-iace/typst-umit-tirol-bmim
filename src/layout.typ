@@ -134,6 +134,20 @@
   )
 }
 
+#let banner-E(..args) = {
+  let opts = options.final()
+  let height = if args.named().at("slide", default: false) {0.9em} else {1.5em}
+  let size = args.named().at("size", default: 1em)
+  box(
+    width: 100%, height: height,
+    if args.pos().len() != 0 {
+      set align(horizon+center)
+      show text: set text(size: size, fill: opts.theme.background)
+      pad(x:2em, ..args.pos())
+    }
+  )
+}
+
 #let header-D(title:none) = context {
   let opts = options.final()
   pad(
@@ -275,39 +289,39 @@
       opts.logo
     }
     set text(weight: "bold")
+    rect(
+      fill: opts.theme.primary,
+      width: 100%,
+      height: 100%,
+    )[]
     pad(
-      top: 0.6em,
+      top: -2.75em,
       grid(
-        columns: (7%, auto, 1fr, auto, 7%),
-        banner-D(slide: true),
+        columns: (5%, auto, 1fr, auto, 5%),
+        banner-E(slide: true),
         if logo-left == auto {
           pad(
             top: -8pt,
             left: -7pt,
             right: -2pt,
-            image("./../assets/logo_iace_blue.svg", height: 1.7em)
+            image("./../assets/logo_iace_white.svg", height: 1.7em)
           )
         } else {
           logo-left
         },
         pad( x: -1pt,
-          banner-D(slide: true, size: 0.8em, move(dy: -1.5pt, heading))
+          banner-E(slide: true, size: 1.2em, move(dy: -0.5pt, heading))
         ),
         if logo-right == auto {
           pad(
-            x: 7.5pt,
-            image(height: 1.4em,
-              if opts.lang == "en" {
-                "./../assets/logo_umit_blue_en.png"
-              } else {
-                "./../assets/logo_umit_blue_gr.png"
-              }
-            )
+            top: -3.5pt,
+            x: -4.5pt,
+            image("./../assets/logo_umit_white_wo.svg", height: 1.4em)
           )
         } else {
           logo-right
         },
-        banner-D(slide: true),
+        banner-E(slide: true),
       )
     )
   },
