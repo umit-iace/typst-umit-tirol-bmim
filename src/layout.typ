@@ -85,6 +85,8 @@
   let opts = options.final()
   set block(
     width: 100%,
+    fill: opts.theme.primary.lighten(90%),
+    inset: 4pt,
   )
   place(hide(it))
   if it.numbering == none [
@@ -193,6 +195,49 @@
   )
 }
 
+#let header-E(title:none) = context {
+  let opts = options.final()
+  pad(
+    left: -15%,
+    rect(
+      fill: opts.theme.primary,
+      width: 115%,
+      height: 100%,
+    )
+  )
+  pad(
+    bottom: 1.25em,
+    left: -5%,
+    right: -5%,
+    grid(
+      columns: (3%, auto, 1fr, auto, 3%),
+      banner-E(),
+      grid.cell(
+        pad(
+          left: -0.6em,
+          right: -0.2em,
+          bottom: -0.43em,
+          image("./../assets/logo_iace_white.svg", height: 2.65em)
+        )
+      ),
+      grid.cell(
+        banner-E(title)
+      ),
+      grid.cell(
+        pad(
+          x: -0.6em,
+          bottom: -0.25em,
+          image(
+            height: 2.05em,
+            "./../assets/logo_umit_white_wo.svg"
+          )
+        ),
+      ),
+      banner-E(),
+    )
+  )
+}
+
 
 #let header-colored(title:none) = context {
   let opts = options.final()
@@ -265,7 +310,8 @@
   // exercise: header-A(),
   // exercise: header-B(),
   // exercise: header-C(),
-  exercise: header-D(),
+  // exercise: header-D(),
+  exercise: header-E(),
   lab: header-colored(),
   lecture: header-colored(),
   letter: () => context {
