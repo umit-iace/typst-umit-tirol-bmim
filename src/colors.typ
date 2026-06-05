@@ -1,4 +1,4 @@
-#let cd_colors_2026 = (
+#let color-cd2026 = (
   // CD 2026
   blue: rgb(0, 66, 104),
   darkblue: rgb(0, 58, 91),
@@ -10,7 +10,7 @@
   blue_Z4: rgb(0, 102, 141),
 )
 
-#let cd_colors_2020 = (
+#let color-cd2020 = (
   // CD 2020
   red: rgb(128, 19, 50),
   teal: rgb(0, 92, 100),
@@ -36,22 +36,22 @@
 #let color-theme = (
   cd26:
   (
-    primary: cd_colors_2026.blue,
-    secondary: cd_colors_2026.darkblue,
-    tertiary: cd_colors_2026.black,
-    lolight: cd_colors_2026.blue_Z2,
-    meanlight: cd_colors_2026.blue_Z1,
-    highlight: cd_colors_2026.meanblue,
+    primary: color-cd2026.blue,
+    secondary: color-cd2026.darkblue,
+    tertiary: color-cd2026.black,
+    lolight: color-cd2026.blue_Z2,
+    meanlight: color-cd2026.blue_Z1,
+    highlight: color-cd2026.meanblue,
     background: white,
     neutral-lightest: white,
   ),
   cd20:
   (
-    primary: cd_colors_2020.blue,
-    secondary: cd_colors_2020.yellow,
-    lolight: cd_colors_2020.dark_gray,
-    meanlight: cd_colors_2020.gray,
-    highlight: cd_colors_2020.teal,
+    primary: color-cd2020.blue,
+    secondary: color-cd2020.yellow,
+    lolight: color-cd2020.dark_gray,
+    meanlight: color-cd2020.gray,
+    highlight: color-cd2020.teal,
     background: white,
     neutral-lightest: white,
   )
