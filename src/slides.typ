@@ -12,7 +12,10 @@
     opts,
     config-page(
       footer: none,
-      background: box(fill: self.colors.primary, height:100%, width: 100%)
+      background: place(
+        dy: 2.25em,
+        box(fill: gradient.linear(self.colors.primary, self.colors.primary.darken(100%), angle: 90deg), height: 100%-2.25em, width: 100%)
+      )
     ),
     config-common(freeze-slide-counter:true),
   )
@@ -104,14 +107,14 @@
   let new-config = utils.merge-dicts(
     opts,
     config-page(
-      margin: (top: 2em, left: 1em),
-      header: none,
+      margin: (top: 2.25em, left: 1em),
+      // header: none
       footer: none,
       background:
         if bgImage == auto {
-            place(image("./../assets/background_umit.jpg")) + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
+          place(image("./../assets/background_umit.jpg")) + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
         } else {
-          background-image
+          bgImage
         }
     ),
   )
@@ -123,8 +126,8 @@
     show outline.entry.where(level: 1): it => {
       let style(entry) = block(
           fill: gradient.linear(
-            self.colors.primary,
-            self.colors.primary.transparentize(100%),
+            self.colors.primary.lighten(5%),
+            self.colors.primary.lighten(5%).transparentize(100%),
             relative: "parent",
           ),
           width: 100%,
@@ -161,9 +164,9 @@
       footer: none,
       background:
         if bgImage == auto {
-            place(image("./../assets/background_umit.jpg")) + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
+          place(image("./../assets/background_umit.jpg")) + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
         } else {
-          background-image
+          bgImage
         }
     ),
   )
@@ -177,8 +180,8 @@
     block(
       width: 100%,
       fill: gradient.linear(
-        self.colors.primary,
-        self.colors.primary.transparentize(100%),
+        self.colors.primary.lighten(5%),
+        self.colors.primary.lighten(5%).transparentize(100%),
         relative: "parent",
       ),
       inset: (x: 2em, y: .8em),
