@@ -343,14 +343,12 @@
     pad(
       top: -2.75em,
       grid(
-        columns: (5%, auto, 1fr, auto, 5%),
-        banner-E(slide: true),
+        columns: (auto, 1fr, auto),
         if logo-left == auto {
           pad(
             top: -8pt,
-            left: -7pt,
-            right: -2pt,
-            image("./../assets/logo_iace_white.svg", height: 1.7em)
+            left: 0.9em,
+            image("./../assets/logo_iace_white.svg", height: 1.6em)
           )
         } else {
           logo-left
@@ -361,13 +359,12 @@
         if logo-right == auto {
           pad(
             top: -3.5pt,
-            x: -4.5pt,
+            right: page.margin.right,
             image("./../assets/logo_umit_white_wo.svg", height: 1.4em)
           )
         } else {
           logo-right
         },
-        banner-E(slide: true),
       )
     )
   },
@@ -484,29 +481,35 @@
       counter(page).display("1")
     )
   },
-  slides: (author:none, title:none, date:none, pagenum:none) => context {
+  slides: (author:none, title:none, date:none, pagenum:none, progressAnimation:true) => context {
     let opts = options.final()
     block(
       [
-        #block(
-          inset: (bottom: -3em),
-          components.progress-bar(height: 1.75em, rgb(200, 183, 118).lighten(80%), white)
-        )
+        #if progressAnimation {
+          block(
+            inset: (bottom: -3em),
+            components.progress-bar(height: 1.75em, opts.theme.highlight, opts.theme.primary)
+          )
+        }
         #box(
-          stroke: opts.theme.highlight,
-          inset: (x: 2em, top: -0.3em ,bottom: 0.5em),
+          stroke: (
+            top: opts.theme.secondary + 0pt,
+          ),
+          fill: if progressAnimation {none} else {opts.theme.primary},
+          inset: (left: page.margin.left + 1.8%, right: page.margin.right + 1.8%, top: -0.3em ,bottom: 0.5em),
           grid(
-            columns: (25%, 50%, 1fr, 5em),
-            align: (left, auto, center, right),
+            columns: (auto, 70%, 1fr, 5%),
+            gutter: 2%,
+            align: (left, left, center, right),
             rows: 1.5em,
-            author,
-            title,
+            text(white)[#author],
+            text(white)[#title],
             if opts.lang == "de" {
-              [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
+              text(white)[#date.day(). #translatedMonth(date, opts.lang) #date.year()]
             } else {
-              [#translatedMonth(date, opts.lang) #date.day(), #date.year()]
+              text(white)[#translatedMonth(date, opts.lang) #date.day(), #date.year()]
             },
-            pagenum,
+            text(white)[#pagenum],
           ),
         )
       ]

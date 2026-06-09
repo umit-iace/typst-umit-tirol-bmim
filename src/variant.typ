@@ -450,9 +450,12 @@
   aspect-ratio: "16-9", // "16-9" or "4-3"
   font: "CMU Sans Serif",
   align: horizon,
+  progressAnimation: true, // shows the progress in footer: false, true
   size: 18pt,
   handout: false, // render as handout: false, true
   notes: none, // show speaker notes: none, right, bottom; sh
+  margins: (x: 1.5em, ),
+  section-slide: auto, // auto, none, function
   ..chosen,
 ) = { body => context {
   option-set(
@@ -461,6 +464,7 @@
     + chosen.named()
   )
   let opts = options.final()
+
   set text(
     lang: opts.lang,
     font: opts.font,
@@ -471,6 +475,11 @@
   show: touying-slides.with(
     config-page(
       paper: "presentation-" + aspect-ratio,
+      margin: (
+        top: 2.25em,
+        bottom: 1.25em,
+        x: margins.x,
+      ),
       header: self => {
         set std.align(top)
         utils.call-or-display(self, self.store.header)
@@ -482,7 +491,6 @@
       },
       header-ascent: 0em,
       footer-descent: 0em,
-      margin: (top: 2.25em, bottom: 1.25em, x: 1.5em),
     ),
     config-info(
       title: title,
@@ -495,7 +503,11 @@
       location: location,
     ),
     config-common(
-      new-section-slide-fn: new-section-slide,
+      new-section-slide-fn: if section-slide != auto {
+        section-slide
+      } else {
+        new-section-slide
+      },
       show-bibliography-as-footnote: bib,
       handout: handout,
       show-notes-on-second-screen: notes,
@@ -548,6 +560,7 @@
         title: if type(title) != array { title } else { title.at(1) },
         date: date,
         pagenum: utils.call-or-display(self, self.store.footer-pagenum),
+        progressAnimation:progressAnimation,
       ),
       quotes: ("« ", " »"),
     ),

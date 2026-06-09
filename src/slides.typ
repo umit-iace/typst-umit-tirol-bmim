@@ -11,10 +11,10 @@
   let new-config = utils.merge-dicts(
     opts,
     config-page(
+      header: none,
       footer: none,
       background: place(
-        dy: 2.25em,
-        box(fill: gradient.linear(self.colors.primary, self.colors.primary.darken(100%), angle: 90deg), height: 100%-2.25em, width: 100%)
+        box(fill: gradient.linear(self.colors.primary, self.colors.primary.darken(100%), angle: 90deg), height: 100%, width: 100%)
       )
     ),
     config-common(freeze-slide-counter:true),
@@ -36,10 +36,29 @@
     set align(center + horizon)
     set text(fill: self.colors.background)
     v(-3.0em)
+    // authors
+    pad(
+      align(left,
+      text(size: 0.95em)[#authors.join[, ]] + if institution != none [
+        #parbreak()
+        #text(size: 0.75em)[#institution.join[\ ]]
+      ]
+    )
+    )
+    // grid(
+    //   columns: (1fr,) * calc.min(authors.len(), 3),
+    //   column-gutter: 1em,
+    //   row-gutter: 1em,
+    //     ..authors.enumerate().map(((idx, author)) => {
+    //       author
+    //     }
+    //   )
+    // )
+    v(1em)
     block(
-      fill: self.colors.primary.lighten(5%),
+      fill: self.colors.highlight,
       inset: 1.5em,
-      radius: 0.5em,
+      radius: 0.25em,
       breakable: false,
       {
         bold(1.75em, text(fill: self.colors.background)[#title.at(0, default:none)])
@@ -49,96 +68,86 @@
         }
       },
     )
-    v(0.5em)
-    // authors
-    grid(
-      columns: (1fr,) * calc.min(authors.len(), 3),
-      column-gutter: 1em,
-      row-gutter: 1em,
-        ..authors.enumerate().map(((idx, author)) => {
-          author
-        }
-      )
-    )
-    v(1em)
-    // institution
-    if institution != none {
-      parbreak()
-      text(size: 0.7em, institution)
-    }
-    v(1em)
-    // conference
-    if conference != none {
-      parbreak()
-      text(size: 1.0em, conference)
-      linebreak()
-    }
-    let locStr = ""
-    if location != none {
-      locStr = [, #location]
-    }
-    // date
-    if date != none {
-      if conference == none {
-        parbreak()
+    v(2em)
+
+      let locStr = ""
+      if location != none {
+        locStr = [, #location]
       }
-      text(size: 1.0em,
-        if opts.lang == "de" {
-          [#date.day(). #translatedMonth(date, opts.lang) #date.year()#locStr]
-        } else {
-          [#translatedMonth(date, opts.lang) #date.day(), #date.year()#locStr]
+    grid(
+      columns: (1fr, 1fr, 1fr),
+      gutter: 0pt,
+      grid.cell(align(left, pad(top: -0mm,
+        image("./../assets/logo_iace_white.svg", height: 2.65em)
+      ))),
+      grid.cell([
+        // conference
+        #if conference != none {
+          parbreak()
+          text(size: 1.0em, conference)
+          linebreak()
         }
-      )
-    }
+        // date
+        #if date != none {
+          if conference == none {
+            parbreak()
+          }
+          text(size: 1.0em,
+          if opts.lang == "de" {
+            [#date.day(). #translatedMonth(date, opts.lang) #date.year()#locStr]
+          } else {
+            [#translatedMonth(date, opts.lang) #date.day(), #date.year()#locStr]
+          })
+        }
+      ]),
+      grid.cell(align(right, pad(top: 1em,
+        image("./../assets/logo_umit_white_gr.svg", height: 2.65em)
+      ))),
+    )
   }
 
   touying-slide(self: self, body)
 })
 
 #let outline-slide(
+  coverLvl: 1,
   ..args,
 ) = touying-slide-wrapper(self => {
   let opts = options.final()
-  let bgImage = if type(opts.bgImage) == dictionary {
-    opts.bgImage.at("outline", default: auto)
-  } else {
-    opts.bgImage
-  }
   let new-config = utils.merge-dicts(
     opts,
-    config-page(
-      margin: (top: 2.25em, left: 1em),
-      // header: none
-      footer: none,
-      background:
-        if bgImage == auto {
-          place(image("./../assets/background_umit.jpg")) + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
-        } else {
-          bgImage
-        }
-    ),
   )
 
   self = utils.merge-dicts(self, new-config)
 
+  let cntOutline = counter("outline")
+  cntOutline.update(1)
+
   let body = {
     show: align.with(horizon)
+    show heading: none
     show outline.entry.where(level: 1): it => {
+      cntOutline.step()
       let style(entry) = block(
           fill: gradient.linear(
-            self.colors.primary.lighten(5%),
+            if cntOutline.get().at(0) == coverLvl {
+              self.colors.primary.lighten(50%)
+            } else {
+              self.colors.primary.lighten(5%)
+            },
             self.colors.primary.lighten(5%).transparentize(100%),
             relative: "parent",
           ),
           width: 100%,
           inset: 6pt,
-          strong(text( fill: white, entry ))
+          strong(text( fill: white, cntOutline.display() + h(1em) + entry ))
         )
       link(it.element.location(), style( it.body() ))
+      []
       v(1em)
     }
 
-    pad(x: 5em, outline(depth: 1, ..args))
+    pad(x: 2.5em, outline(depth: 1, ..args))
   }
 
   touying-slide(self: self, body)
@@ -150,11 +159,6 @@
   ..args,
 ) = touying-slide-wrapper(self => {
   let opts = options.final()
-  let bgImage = if type(opts.bgImage) == dictionary {
-    opts.bgImage.at("section", default: auto)
-  } else {
-    opts.bgImage
-  }
 
   let new-config = utils.merge-dicts(
     opts,
@@ -162,12 +166,7 @@
       margin: 0pt,
       header: none,
       footer: none,
-      background:
-        if bgImage == auto {
-          place(image("./../assets/background_umit.jpg")) + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
-        } else {
-          bgImage
-        }
+      background: place(image("./../assets/background_umit.jpg")) + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
     ),
   )
 

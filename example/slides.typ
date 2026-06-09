@@ -12,12 +12,6 @@
   authors: ([John Doel], [Jane Doe$zwj^(star)$], [Max Mustermann]),
   authors-short: [Doel et al.],
   date: datetime(day: 1, month: 3, year: 2024),
-  bgImage: (
-    outline: place(
-      dy: 2.25em,
-      box(fill: gradient.linear(bmim.color-cd2026.blue, bmim.color-cd2026.blue.darken(100%), angle: 90deg), height: 100%-2.25em, width: 100%)
-    ),
-  ),
   bib: bibliography(title: none, "sources.bib"),
   handout: false,
   notes: none,
