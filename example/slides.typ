@@ -8,10 +8,15 @@
   lang: "en",
   conference: "94th Conference of Applied Mathematics and Health Care",
   institution: (
-    [Institut für Automatisierungs und Regelungstechnik, UMIT TIROL, Hall in Tirol, Österreich],
+    [$zwj^(1)$Institut für Automatisierungs und Regelungstechnik, UMIT TIROL, Hall in Tirol, Österreich],
+    [$zwj^(2)$Institut für Mechatronik, Universität Innsbruck, Innsbruck, Österreich],
   ),
   location: "Irgendwo",
-  authors: ([John Doel], [Jane Doe$zwj^(star)$], [Max Mustermann]),
+  authors: (
+    [John Doel$zwj^(2)$],
+    [#text(weight: "bold", size: 1.05em)[Jane Doe$zwj^(1)$]],
+    [Max Mustermann$zwj^(1)$]
+  ),
   authors-short: [Doel et al.],
   date: datetime(day: 1, month: 3, year: 2024),
   bib: bibliography(title: none, "sources.bib"),
@@ -29,7 +34,7 @@ A slide with a motivation.
 
 #lorem(50)
 
-#bmim.outline-slide(title: "")
+#bmim.outline-slide(title: "Contents")
 
 = Modeling
 
