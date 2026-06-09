@@ -7,7 +7,9 @@
   subtitle: "Reactions are bad",
   lang: "en",
   conference: "94th Conference of Applied Mathematics and Health Care",
-  institution: "Institut für Automatisierungs und Regelungstechnik\n UMIT TIROL, Hall in Tirol, Österreich",
+  institution: (
+    [Institut für Automatisierungs und Regelungstechnik, UMIT TIROL, Hall in Tirol, Österreich],
+  ),
   location: "Irgendwo",
   authors: ([John Doel], [Jane Doe$zwj^(star)$], [Max Mustermann]),
   authors-short: [Doel et al.],
