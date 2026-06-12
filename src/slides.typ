@@ -37,25 +37,17 @@
     set text(fill: self.colors.background)
     v(-3.0em)
     // authors
-    pad(
+    block(
+      width: 100%,
       align(left,
       text(size: 0.95em)[#authors.join[, ]] + if institution != none [
-        #parbreak()
+        #line(length: 20%, stroke: self.colors.highlight) #v(-0.5em)
         #text(size: 0.75em)[#institution.join[\ ]]
-      ]
+      ])
     )
-    )
-    // grid(
-    //   columns: (1fr,) * calc.min(authors.len(), 3),
-    //   column-gutter: 1em,
-    //   row-gutter: 1em,
-    //     ..authors.enumerate().map(((idx, author)) => {
-    //       author
-    //     }
-    //   )
-    // )
-    v(1em)
+    v(0.5em)
     block(
+      width: 100%,
       fill: self.colors.highlight,
       inset: 1.5em,
       radius: 0.25em,
@@ -70,10 +62,10 @@
     )
     v(2em)
 
-      let locStr = ""
-      if location != none {
-        locStr = [, #location]
-      }
+    let locStr = ""
+    if location != none {
+      locStr = [, #location]
+    }
     grid(
       columns: (1fr, 1fr, 1fr),
       gutter: 0pt,
@@ -100,7 +92,8 @@
           })
         }
       ]),
-      grid.cell(align(right, pad(top: 1em,
+      grid.cell(align(right, pad(
+        top: 1em,
         image("./../assets/logo_umit_white_gr.svg", height: 2.65em)
       ))),
     )
