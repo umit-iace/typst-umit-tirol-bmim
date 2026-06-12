@@ -447,7 +447,7 @@
   authors-short: none, // none or [short author]
   date: none, // datetime
   bib: none, // none or "path/to/bibfile"
-  aspect-ratio: "16-9", // "16-9" or "4-3"
+  aspect-ratio: "16-9", // "16-10" or "16-9" or "4-3"
   font: "CMU Sans Serif",
   align: horizon,
   progressAnimation: true, // shows the progress in footer: false, true
@@ -474,7 +474,7 @@
 
   show: touying-slides.with(
     config-page(
-      paper: "presentation-" + aspect-ratio,
+      ..utils.page-args-from-aspect-ratio(aspect-ratio),
       margin: (
         top: 2.25em,
         bottom: 1.25em,
