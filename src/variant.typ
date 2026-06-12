@@ -185,8 +185,8 @@
     )
     layout(l => {
       let prefix = {
-        show i18n.at(lang).fig: h(0pt, weak:true)
-        show i18n.at(lang).tab: h(0pt, weak:true)
+        show i18n.at(opts.lang).fig: h(0pt, weak:true)
+        show i18n.at(opts.lang).tab: h(0pt, weak:true)
         it.prefix()
       }
 
