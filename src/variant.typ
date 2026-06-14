@@ -454,7 +454,7 @@
   size: 18pt,
   handout: false, // render as handout: false, true
   notes: none, // show speaker notes: none, right, bottom; sh
-  margins: (x: 1.5em, ),
+  margins: (x: 27pt, ),
   section-slide: auto, // auto, none, function
   ..chosen,
 ) = { body => context {
@@ -476,8 +476,8 @@
     config-page(
       ..utils.page-args-from-aspect-ratio(aspect-ratio),
       margin: (
-        top: 2.25em,
-        bottom: 1.25em,
+        top: page.height * 4.8%,
+        bottom: page.height * 2.6%,
         x: margins.x,
       ),
       header: self => {
@@ -489,8 +489,8 @@
         set text(size: .5em)
         utils.call-or-display(self, self.store.footer)
       },
-      header-ascent: 0em,
-      footer-descent: 0em,
+      header-ascent: 0pt,
+      footer-descent: 0pt,
     ),
     config-info(
       title: title,
@@ -533,9 +533,6 @@
         show strong: self.methods.alert.with(self: self)
 
         show quote: it => slides-quote(it, self.store.quotes)
-
-        show bibliography: set text(size: 15pt)
-        show bibliography: set par(spacing: 0.5em, leading: 0.4em)
 
         show figure.where(kind: table): set figure.caption(position: top)
 

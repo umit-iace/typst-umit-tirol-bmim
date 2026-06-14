@@ -150,6 +150,20 @@
   )
 }
 
+#let banner-slides(..args) = {
+  let opts = options.final()
+  let height = if args.named().at("slide", default: false) {0.9em} else {1.5em}
+  let size = args.named().at("size", default: 1em)
+  box(
+    width: 100%, height: height,
+    if args.pos().len() != 0 {
+      set align(horizon+center)
+      show text: set text(size: size, fill: opts.theme.background)
+      pad(..args.pos())
+    }
+  )
+}
+
 #let header-D(title:none) = context {
   let opts = options.final()
   pad(
@@ -339,28 +353,28 @@
       fill: opts.theme.primary,
       width: 100%,
       height: 100%,
-    )[]
+    )
     pad(
-      top: -2.75em,
+      top: -page.margin.top * 1.22,
       grid(
         columns: (auto, 1fr, auto),
         if logo-left == auto {
           pad(
             top: -8pt,
-            left: 0.9em,
-            image("./../assets/logo_iace_white.svg", height: 1.6em)
+            left: page.margin.left - 11%,
+            image("./../assets/logo_iace_white.svg", height: 28.8pt)
           )
         } else {
           logo-left
         },
         pad( x: -1pt,
-          banner-E(slide: true, size: 1.2em, move(dy: -0.5pt, heading))
+          banner-slides(slide: true, size: 21.6pt, move(dy: -0.5pt, heading))
         ),
         if logo-right == auto {
           pad(
             top: -3.5pt,
             right: page.margin.right,
-            image("./../assets/logo_umit_white_wo.svg", height: 1.4em)
+            image("./../assets/logo_umit_white_wo.svg", height: 25.2pt)
           )
         } else {
           logo-right
@@ -487,8 +501,8 @@
       [
         #if progressAnimation {
           block(
-            inset: (bottom: -3em),
-            components.progress-bar(height: 1.75em, opts.theme.highlight, opts.theme.primary)
+            inset: (bottom: -page.height * 5.7%),
+            components.progress-bar(height: page.height * 3.3%, opts.theme.highlight, opts.theme.primary)
           )
         }
         #box(
@@ -496,12 +510,12 @@
             top: opts.theme.secondary + 0pt,
           ),
           fill: if progressAnimation {none} else {opts.theme.primary},
-          inset: (left: page.margin.left + 1.8%, right: page.margin.right + 1.8%, top: -0.3em ,bottom: 0.5em),
+          inset: (left: page.margin.left, right: page.margin.right, top: -page.height * 0.525%, bottom: page.height * 0.9%),
           grid(
             columns: (auto, 70%, 1fr, 5%),
             gutter: 2%,
             align: (left, left, center, right),
-            rows: 1.5em,
+            rows: page.height * 2.8%,
             text(white)[#author],
             text(white)[#title],
             if opts.lang == "de" {
