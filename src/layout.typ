@@ -152,7 +152,7 @@
 
 #let banner-slides(..args) = {
   let opts = options.final()
-  let height = if args.named().at("slide", default: false) {0.9em} else {1.5em}
+  let height = if args.named().at("slide", default: false) {0.5em} else {1.5em}
   let size = args.named().at("size", default: 1em)
   box(
     width: 100%, height: height,
@@ -355,26 +355,26 @@
       height: 100%,
     )
     pad(
-      top: -page.margin.top * 1.22,
+      top: -page.margin.top * 1.42,
       grid(
         columns: (auto, 1fr, auto),
         if logo-left == auto {
           pad(
-            top: -8pt,
+            top: -6.5pt,
             left: page.margin.left - 11%,
-            image("./../assets/logo_iace_white.svg", height: 28.8pt)
+            image("./../assets/logo_iace_white.svg", height: 20.8pt)
           )
         } else {
           logo-left
         },
         pad( x: -1pt,
-          banner-slides(slide: true, size: 21.6pt, move(dy: -0.5pt, heading))
+          banner-slides(slide: true, size: 17.6pt, move(dy: -0.5pt, heading))
         ),
         if logo-right == auto {
           pad(
-            top: -3.5pt,
+            top: -2.2pt,
             right: page.margin.right,
-            image("./../assets/logo_umit_white_wo.svg", height: 25.2pt)
+            image("./../assets/logo_umit_white_wo.svg", height: 17.2pt)
           )
         } else {
           logo-right

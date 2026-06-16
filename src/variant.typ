@@ -476,7 +476,7 @@
     config-page(
       ..utils.page-args-from-aspect-ratio(aspect-ratio),
       margin: (
-        top: page.height * 4.8%,
+        top: page.height * 3.5%,
         bottom: page.height * 2.6%,
         x: margins.x,
       ),
