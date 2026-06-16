@@ -102,6 +102,178 @@
   touying-slide(self: self, body)
 })
 
+
+#let title-slide2(
+  ..args,
+) = touying-slide-wrapper(self => {
+  let opts = options.final()
+  let new-config = utils.merge-dicts(
+    opts,
+    config-page(
+      header: none,
+      footer: none,
+      background: [
+        #place(center+bottom,
+          image(
+            "./../assets/background_bettelwurf.jpg",
+            width: 100%,
+            // height: 160%,
+          )
+        )
+        // #place(bottom,
+        //   box(
+        //     width: 100%,
+        //     height: 100%,
+        //     fill: gradient.linear(
+        //       self.colors.highlight.transparentize(100%),
+        //       self.colors.highlight.lighten(70%),
+        //       angle: 90deg,
+        // )))
+        //
+        // box(
+        //   fill: self.colors.background,
+        //   height: 100%, 
+        //   width: 100%,
+        // )
+        //  
+        //  
+        ]
+    ),
+    config-common(freeze-slide-counter:true),
+  )
+
+  self = utils.merge-dicts(self, new-config)
+
+  let authors = (self.info.authors,).flatten()
+  let title = (self.info.title,).flatten()
+  let subtitle = self.info.subtitle
+  let institution = self.info.institution
+  let conference = self.info.conference
+  let location = self.info.location
+  let date = self.info.date
+
+  let bold(size, body) = strong(text(size: size, body))
+
+  let body = {
+    // restore defaults
+    set par(justify: false, spacing: 0.65em)
+    set text(fill: self.colors.background, spacing: 100%)
+
+    let left_margin = 28pt
+
+    // header
+    let logo_pad = 20pt
+    let logo_height = 36pt
+    context place(
+      top+left,
+      dx: -page.margin.left,
+      dy: -page.margin.top,
+      box(
+        width: page.width,
+        // fill: self.colors.highlight,
+        pad(
+            top: logo_pad,
+            left: page.margin.left + left_margin,
+            right: page.margin.right + left_margin,
+            bottom: logo_pad,
+          {
+          grid(
+            columns: (1fr, 1fr),
+            gutter: 0pt,
+            grid.cell(align(left, pad(
+              left: -logo_height / 3,
+              image("./../assets/logo_iace_blue.svg", height: logo_height)
+            ))),
+            grid.cell(align(right, pad(
+              top: logo_height / 6, // compensate the logo offsets
+              if opts.lang == "de" {
+                image("./../assets/logo_umit_blue_gr.svg", height: logo_height)
+              } else {
+                image("./../assets/logo_umit_blue_gr.svg", height: logo_height)
+              }
+            ))),
+          )
+        }
+    )))
+
+    // body
+    context place(
+      bottom+left,
+      dy: page.margin.bottom,
+    block(
+      inset: left_margin,
+      // fill: self.colors.highlight,
+      fill: gradient.linear(
+        self.colors.primary.transparentize(5%),
+        self.colors.primary.transparentize(0%).darken(100%), 
+        angle: 90deg), 
+      radius: 1pt,
+      {
+      // authors and institutions
+      block(
+        width: 100%,
+        align(left,
+        text(size: 16pt)[#authors.join[, ]] + if institution != none [
+          // #parbreak()
+          #line(length: 30%, stroke: self.colors.background) 
+          #text(size: 12pt)[#institution.join[\ ]]
+        ])
+      )
+      // line(length: 30%, stroke: self.colors.background) 
+      v(1em)
+      // title
+      block(
+        width: 100%,
+        // radius: 0.25em,
+        // fill: self.colors.highlight,
+        // breakable: false,
+        {
+          // set 
+          par(spacing: 1em, justify: false,
+            bold(32pt, 
+              text(fill: self.colors.background, spacing: 80%)[
+                #title.at(0, default:none)
+              ]
+            )
+          )
+          if subtitle != none {
+            parbreak()
+            bold(16pt, text(fill: self.colors.background)[#subtitle])
+          }
+        },
+      )
+      // // flush the rest to the bottom
+      v(2em)
+      let locStr = ""
+      if location != none {
+        locStr = [, #location]
+      }
+      [
+      // conference
+      #if conference != none {
+        parbreak()
+        text(size: 14pt, conference)
+        linebreak()
+      }
+      // date
+      #if date != none {
+        if conference == none {
+          parbreak()
+        }
+        text(size: 14pt,
+        if opts.lang == "de" {
+          [#date.day(). #translatedMonth(date, opts.lang) #date.year()#locStr]
+        } else {
+          [#translatedMonth(date, opts.lang) #date.day(), #date.year()#locStr]
+        })
+      }
+      ]
+    }
+    ))
+  }
+  touying-slide(self: self, body)
+})
+
 #let outline-slide(
   coverLvl: 1,
   ..args,

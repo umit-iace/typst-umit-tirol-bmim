@@ -2,19 +2,23 @@
 #import "/src/lib.typ" as bmim: example, tip, hint
 
 #show: bmim.slides(
-  title: ("Control design stratgies for better results",
+  title: ("Control design strategies for better results that take a quite loooooooooooooooooooooong title to explain",
   "Control it better"),
-  subtitle: "Reactions are bad",
+  subtitle: "Because reactions are bad",
   lang: "en",
-  conference: "94th Conference of Applied Mathematics and Health Care",
+  conference: "94th Conference of Applied Mathematics and Slide Care",
   institution: (
     [$zwj^(1)$Institut für Automatisierungs und Regelungstechnik, UMIT TIROL, Hall in Tirol, Österreich],
     [$zwj^(2)$Institut für Mechatronik, Universität Innsbruck, Innsbruck, Österreich],
   ),
   location: "Irgendwo",
   authors: (
-    [John Doel$zwj^(2)$],
     [#text(weight: "bold", size: 1.05em)[Jane Doe$zwj^(1)$]],
+    [John Doel$zwj^(2)$],
+    [John Doel$zwj^(2)$],
+    [John Doel$zwj^(2)$],
+    [John Doel$zwj^(2)$],
+    [John Doel$zwj^(2)$],
     [Max Mustermann$zwj^(1)$]
   ),
   authors-short: [Doel et al.],
@@ -24,7 +28,8 @@
   notes: none,
 )
 
-#bmim.title-slide()
+// #bmim.title-slide()
+#bmim.title-slide2()
 
 = Motivation <touying:skip>
 
