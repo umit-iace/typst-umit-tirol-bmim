@@ -448,7 +448,7 @@
   date: none, // datetime
   bib: none, // none or "path/to/bibfile"
   aspect-ratio: "16-9", // "16-10" or "16-9" or "4-3"
-  font: "CMU Sans Serif",
+  font: "Merriweather Sans",
   align: horizon,
   progressAnimation: true, // shows the progress in footer: false, true
   size: 18pt,

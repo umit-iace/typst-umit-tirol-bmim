@@ -2,9 +2,9 @@
 #import "/src/lib.typ" as bmim: example, tip, hint
 
 #show: bmim.slides(
-  title: ("Control design strategies for better results that take a quite loooooooooooooooooooooong title to explain",
+  title: ("Control design strategies for better results that take a quite a long title to explain what's really happening",
   "Control it better"),
-  subtitle: "Because reactions are bad",
+  // subtitle: "Because reactions are bad",
   lang: "en",
   conference: "94th Conference of Applied Mathematics and Slide Care",
   institution: (

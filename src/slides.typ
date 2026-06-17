@@ -117,26 +117,8 @@
           image(
             "./../assets/background_bettelwurf.jpg",
             width: 100%,
-            // height: 160%,
           )
         )
-        // #place(bottom,
-        //   box(
-        //     width: 100%,
-        //     height: 100%,
-        //     fill: gradient.linear(
-        //       self.colors.highlight.transparentize(100%),
-        //       self.colors.highlight.lighten(70%),
-        //       angle: 90deg,
-        // )))
-        //
-        // box(
-        //   fill: self.colors.background,
-        //   height: 100%, 
-        //   width: 100%,
-        // )
-        //  
-        //  
         ]
     ),
     config-common(freeze-slide-counter:true),
@@ -159,42 +141,43 @@
     set par(justify: false, spacing: 0.65em)
     set text(fill: self.colors.background, spacing: 100%)
 
+    // settings
     let left_margin = 28pt
+    let logo_pad = 20pt
+    let logo_height = 40pt
 
     // header
-    let logo_pad = 20pt
-    let logo_height = 36pt
-    context place(
-      top+left,
-      dx: -page.margin.left,
-      dy: -page.margin.top,
-      box(
-        width: page.width,
-        // fill: self.colors.highlight,
-        pad(
-            top: logo_pad,
-            left: page.margin.left + left_margin,
-            right: page.margin.right + left_margin,
-            bottom: logo_pad,
-          {
-          grid(
-            columns: (1fr, 1fr),
-            gutter: 0pt,
-            grid.cell(align(left, pad(
-              left: -logo_height / 3,
-              image("./../assets/logo_iace_blue.svg", height: logo_height)
-            ))),
-            grid.cell(align(right, pad(
-              top: logo_height / 6, // compensate the logo offsets
-              if opts.lang == "de" {
-                image("./../assets/logo_umit_blue_gr.svg", height: logo_height)
-              } else {
-                image("./../assets/logo_umit_blue_gr.svg", height: logo_height)
-              }
-            ))),
-          )
-        }
-    )))
+    // context place(
+    //   top+left,
+    //   dx: -page.margin.left,
+    //   dy: -page.margin.top,
+    //   box(
+    //     width: page.width,
+    //     // fill: self.colors.highlight,
+    //     pad(
+    //         top: logo_pad,
+    //         left: page.margin.left + left_margin,
+    //         right: page.margin.right + left_margin,
+    //         bottom: logo_pad,
+    //       {
+    //       grid(
+    //         columns: (1fr, 1fr),
+    //         gutter: 0pt,
+    //         grid.cell(align(left, pad(
+    //           left: -logo_height / 3,
+    //           image("./../assets/logo_iace_blue.svg", height: logo_height)
+    //         ))),
+    //         grid.cell(align(right, pad(
+    //           top: logo_height / 6, // compensate the logo offsets
+    //           if opts.lang == "de" {
+    //             image("./../assets/logo_umit_blue_gr.svg", height: logo_height)
+    //           } else {
+    //             image("./../assets/logo_umit_blue_gr.svg", height: logo_height)
+    //           }
+    //         ))),
+    //       )
+    //     }
+    // )))
 
     // body
     context place(
@@ -204,70 +187,92 @@
       inset: left_margin,
       // fill: self.colors.highlight,
       fill: gradient.linear(
-        self.colors.primary.transparentize(5%),
+        self.colors.primary.transparentize(50%),
         self.colors.primary.transparentize(0%).darken(100%), 
         angle: 90deg), 
-      radius: 1pt,
-      {
-      // authors and institutions
-      block(
-        width: 100%,
-        align(left,
-        text(size: 16pt)[#authors.join[, ]] + if institution != none [
-          // #parbreak()
-          #line(length: 30%, stroke: self.colors.background) 
-          #text(size: 12pt)[#institution.join[\ ]]
-        ])
-      )
-      // line(length: 30%, stroke: self.colors.background) 
-      v(1em)
-      // title
-      block(
-        width: 100%,
-        // radius: 0.25em,
-        // fill: self.colors.highlight,
-        // breakable: false,
-        {
-          // set 
-          par(spacing: 1em, justify: false,
-            bold(32pt, 
-              text(fill: self.colors.background, spacing: 80%)[
-                #title.at(0, default:none)
-              ]
-            )
-          )
-          if subtitle != none {
-            parbreak()
-            bold(16pt, text(fill: self.colors.background)[#subtitle])
-          }
-        },
-      )
-      // // flush the rest to the bottom
-      v(2em)
-      let locStr = ""
-      if location != none {
-        locStr = [, #location]
-      }
-      [
-      // conference
-      #if conference != none {
-        parbreak()
-        text(size: 14pt, conference)
-        linebreak()
-      }
-      // date
-      #if date != none {
-        if conference == none {
-          parbreak()
+      radius: 1pt, {
+        // authors and institutions
+        block(
+          width: 100%,
+          align(left,
+          text(size: 16pt)[#authors.join[, ]] + if institution != none [
+            #linebreak()
+            // #line(length: 30%, stroke: self.colors.background) 
+            #text(size: 12pt)[#institution.join[\ ]]
+          ])
+        )
+        // line(length: 30%, stroke: self.colors.background) 
+        v(.8em)
+        // title
+        block(
+          width: 100%,
+          radius: 0.25em,
+          // fill: self.colors.highlight,
+          // breakable: false,
+          {
+            set par(leading: .4em)
+            set text(fill: self.colors.background, 
+                  font: "Merriweather",
+                  // spacing: 80%, 
+                  weight: "bold",
+                  size: 36pt
+              )
+            [
+              #title.at(0, default:none)
+              #if subtitle != none {
+                parbreak()
+                text(size: 16pt, subtitle)
+              }
+            ]
+          },
+        )
+        v(.8em)
+        let locStr = ""
+        if location != none {
+          locStr = [, #location]
         }
-        text(size: 14pt,
-        if opts.lang == "de" {
-          [#date.day(). #translatedMonth(date, opts.lang) #date.year()#locStr]
-        } else {
-          [#translatedMonth(date, opts.lang) #date.day(), #date.year()#locStr]
-        })
-      }
-      ]
+        [
+        // conference
+        #if conference != none {
+          parbreak()
+          text(size: 14pt, conference + ", ")
+          // linebreak()
+        }
+        // date
+        #if date != none {
+          if conference == none {
+            parbreak()
+          }
+          text(size: 14pt,
+          if opts.lang == "de" {
+            [#date.day(). #translatedMonth(date, opts.lang) #date.year()#locStr]
+          } else {
+            [#translatedMonth(date, opts.lang) #date.day(), #date.year()#locStr]
+          })
+        }
+        ]
+        // flush the rest to the bottom
+        v(1fr)
+        // logos
+        block(
+          // fill: self.colors.highlight,
+          grid(
+            columns: (1fr, 1fr),
+            gutter: 0pt,
+            grid.cell(align(left+top, pad(
+              top: 0pt,
+              left: -logo_height / 3,
+              image("./../assets/logo_iace_white.svg", height: logo_height)
+            ))),
+            grid.cell(align(right+bottom, pad(
+              top: logo_height / 6, // compensate the logo offsets
+              if opts.lang == "de" {
+                image("./../assets/logo_umit_white_gr.svg", height: logo_height)
+              } else {
+                image("./../assets/logo_umit_white_gr.svg", height: logo_height)
+              }
+            ))),
+        ))
     }
     ))
   }
