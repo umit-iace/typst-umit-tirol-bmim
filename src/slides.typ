@@ -14,115 +14,23 @@
       header: none,
       footer: none,
       background: place(
-        box(fill: gradient.linear(self.colors.primary, self.colors.primary.darken(100%), angle: 90deg), height: 100%, width: 100%)
-      )
+        center+bottom,
+        image(width: 100%, "./../assets/background_bettelwurf.jpg")
+      ) + box(fill: self.colors.primary.transparentize(65%).lighten(50%), height:100%, width: 100%)
     ),
     config-common(freeze-slide-counter:true),
   )
 
-  self = utils.merge-dicts(self, new-config)
-
-  let authors = (self.info.authors,).flatten()
-  let title = (self.info.title,).flatten()
-  let subtitle = self.info.subtitle
-  let institution = self.info.institution
-  let conference = self.info.conference
-  let location = self.info.location
-  let date = self.info.date
-
-  let bold(size, body) = strong(text(size: size, body))
-
-  let body = {
-    set align(center + horizon)
-    set text(fill: self.colors.background)
-    v(-3.0em)
-    // authors
-    block(
-      width: 100%,
-      align(left,
-      text(size: 0.95em)[#authors.join[, ]] + if institution != none [
-        #line(length: 20%, stroke: self.colors.highlight) #v(-0.5em)
-        #text(size: 0.75em)[#institution.join[\ ]]
-      ])
-    )
-    v(0.5em)
-    block(
-      width: 100%,
-      fill: self.colors.highlight,
-      inset: 1.5em,
-      radius: 0.25em,
-      breakable: false,
-      {
-        bold(1.75em, text(fill: self.colors.background)[#title.at(0, default:none)])
-        if subtitle != none {
-          parbreak()
-          bold(1.0em, text(fill: self.colors.background)[#subtitle])
-        }
-      },
-    )
-    v(2em)
-
-    let locStr = ""
-    if location != none {
-      locStr = [, #location]
-    }
-    grid(
-      columns: (1fr, 1fr, 1fr),
-      gutter: 0pt,
-      grid.cell(align(left, pad(top: -0mm,
-        image("./../assets/logo_iace_white.svg", height: 2.65em)
-      ))),
-      grid.cell([
-        // conference
-        #if conference != none {
-          parbreak()
-          text(size: 1.0em, conference)
-          linebreak()
-        }
-        // date
-        #if date != none {
-          if conference == none {
-            parbreak()
-          }
-          text(size: 1.0em,
-          if opts.lang == "de" {
-            [#date.day(). #translatedMonth(date, opts.lang) #date.year()#locStr]
-          } else {
-            [#translatedMonth(date, opts.lang) #date.day(), #date.year()#locStr]
-          })
-        }
-      ]),
-      grid.cell(align(right, pad(
-        top: 1em,
-        image("./../assets/logo_umit_white_gr.svg", height: 2.65em)
-      ))),
-    )
+  let logo-left = if type(opts.logo) == dictionary {
+    opts.logo.at("title-left", default: auto)
+  } else {
+    opts.logo
   }
-
-  touying-slide(self: self, body)
-})
-
-
-#let title-slide2(
-  ..args,
-) = touying-slide-wrapper(self => {
-  let opts = options.final()
-  let new-config = utils.merge-dicts(
-    opts,
-    config-page(
-      header: none,
-      footer: none,
-      background: [
-        #place(center+bottom,
-          image(
-            "./../assets/background_bettelwurf.jpg",
-            width: 100%,
-          )
-        )
-        ]
-    ),
-    config-common(freeze-slide-counter:true),
-  )
+  let logo-right = if type(opts.logo) == dictionary {
+    opts.logo.at("title-right", default: auto)
+  } else {
+    opts.logo
+  }
 
   self = utils.merge-dicts(self, new-config)
 
@@ -146,77 +54,42 @@
     let logo_pad = 20pt
     let logo_height = 40pt
 
-    // header
-    // context place(
-    //   top+left,
-    //   dx: -page.margin.left,
-    //   dy: -page.margin.top,
-    //   box(
-    //     width: page.width,
-    //     // fill: self.colors.highlight,
-    //     pad(
-    //         top: logo_pad,
-    //         left: page.margin.left + left_margin,
-    //         right: page.margin.right + left_margin,
-    //         bottom: logo_pad,
-    //       {
-    //       grid(
-    //         columns: (1fr, 1fr),
-    //         gutter: 0pt,
-    //         grid.cell(align(left, pad(
-    //           left: -logo_height / 3,
-    //           image("./../assets/logo_iace_blue.svg", height: logo_height)
-    //         ))),
-    //         grid.cell(align(right, pad(
-    //           top: logo_height / 6, // compensate the logo offsets
-    //           if opts.lang == "de" {
-    //             image("./../assets/logo_umit_blue_gr.svg", height: logo_height)
-    //           } else {
-    //             image("./../assets/logo_umit_blue_gr.svg", height: logo_height)
-    //           }
-    //         ))),
-    //       )
-    //     }
-    // )))
-
     // body
     context place(
       bottom+left,
       dy: page.margin.bottom,
     block(
       inset: left_margin,
-      // fill: self.colors.highlight,
       fill: gradient.linear(
-        self.colors.primary.transparentize(50%),
-        self.colors.primary.transparentize(0%).darken(100%), 
-        angle: 90deg), 
-      radius: 1pt, {
-        // authors and institutions
-        block(
-          width: 100%,
-          align(left,
-          text(size: 14pt)[#authors.join[, ]] + if institution != none [
-            #linebreak()
-            // #line(length: 30%, stroke: self.colors.background) 
-            #text(size: 10pt)[#institution.join[\ ]]
-          ])
-        )
-        // line(length: 30%, stroke: self.colors.background) 
-        v(.8em)
-        // title
-        block(
-          width: 100%,
-          radius: 0.25em,
-          // fill: self.colors.highlight,
-          // breakable: false,
-          {
+        self.colors.primary.transparentize(30%),
+        self.colors.primary.transparentize(0%).darken(100%),
+        angle: 90deg
+      ),
+      radius: 2pt,
+      {
+      // authors and institutions
+      block(
+        width: 100%,
+        align(left,
+        text(
+          size: 14pt)[#authors.join[, ]] + if institution != none [
+          #line(length: 30%, stroke: self.colors.background)
+          #text(size: 10pt)[#institution.join[\ ]]
+        ])
+      )
+      v(0.5em)
+      // title
+      block(
+        width: 100%,
+        {
             set par(leading: .4em)
-            set text(fill: self.colors.background, 
-                  font: "Merriweather",
-                  // spacing: 80%, 
-                  weight: "bold",
-                  size: 36pt
-              )
+            set text(
+              fill: self.colors.background,
+              font: "Merriweather",
+              // spacing: 80%,
+              weight: "bold",
+              size: 34pt
+            )
             [
               #title.at(0, default:none)
               #if subtitle != none {
@@ -224,55 +97,74 @@
                 text(size: 16pt, subtitle)
               }
             ]
-          },
-        )
-        v(.8em)
-        let locStr = ""
-        if location != none {
-          locStr = [, #location]
-        }
-        [
-        // conference
-        #if conference != none {
-          parbreak()
-          text(size: 14pt, conference + ", ")
-          // linebreak()
-        }
-        // date
-        #if date != none {
-          if conference == none {
-            parbreak()
-          }
-          text(size: 14pt,
-          if opts.lang == "de" {
-            [#date.day(). #translatedMonth(date, opts.lang) #date.year()#locStr]
-          } else {
-            [#translatedMonth(date, opts.lang) #date.day(), #date.year()#locStr]
-          })
-        }
-        ]
-        // flush the rest to the bottom
-        v(1fr)
-        // logos
-        block(
-          // fill: self.colors.highlight,
-          grid(
-            columns: (1fr, 1fr),
-            gutter: 0pt,
-            grid.cell(align(left+top, pad(
-              top: 0pt,
-              left: -logo_height / 3,
-              image("./../assets/logo_iace_white.svg", height: logo_height)
-            ))),
-            grid.cell(align(right+bottom, pad(
-              top: logo_height / 6, // compensate the logo offsets
-              if opts.lang == "de" {
-                image("./../assets/logo_umit_white_gr.svg", height: logo_height)
-              } else {
-                image("./../assets/logo_umit_white_gr.svg", height: logo_height)
+        },
+      )
+      // flush the rest to the bottom
+      v(2em)
+      grid(
+        columns: (1fr, 1fr),
+        gutter: 1pt,
+        grid.cell(
+          align(left+bottom,{
+            let locStr = ""
+            if location != none {
+              locStr = [, #location]
+            }
+            [
+            // conference
+            #if conference != none {
+              parbreak()
+              text(size: 14pt, conference)
+              linebreak()
+            }
+            // date
+            #if date != none {
+              if conference == none {
+                parbreak()
               }
-            ))),
-        ))
+              text(size: 14pt,
+              if opts.lang == "de" {
+                [#date.day(). #translatedMonth(date, opts.lang) #date.year()#locStr]
+              } else {
+                [#translatedMonth(date, opts.lang) #date.day(), #date.year()#locStr]
+              })
+            }
+            ]
+          })
+        ),
+        grid.cell(
+          align(center+bottom,
+            grid(
+              columns: (1fr, 1fr),
+              gutter: 0pt,
+              grid.cell(
+                if logo-left == auto {
+                  pad(
+                    top: 0pt,
+                    image("./../assets/logo_iace_white.svg", height: 40pt)
+                  )
+                } else {
+                  logo-left
+                }
+              ),
+              grid.cell(
+                if logo-right == auto {
+                  place(
+                    dy: 10pt,
+                    if opts.lang == "de" {
+                      image("./../assets/logo_umit_white_gr.svg", height: 36pt)
+                    } else {
+                      image("./../assets/logo_umit_white_gr.svg", height: 36pt)
+                    }
+                  )
+                } else {
+                  logo-right
+                }
+              ),
+            )
+          )
+        )
+      )
     }
     ))
   }
@@ -336,7 +228,10 @@
       margin: 0pt,
       header: none,
       footer: none,
-      background: place(image("./../assets/background_umit.jpg")) + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
+      background: place(
+        center+bottom,
+        image(width: 100%, "./../assets/background_bettelwurf.jpg")
+      ) + box(fill: self.colors.primary.transparentize(65%).lighten(50%), height:100%, width: 100%)
     ),
   )
 

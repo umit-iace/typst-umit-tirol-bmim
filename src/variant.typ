@@ -451,7 +451,7 @@
   font: "Merriweather Sans",
   align: horizon,
   progressAnimation: true, // shows the progress in footer: false, true
-  size: 18pt,
+  size: 16pt,
   handout: false, // render as handout: false, true
   notes: none, // show speaker notes: none, right, bottom; sh
   margins: (x: 27pt, ),
