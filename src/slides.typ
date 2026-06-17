@@ -195,10 +195,10 @@
         block(
           width: 100%,
           align(left,
-          text(size: 16pt)[#authors.join[, ]] + if institution != none [
+          text(size: 14pt)[#authors.join[, ]] + if institution != none [
             #linebreak()
             // #line(length: 30%, stroke: self.colors.background) 
-            #text(size: 12pt)[#institution.join[\ ]]
+            #text(size: 10pt)[#institution.join[\ ]]
           ])
         )
         // line(length: 30%, stroke: self.colors.background) 
