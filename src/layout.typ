@@ -368,7 +368,7 @@
           logo-left
         },
         pad( x: -1pt,
-          banner-slides(slide: true, size: 16pt, move(dy: 2.5pt, heading))
+          banner-slides(slide: true, size: 16pt, move(dy: 4pt, heading))
         ),
         if logo-right == auto {
           pad(
