@@ -29,7 +29,7 @@ jobs:
       - name: Install fonts
         run: |
           sudo apt update
-          sudo apt install -y lmodern cm-super fonts-cmu
+          sudo apt install -y lmodern cm-super fonts-cmu node-fontsource-merriweather
 
       - name: Install Touying Exporter
         run: pip install touying
