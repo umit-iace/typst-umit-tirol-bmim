@@ -59,3 +59,11 @@ This will watch your file and recompile it to a pdf when the file is saved.
 
 - Store the package in `~/.local/share/typst/packages/local/ratsch-bmim/0.3.0`
 - Import from it with `#import "@local/ratsch-bmim:0.3.0": *`
+
+## License
+
+The images logo_iace_\*/logo_umit_\*/background_\*/footer_umit_\* in the `assets` folder are the property of the UMIT TIROL.
+
+The images logo_lfui_\* in the `assets` folder are the property of the University of Innsbruck.
+
+The rest of the project is licensed under the [MIT License](LICENSE).
