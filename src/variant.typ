@@ -451,7 +451,7 @@
   font: "Source Sans 3",
   align: horizon,
   progressAnimation: true, // shows the progress in footer: false, true
-  size: 16pt,
+  size: 18pt,
   handout: false, // render as handout: false, true
   notes: none, // show speaker notes: none, right, bottom; sh
   margins: (x: 27pt, ),

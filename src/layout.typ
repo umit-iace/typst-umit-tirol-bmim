@@ -360,7 +360,7 @@
         columns: (auto, 1fr, auto),
         if logo-left == auto {
           pad(
-            top: -3.5pt,
+            top: -6.5pt,
             left: page.margin.left - 11%,
             image("./../assets/logo_iace_white.svg", height: 20.8pt)
           )
@@ -368,11 +368,11 @@
           logo-left
         },
         pad( x: -1pt,
-          banner-slides(slide: true, size: 16pt, move(dy: 4pt, heading))
+          banner-slides(slide: true, size: 17.6pt, move(dy: 0.5pt, heading))
         ),
         if logo-right == auto {
           pad(
-            top: 0.8pt,
+            top: -2.2pt,
             right: page.margin.right,
             image("./../assets/logo_umit_white_wo.svg", height: 17.2pt)
           )
@@ -515,7 +515,7 @@
             columns: (auto, 70%, 1fr, 5%),
             gutter: 2%,
             align: (left, left, center, right),
-            rows: page.height * 3.1%,
+            rows: page.height * 2.8%,
             text(white)[#author],
             text(white)[#title],
             if opts.lang == "de" {
