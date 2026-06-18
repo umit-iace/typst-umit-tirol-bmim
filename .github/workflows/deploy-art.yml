@@ -31,7 +31,7 @@ jobs:
       - name: Install fonts
         run: |
           sudo apt update
-          sudo apt install -y lmodern cm-super fonts-cmu node-fontsource-merriweather
+          sudo apt install -y lmodern cm-super fonts-cmu fonts-adobe-sourcesans3 fonts-adobe-source-serif-pro
 
       - name: Setup typst
         uses: typst-community/setup-typst@v4

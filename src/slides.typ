@@ -85,7 +85,7 @@
             set par(leading: .4em)
             set text(
               fill: self.colors.background,
-              font: "Merriweather",
+              font: "Source Serif 4",
               // spacing: 80%,
               weight: "bold",
               size: 34pt
