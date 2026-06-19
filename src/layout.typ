@@ -4,83 +4,6 @@
 #import "slides.typ": *
 
 
-#let header-A() = context {
-  // Weißer Kopfbereich darunter ne Linie
-  let opts = options.final()
-  let header_pad = 8mm      // Innenabstand
-  stack(
-    spacing: 0pt,
-  )[
-    // Weißer Bereich mit Logos
-    #pad(
-      top: header_pad,
-      bottom: header_pad,
-    )[
-      #grid(
-        columns: (auto, 1fr, auto),
-        gutter: 0pt,
-        // fill: blue,
-        align(right+top, image("./../assets/logo_umit_blue_gr.png", height: 10mm)),
-        [], // Spacer
-        align(left+top, pad(top: -2mm, image("./../assets/logo_iace_blue.svg", height: 10mm))),
-      )
-      // Linie unten als Akzent
-      #line(length: 100%, stroke: 0.1mm+opts.theme.tertiary)
-    ]
-  ]
-}
-
-#let header-B() = context {
-  // Balken in Primärfarbe, Logos invertiert
-  let opts = options.final()
-  let header_pad = 10mm      // Innenabstand
-  let logo_height = 7mm      // 
-  pad(
-    left: -header_pad,
-    right: -header_pad,
-    box(
-      fill: opts.theme.primary,
-      // fill: gradient.linear(opts.theme.primary, opts.theme.tertiary, angle: 90deg),
-      inset: (left: header_pad, right: header_pad, top: 1mm, bottom: 1mm),
-    )[
-      #grid(
-        columns: (auto, 1fr, auto),
-        gutter: 0pt,
-        align(left+top, pad(top: -0mm, image("./../assets/logo_iace_white.svg", height: logo_height))),
-        [], // Spacer
-        align(right+top, image("./../assets/logo_umit_de_white.svg", height: logo_height)),
-      )
-    ]
-  )
-}
-
-#let header-C() = context {
-  // Balken in Primärfarbe, Logos invertiert
-  let opts = options.final()
-  let header_pad = 5mm      // Innenabstand
-  let logo_height = 7mm      // 
-  pad(
-    left: -header_pad,
-    right: -header_pad,
-  )[
-    #line(length: 100%, stroke: 0.25mm+opts.theme.primary)
-    #box(
-      // fill: opts.theme.primary,
-      inset: (left: header_pad, right: header_pad, top: -1mm, bottom: -1mm),
-    )[
-      #grid(
-        columns: (auto, 1fr, auto),
-        gutter: 0pt,
-        align(left+top, pad(top: -0mm, image("./../assets/logo_iace_blue.svg", height: logo_height))),
-        [], // Spacer
-        align(right+top, image("./../assets/logo_umit_blue_gr.png", height: logo_height)),
-      )
-    ]
-    #line(length: 100%, stroke: 0.5mm+opts.theme.primary)
-]
-}
-
-
 #let heading-colored(it) = context {
   let opts = options.final()
   set block(
@@ -94,63 +17,11 @@
   ] else [
     #block(counter(heading).display(it.numbering)  + h(1em) + it.body)
   ]
-  // line(length: 100%, stroke: .5pt+opts.theme.primary)
 }
 
 #let underline-space(fraction) = box(height: -1pt, line(length: fraction))
 
 #let banner(..args) = {
-  let opts = options.final()
-  let height = if args.named().at("slide", default: false) {0.9em} else {1.5em}
-  let size = args.named().at("size", default: 1em)
-  box(
-    width: 100%, height: height,
-    // fill: opts.theme.primary.lighten(90%),
-    fill: opts.theme.primary,
-    if args.pos().len() != 0 {
-      set align(horizon)
-      show text: set text(size: size, fill: opts.theme.neutral-lightest)
-      pad(x:1em, ..args.pos())
-    }
-  )
-  // v(-2.1mm)
-  // line( length: 100%, stroke: .5mm+opts.theme.primary)
-}
-
-#let banner-D(..args) = {
-  let opts = options.final()
-  let height = if args.named().at("slide", default: false) {0.9em} else {1.5em}
-  let size = args.named().at("size", default: 1em)
-  box(
-    width: 100%, height: height,
-    stroke: (
-      bottom: .5mm+opts.theme.primary,
-      top: .5mm+opts.theme.primary,
-    ),
-    fill: opts.theme.primary.lighten(90%),
-    if args.pos().len() != 0 {
-      set align(horizon)
-      show text: set text(size: size, fill: opts.theme.primary)
-      pad(x:1em, ..args.pos())
-    }
-  )
-}
-
-#let banner-E(..args) = {
-  let opts = options.final()
-  let height = if args.named().at("slide", default: false) {0.9em} else {1.5em}
-  let size = args.named().at("size", default: 1em)
-  box(
-    width: 100%, height: height,
-    if args.pos().len() != 0 {
-      set align(horizon+center)
-      show text: set text(size: size, fill: opts.theme.background)
-      pad(x:2em, ..args.pos())
-    }
-  )
-}
-
-#let banner-slides(..args) = {
   let opts = options.final()
   let height = if args.named().at("slide", default: false) {0.5em} else {1.5em}
   let size = args.named().at("size", default: 1em)
@@ -164,136 +35,43 @@
   )
 }
 
-#let header-D(title:none) = context {
-  let opts = options.final()
-  pad(
-    bottom: 0.25em,
-    left: -5%,
-    right: -5%,
-    grid(
-      columns: (5%, auto, 1fr, auto, 5%),
-      banner-D(),
-      grid.cell(
-        pad(
-          left: -0.6em,
-          right: -0.2em,
-          bottom: -0.43em,
-          image("./../assets/logo_iace_blue.svg", height: 2.65em)
-        )
-      ),
-      grid.cell(
-        banner-D(title)
-      ),
-      align(top,
-        pad(
-          left: 0.5em,
-          right: 0.5em,
-          top: 0.7225em,
-          bottom: -1em,
-          image(
-            width: 9.55em,
-            if opts.logo-with-text {
-              if opts.lang == "en" {
-                "./../assets/logo_umit_blue_en.png"
-              } else {
-                "./../assets/logo_umit_blue_gr.png"
-              }
-            } else {
-              "./../assets/logo_umit_blue_wo.png"
-            }
-          )
-        )
-      ),
-      banner-D(),
-    )
-  )
-}
-
-#let header-E(title:none) = context {
-  let opts = options.final()
-  pad(
-    left: -15%,
-    rect(
-      fill: opts.theme.primary,
-      width: 115%,
-      height: 100%,
-    )
-  )
-  pad(
-    bottom: 1.25em,
-    left: -5%,
-    right: -5%,
-    grid(
-      columns: (3%, auto, 1fr, auto, 3%),
-      banner-E(),
-      grid.cell(
-        pad(
-          left: -0.6em,
-          right: -0.2em,
-          bottom: -0.43em,
-          image("./../assets/logo_iace_white.svg", height: 2.65em)
-        )
-      ),
-      grid.cell(
-        banner-E(title)
-      ),
-      grid.cell(
-        pad(
-          x: -0.6em,
-          bottom: -0.25em,
-          image(
-            height: 2.05em,
-            "./../assets/logo_umit_white_wo.svg"
-          )
-        ),
-      ),
-      banner-E(),
-    )
-  )
-}
-
-
 #let header-colored(title:none) = context {
   let opts = options.final()
   pad(
-    bottom: 0.25em,
-    left: -5%,
-    right: -5%,
+    top: page.margin.top * 0.3,
+    left: -page.margin.left * 0.4,
+    rect(
+      fill: opts.theme.primary,
+      width: 100% + page.margin.left * 0.4,
+      height: 80%,
+    )
+  )
+  pad(
+    bottom: 3pt,
+    top: page.margin.top * 0.3,
+    left: -page.margin.left * 0.4,
     grid(
-      columns: (5%, auto, 1fr, auto, 5%),
-      banner(),
+      columns: (auto, 1fr, auto),
       grid.cell(
         pad(
-          left: -0.6em,
-          right: -0.2em,
-          bottom: -0.43em,
-          image("./../assets/logo_iace_black.svg", height: 2.65em)
+          left: page.margin.left * 0.4,
+          bottom: 5.4pt,
+          image(
+            "./../assets/logo_iace_white.svg", height: 18pt
+          )
         )
       ),
       grid.cell(
         banner(title)
       ),
-      align(top,
+      grid.cell(
         pad(
-          left: 0.5em,
-          right: 0.5em,
-          top: 0.7225em,
-          bottom: -1em,
+          bottom: 6pt,
           image(
-            width: 9.55em,
-            if opts.logo-with-text {
-              if opts.lang == "en" {
-                "./../assets/logo_umit_blue_en.png"
-              } else {
-                "./../assets/logo_umit_blue_gr.png"
-              }
-            } else {
-              "./../assets/logo_umit_blue_wo.png"
-            }
+            "./../assets/logo_umit_white_wo.svg", height: 13.25pt
           )
         )
       ),
-      banner(),
     )
   )
 }
@@ -320,12 +98,7 @@
 
 #let header = (
   exam: header-colored(),
-  // exercise: header-colored(),
-  // exercise: header-A(),
-  // exercise: header-B(),
-  // exercise: header-C(),
-  // exercise: header-D(),
-  exercise: header-E(),
+  exercise: header-colored(),
   lab: header-colored(),
   lecture: header-colored(),
   letter: () => context {
@@ -368,7 +141,7 @@
           logo-left
         },
         pad( x: -1pt,
-          banner-slides(slide: true, size: 17.6pt, move(dy: 0.5pt, heading))
+          banner(slide: true, size: 17.6pt, move(dy: 0.5pt, heading))
         ),
         if logo-right == auto {
           pad(
