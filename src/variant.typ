@@ -535,7 +535,6 @@
   set text(
     lang: opts.lang,
     font: opts.font,
-    spacing: .5em,
     size: opts.size,
   )
 
@@ -553,7 +552,7 @@
       },
       footer: self => {
         set std.align(bottom)
-        set text(size: .5em)
+        set text(size: 9pt)
         utils.call-or-display(self, self.store.footer)
       },
       header-ascent: 0pt,
@@ -585,11 +584,21 @@
       init: (self: none, body) => {
         set std.align(align)
         set text(size: opts.size)
-        set list(marker: text(size: 1.25em, baseline: -0.075em, fill: self.colors.primary, sym.triangle.filled.r))
+
+        show heading: set text(fill: self.colors.primary)
+        
+        set list(
+          marker: text(
+            fill: self.colors.primary, 
+            sym.triangle.filled.r
+          ))
+
         show figure.caption: set text(size: 0.6em)
+        show figure.where(kind: table): set figure.caption(position: top)
+
         show footnote.entry: set text(size: 0.6em)
         set footnote.entry(gap: 0.2em)
-        show heading: set text(fill: self.colors.primary)
+
         show link: it => if type(it.dest) == str {
           set text(fill: self.colors.primary)
           it
@@ -600,8 +609,6 @@
         show strong: self.methods.alert.with(self: self)
 
         show quote: it => slides-quote(it, self.store.quotes)
-
-        show figure.where(kind: table): set figure.caption(position: top)
 
         body
       },

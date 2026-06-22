@@ -1,5 +1,5 @@
 #import "@preview/touying:0.7.3": *
-#import "/src/lib.typ" as bmim: example, tip, hint
+#import "/src/lib.typ" as bmim: example, tip, hint, important
 
 #show: bmim.slides(
   title: (
@@ -48,61 +48,136 @@
 == Motivation
 
 A slide with a motivation.
+The section slide for this section was supressed by writing 
+```typst
+= Motivation <touying:skip>
+```
 
-#lorem(50)
 
 #bmim.outline-slide(title: "Contents")
 
-= Modeling
 
-== Modeling
+= Formatting
 
-A slide with *important information* and a citation @netwok2020.
-
-
-= Controller
-
-== Controller
-
-A slide with *important information*.
+== Paragraphs
 
 #lorem(50)
 
-#pause
+#lorem(100)
 
-=== Highlight
-This is #highlight(fill: blue)[highlighted in blue]. This is #highlight(fill: yellow)[highlighted in yellow]. This is #highlight(fill:
-green)[highlighted in green]. This is #highlight(fill: red)[highlighted in red].
 
-== Implementation
+== Headings
 
+=== 2nd Level
+==== 3nd Level
+===== 4th Level
+====== 5th Level
+
+== Formatting
+
+It is recommended that you _emphasize important things_ in your talk.
+If you should mention even more important things, give them a
+*strong emphasis*.
+
+Sometimes, you have to show some functions names like `halt_and_catch_fire()`. 
+On top of that, we have inline code like ```c i = i+1``` but also code blocks:
+```rust
+fn main() {
+    println!("Hello World!");
+}
+```
+
+This page is a good website: https://umit-tirol.at
+
+
+== Math
+
+A very nice inline formula is this one: $ a^2 + b^2 = c^2$.
+
+Depending on the context, maybe some math block works better:
+$
+integral_a^b f(x) dif x = F(b) - F(a)
+$
+
+== Enumerations
+
+This is a bullet list:
+- #lorem(20)
+- #lorem(20)
+
+This is a numbered list:
++ #lorem(20)
++ #lorem(20)
+
+This is a term list:
+/ Controller: Technical device that does very nice things.
+/ Student: Human beeing that struggles with the concept of a controller
+
+== Admonitions
+
+Here we have some admonitions:
+
+#example[#lorem(30)]
+#hint[#lorem(30)]
+#important[#lorem(30)]
+#tip[#lorem(30)]
+
+
+== Highlighting
+
+This is #highlight(fill: blue)[highlighted in blue]. 
+This is #highlight(fill: yellow)[highlighted in yellow]. 
+This is #highlight(fill: green)[highlighted in green]. 
+This is #highlight(fill: red)[highlighted in red].
+
+
+== Quotes
+
+We know that "to be or not to be" is from Shakespear, but do you now how
+#quote(attribution: [Exodus 20:13])[Thou shalt not kill] landed
+in the ten commandments?
+
+On the other hand, a block quote can also be nice:
 #quote(
+  block: true,
   attribution: [from the Henry Cary literal translation of 1897 | *Noticed the custom quotes?*],
 )[
   ... I seem, then, in just this little thing to be wiser than this man at
   any rate, that what I do not know I do not think I know either.
 ]
 
-= Summary
+== Citations
 
-== Summary
+In this template, a citation will create a footnote@netwok2020.
 
-- Next Steps
-
-#speaker-note[
-  + This is a speaker note.
-  + You won't see it unless you use `config-common(show-notes-on-second-screen: right)`
-]
-
-== Admonitions
-
-A slide with admonitions
-
-#example[Test]
-
-#hint[Test]
-
-== References
+== Bibliography
 
 #magic.bibliography(title: none)
+
+= Animations
+
+#lorem(50)
+
+#pause
+
+#lorem(50)
+
+#pause
+
+#lorem(50)
+
+
+== Speacker Notes
+
+This slide contains a speaker-note.
+You won't see it unless you use 
+`config-common(show-notes-on-second-screen: right)`
+
+#speaker-note[
+  This is a speaker note.
+]
+
+
+
+
 
