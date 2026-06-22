@@ -610,6 +610,8 @@
 
         show quote: it => slides-quote(it, self.store.quotes)
 
+        show raw: set text(font: "Source Code Pro")
+
         body
       },
     ),
