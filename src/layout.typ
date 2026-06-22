@@ -47,7 +47,6 @@
     )
   )
   pad(
-    bottom: 3pt,
     top: page.margin.top * 0.3,
     left: -page.margin.left * 0.4,
     grid(
@@ -55,9 +54,9 @@
       grid.cell(
         pad(
           left: page.margin.left * 0.4,
-          bottom: 5.4pt,
+          bottom: page.margin.top * 0.12,
           image(
-            "./../assets/logo_iace_white.svg", height: 18pt
+            "./../assets/logo_iace_white.svg", height: page.margin.top * 0.254
           )
         )
       ),
@@ -66,9 +65,9 @@
       ),
       grid.cell(
         pad(
-          bottom: 6pt,
+          bottom: page.margin.top * 0.135,
           image(
-            "./../assets/logo_umit_white_wo.svg", height: 13.25pt
+            "./../assets/logo_umit_white_wo.svg", height: page.margin.top * 0.17
           )
         )
       ),
