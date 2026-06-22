@@ -1,4 +1,4 @@
-#import "@preview/touying:0.7.3": *
+#import "@preview/touying:0.7.4": *
 #import "/src/lib.typ" as bmim: example, tip, hint, important
 
 #show: bmim.slides(
@@ -48,7 +48,7 @@
 == Motivation
 
 A slide with a motivation.
-The section slide for this section was supressed by writing 
+The section slide for this section was supressed by writing
 ```typst
 = Motivation <touying:skip>
 ```
@@ -79,7 +79,7 @@ It is recommended that you _emphasize important things_ in your talk.
 If you should mention even more important things, give them a
 *strong emphasis*.
 
-Sometimes, you have to show some functions names like `halt_and_catch_fire()`. 
+Sometimes, you have to show some functions names like `halt_and_catch_fire()`.
 On top of that, we have inline code like ```c i = i+1``` but also code blocks:
 ```rust
 fn main() {
@@ -125,21 +125,38 @@ Here we have some admonitions:
 
 == Highlighting
 
-This is #highlight(fill: blue)[highlighted in blue]. 
-This is #highlight(fill: yellow)[highlighted in yellow]. 
-This is #highlight(fill: green)[highlighted in green]. 
+This is #highlight(fill: blue)[highlighted in blue].
+This is #highlight(fill: yellow)[highlighted in yellow].
+This is #highlight(fill: green)[highlighted in green].
 This is #highlight(fill: red)[highlighted in red].
 
 
 == Quotes
 
-We know that "to be or not to be" is from Shakespear, but do you now how
-#quote(attribution: [Exodus 20:13])[Thou shalt not kill] landed
-in the ten commandments?
+#let slides-quote(it, quotes, outset: 0.5em) = {
+  box(
+    fill: luma(220),
+    outset: outset,
+    width: 100%,
+    quotes.at(0) + it.body + quotes.at(1)
+    + if it.attribution != none {
+      set text(size: 0.8em)
+      linebreak()
+      h(1fr)
+      it.attribution
+    },
+  )
+}
+
+We know that #quote[to be or not to be] is from Shakespear, but do you now how
+#set smartquote(quotes: (single: ("« ", " »"),  double: auto))
+'Thou shalt not kill'
+landed in the ten commandments?
 
 On the other hand, a block quote can also be nice:
+
+#show quote: it => slides-quote(it, ("« ", " »"))
 #quote(
-  block: true,
   attribution: [from the Henry Cary literal translation of 1897 | *Noticed the custom quotes?*],
 )[
   ... I seem, then, in just this little thing to be wiser than this man at
@@ -170,8 +187,14 @@ In this template, a citation will create a footnote@netwok2020.
 == Speacker Notes
 
 This slide contains a speaker-note.
-You won't see it unless you use 
-`config-common(show-notes-on-second-screen: right)`
+You won't see it unless you use
+```typst
+#show: bmim.slides(
+  ...
+  notes: right // or bottom
+  ...
+}
+```
 
 #speaker-note[
   This is a speaker note.

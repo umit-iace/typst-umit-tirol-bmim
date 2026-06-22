@@ -522,7 +522,7 @@
   progressAnimation: true, // shows the progress in footer: false, true
   size: 18pt,
   handout: false, // render as handout: false, true
-  notes: none, // show speaker notes: none, right, bottom; sh
+  notes: none, // show speaker notes: none, right, bottom
   margins: (x: 27pt, ),
   section-slide: auto, // auto, none, function
   ..chosen,
@@ -588,10 +588,10 @@
         set text(size: opts.size)
 
         show heading: set text(fill: self.colors.primary)
-        
+
         set list(
           marker: text(
-            fill: self.colors.primary, 
+            fill: self.colors.primary,
             sym.triangle.filled.r
           ))
 
@@ -609,8 +609,6 @@
         }
 
         show strong: self.methods.alert.with(self: self)
-
-        show quote: it => slides-quote(it, self.store.quotes)
 
         show raw: set text(font: "Source Code Pro")
 
@@ -637,7 +635,6 @@
         pagenum: utils.call-or-display(self, self.store.footer-pagenum),
         progressAnimation:progressAnimation,
       ),
-      quotes: ("« ", " »"),
     ),
   )
   body
