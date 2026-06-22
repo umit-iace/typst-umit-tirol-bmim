@@ -263,6 +263,8 @@
   date: datetime.today(), // datetime or content
   ..chosen
 ) = { body => {
+  show: bmim-common
+
   set std.page(
     header: header.lecture,
     footer: (footer.lecture)(),
