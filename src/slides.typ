@@ -15,7 +15,7 @@
       footer: none,
       background: place(
         center+bottom,
-        image(width: 100%, "./../assets/background_bettelwurf.jpg")
+        image(height: 100%, "./../assets/background_bettelwurf.jpg")
       ) + box(fill: self.colors.primary.transparentize(65%).lighten(50%), height:100%, width: 100%)
     ),
     config-common(freeze-slide-counter:true),
@@ -86,7 +86,6 @@
             set text(
               fill: self.colors.background,
               font: "Source Serif 4",
-              // spacing: 80%,
               weight: "bold",
               size: 34pt
             )
@@ -230,7 +229,7 @@
       footer: none,
       background: place(
         center+bottom,
-        image(width: 100%, "./../assets/background_bettelwurf.jpg")
+        image(height: 100%, "./../assets/background_bettelwurf.jpg")
       ) + box(fill: self.colors.primary.transparentize(65%).lighten(50%), height:100%, width: 100%)
     ),
   )
