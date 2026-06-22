@@ -119,7 +119,16 @@
 
   show heading.where(level: 1): heading-colored
 
-  (titleblock.exam)(course, title, authors, date, total-time, show-hints)
+  context {
+    let titlebk = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(course, title, authors, date, total-time, show-hints)
+    } else if options.final().titleblock == none {
+    } else {
+      (titleblock.exam)(course, title, authors, date, total-time, show-hints)
+    }
+    titlebk
+  }
+
   body
 
   if show-solution == "bottom" {
@@ -169,7 +178,15 @@
 
   show heading.where(level: 1): heading-colored
 
-  (titleblock.exercise)(course, title, authors, date)
+  context {
+    let titlebk = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(course, title, authors, date)
+    } else if options.final().titleblock == none {
+    } else {
+      (titleblock.exercise)(course, title, authors, date)
+    }
+    titlebk
+  }
 
   body
 
@@ -204,7 +221,16 @@
 
   set heading(numbering: "1.")
   show heading.where(level: 1): heading-colored
-  (titleblock.lab)(course, title, authors, date)
+
+  context {
+    let titlebk = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(course, title, authors, date)
+    } else if options.final().titleblock == none {
+    } else {
+      (titleblock.lab)(course, title, authors, date)
+    }
+    titlebk
+  }
 
   body
 
@@ -367,7 +393,15 @@
   show heading.where(level: 2): set text(weight: "light", size: options.final().size)
   show heading.where(level: 2): emph
 
-  (titleblock.report)(course, title, authors, date)
+  context {
+    let titlebk = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(course, title, authors, date)
+    } else if options.final().titleblock == none {
+    } else {
+      (titleblock.report)(course, title, authors, date)
+    }
+    titlebk
+  }
 
   body
 }}
@@ -391,7 +425,15 @@
   show: bmim-common
   show ref: task.show-ref
 
-  (titleblock.workbook)(course, authors, date)
+  context {
+    let titlebk = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(course, authors, date)
+    } else if options.final().titleblock == none {
+    } else {
+      (titleblock.workbook)(course, authors, date)
+    }
+    titlebk
+  }
 
   set page(
     header: header.workbook,
