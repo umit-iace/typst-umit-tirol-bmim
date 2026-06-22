@@ -120,13 +120,20 @@
   show heading.where(level: 1): heading-colored
 
   context {
-    let titlebk = if type(options.final().titleblock) == function {
-      (options.final().titleblock)(course, title, authors, date, total-time, show-hints)
-    } else if options.final().titleblock == none {
-    } else {
-      (titleblock.exam)(course, title, authors, date, total-time, show-hints)
+    let tbArgs = (
+      course: course,
+      title: title,
+      authors: authors,
+      date: date,
+      total-time: total-time,
+      show-hints: show-hints,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.exam)(tbArgs)
     }
-    titlebk
+    tb
   }
 
   body
@@ -179,13 +186,18 @@
   show heading.where(level: 1): heading-colored
 
   context {
-    let titlebk = if type(options.final().titleblock) == function {
-      (options.final().titleblock)(course, title, authors, date)
-    } else if options.final().titleblock == none {
-    } else {
-      (titleblock.exercise)(course, title, authors, date)
+    let tbArgs = (
+      course: course,
+      title: title,
+      authors: authors,
+      date: date,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.exercise)(tbArgs)
     }
-    titlebk
+    tb
   }
 
   body
@@ -223,13 +235,18 @@
   show heading.where(level: 1): heading-colored
 
   context {
-    let titlebk = if type(options.final().titleblock) == function {
-      (options.final().titleblock)(course, title, authors, date)
-    } else if options.final().titleblock == none {
-    } else {
-      (titleblock.lab)(course, title, authors, date)
+    let tbArgs = (
+      course: course,
+      title: title,
+      authors: authors,
+      date: date,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.lab)(tbArgs)
     }
-    titlebk
+    tb
   }
 
   body
@@ -394,13 +411,17 @@
   show heading.where(level: 2): emph
 
   context {
-    let titlebk = if type(options.final().titleblock) == function {
-      (options.final().titleblock)(course, title, authors, date)
-    } else if options.final().titleblock == none {
-    } else {
-      (titleblock.report)(course, title, authors, date)
+    let tbArgs = (
+      title: title,
+      authors: authors,
+      date: date,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.report)(tbArgs)
     }
-    titlebk
+    tb
   }
 
   body
@@ -426,13 +447,17 @@
   show ref: task.show-ref
 
   context {
-    let titlebk = if type(options.final().titleblock) == function {
-      (options.final().titleblock)(course, authors, date)
-    } else if options.final().titleblock == none {
-    } else {
-      (titleblock.workbook)(course, authors, date)
+    let tbArgs = (
+      course: course,
+      authors: authors,
+      date: date,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.workbook)(tbArgs)
     }
-    titlebk
+    tb
   }
 
   set page(

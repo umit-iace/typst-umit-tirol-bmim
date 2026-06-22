@@ -350,14 +350,14 @@
 )
 
 #let titleblock = (
-  exam:     (course, title, authors, date, total-time, show-hints) => context {
+  exam:     (args) => context {
     let opts = options.final()
-    let course = if type(course) == array { course.at(0) } else { course }
+    let course = if type(args.course) == array { args.course.at(0) } else { args.course }
 
     [
       #set align(center)
 
-      *#title - #course*
+      *#args.title - #course*
     ]
     v(1em)
     grid(
@@ -365,12 +365,12 @@
       gutter: 0.5em,
       align: (right, left),
       strong[
-        #opts.spell.on #date.day(). #translatedMonth(date, opts.lang)
-        #date.year(), #opts.spell.ho:
+        #opts.spell.on #args.date.day(). #translatedMonth(args.date, opts.lang)
+        #args.date.year(), #opts.spell.ho:
       ],
       grid(
         row-gutter: 0.5em,
-        ..authors.map(author => strong(author)),
+        ..args.authors.map(author => strong(author)),
       ),
     )
     v(1.25em)
@@ -392,7 +392,7 @@
         strong(opts.spell.eval)
         task.points-table
       },
-      if show-hints {
+      if args.show-hints {
         {
           set list(spacing: 1.3em)
           set text(size: 10pt)
@@ -400,7 +400,7 @@
             *Hinweise*
             #v(0.75em)
             #pad(left: 1.4em)[
-              - Die Prüfung umfasst #context task.total-count() Aufgaben, die Bearbeitungszeit beträgt #total-time.
+              - Die Prüfung umfasst #context task.total-count() Aufgaben, die Bearbeitungszeit beträgt #args.total-time.
               - Es können insgesamt #context task.total-points() Punkte erreicht werden.
               - Zugelassene Hilfsmittel:
                 - *ein handschriftlich* beschriebener A4 Zettel; *Muss* am Ende der Klausur abgegeben werden.
@@ -422,14 +422,14 @@
       ..tableData.filter(x => x != none)
     )
   },
-  exercise: (course, title, authors, date) => context {
+  exercise: (args) => context {
     let opts = options.final()
-    let course = if type(course) == array { course.at(0) } else { course }
+    let course = if type(args.course) == array { args.course.at(0) } else { args.course }
 
     [
       #set align(center)
 
-      *#title - #course*
+      *#args.title - #course*
     ]
     v(1em)
     grid(
@@ -437,17 +437,17 @@
       gutter: 0.5em,
       align: (right, left),
       strong[
-        #opts.spell.on #date.day(). #translatedMonth(date, opts.lang)
-        #date.year(), #opts.spell.ho:
+        #opts.spell.on #args.date.day(). #translatedMonth(args.date, opts.lang)
+        #args.date.year(), #opts.spell.ho:
       ],
       grid(
         row-gutter: 0.5em,
-        ..authors.map(author => strong(author)),
+        ..args.authors.map(author => strong(author)),
       ),
     )
   },
-  lab:      (course, title, authors, date) => context {
-    let course = if type(course) == array { course.at(0) } else { course }
+  lab:      (args) => context {
+    let course = if type(args.course) == array { args.course.at(0) } else { args.course }
     let opts = options.final()
     set align(center)
     rect(
@@ -463,12 +463,12 @@
           #sym.hyph \
           #course \
           #line(length: 95%)
-          #if type(title) == array {
-            title.at(0)
+          #if type(args.title) == array {
+            args.title.at(0)
             linebreak()
-            title.at(1)
+            args.title.at(1)
           } else {
-            title
+            args.title
           }
         ]
       )
@@ -488,14 +488,13 @@
       ],
       grid(
         row-gutter: 0.5em,
-        ..authors.map(author => text(author)),
+        ..args.authors.map(author => text(author)),
       ),
       [
         #opts.spell.lc:
       ],
       [
-        #let curDate = datetime.today()
-        #curDate.day(). #translatedMonth(curDate, opts.lang) #curDate.year()
+        #args.date.day(). #translatedMonth(args.date, opts.lang) #args.date.year()
       ],
     )
   },
@@ -579,25 +578,25 @@
       #authors.join([\ ])
     ])
   },
-  report:   (course, title, authors, date) => context place(
+  report:   (args) => context place(
     top, float: true, scope: "parent",
     block(inset: (top: 2em, bottom: 1em), {
       set par(spacing: 1em)
       let opts = options.final()
-      let title = text(opts.theme.highlight, 2em, strong(title))
+      let title = text(opts.theme.highlight, 2em, strong(args.title))
       let w = measure(title).width
       title
       line(length: w+0.5em, stroke: 1pt)
-      authors.join(", ")
-      par[#opts.spell.date: #print-date(date)]
+      args.authors.join(", ")
+      par[#opts.spell.date: #print-date(args.date)]
       line(length: w+0.5em, stroke: 3pt)
 
     })
   ),
   slides: () => context {},
-  workbook: (course, authors, date) => context {
+  workbook: (args) => context {
     let opts = options.final()
-    let course = if type(course) == array { course.at(0) } else { course }
+    let course = if type(args.course) == array { args.course.at(0) } else { args.course }
     set align(center+horizon)
     set par(spacing: 3em)
 
@@ -614,7 +613,7 @@
 
       #{
         set text(1.3em)
-        authors.map(smallcaps).join([, ])
+        args.authors.map(smallcaps).join([, ])
       }
       #par[]
       #par[]
@@ -633,7 +632,7 @@
           )
         )
       ]
-      #print-date(date)
+      #print-date(args.date)
     ]
     pagebreak(to: "odd")
   },
