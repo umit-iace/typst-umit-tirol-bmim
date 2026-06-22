@@ -25,14 +25,50 @@
   let opts = options.final()
   let height = if args.named().at("slide", default: false) {0.5em} else {1.5em}
   let size = args.named().at("size", default: 1em)
+  show text: set text(size: size, fill: opts.theme.background)
+
   box(
-    width: 100%, height: height,
-    if args.pos().len() != 0 {
-      set align(horizon+center)
-      show text: set text(size: size, fill: opts.theme.background)
-      pad(..args.pos())
+    width: 100%,
+    height: height,
+    if args.named().at("slide", default: false) {
+      let all-sections = query(heading.where(level: 1))
+      let current-section = utils.current-heading(
+        level: 1,
+      )
+      let centerEl = calc.floor(all-sections.len() / 2)
+      align(horizon+center)[
+        #stack(
+          dir: ltr,
+          spacing: 10pt,
+          ..all-sections.enumerate().map(((idx, sec)) => {
+            let is-current = sec.location() == current-section.location()
+
+            let dot = if is-current {
+              circle(radius: 3.5pt, stroke: 1pt + gray.lighten(20%), fill: gray.lighten(20%))
+            } else {
+              circle(radius: 3.5pt, stroke: 1pt + gray.lighten(20%), fill: none)
+            }
+            if idx + 1 == centerEl {
+              stack(
+                spacing: 10pt,
+                dir: ltr,
+                dot,
+                pad(..args.pos()),
+              )
+            } else {
+              dot
+            }
+          })
+        )
+      ]
+    } else {
+      if args.pos().len() != 0 {
+        set align(horizon+center)
+        pad(..args.pos())
+      }
     }
   )
+
 }
 
 #let header-colored(title:none) = context {

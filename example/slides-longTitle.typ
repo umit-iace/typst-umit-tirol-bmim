@@ -200,7 +200,3 @@ You won't see it unless you use
   This is a speaker note.
 ]
 
-
-
-
-

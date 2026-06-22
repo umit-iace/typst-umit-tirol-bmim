@@ -633,7 +633,7 @@
         title: if type(title) != array { title } else { title.at(1) },
         date: date,
         pagenum: utils.call-or-display(self, self.store.footer-pagenum),
-        progressAnimation:progressAnimation,
+        progressAnimation: progressAnimation,
       ),
     ),
   )
