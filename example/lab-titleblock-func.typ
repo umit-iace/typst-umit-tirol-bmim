@@ -1,12 +1,25 @@
 #import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, important, tip, example, hint
 
+#let tb(args) = context {
+  let course = if type(args.course) == array { args.course.at(0) } else { args.course }
+
+  set align(center)
+  block([
+    #text(size: 2em, [Labratory #args.course.at(1)  #linebreak()])
+    #text(size: 4em, args.title)
+    #v(1em)
+    #text(size: 0.9em, args.authors.intersperse(", ").map(x => [#x]).join())
+  ])
+}
+
 #show: bmim.lab(
   title: ("Title"),
   lang: "de",
   course: ("Vorlesung", "VL"),
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
-  date: datetime.today(),
+  date: datetime(day: 1, month: 3, year: 2024),
   show-solution: "inline",
+  titleblock: tb,
 )
 
 #set math.equation(numbering: "(1.1)")

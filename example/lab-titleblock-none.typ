@@ -5,8 +5,9 @@
   lang: "de",
   course: ("Vorlesung", "VL"),
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
-  date: datetime.today(),
+  date: datetime(day: 1, month: 3, year: 2024),
   show-solution: "inline",
+  titleblock: none,
 )
 
 #set math.equation(numbering: "(1.1)")
