@@ -48,13 +48,30 @@
 == Motivation
 
 A slide with a motivation.
-The section slide for this section was supressed by writing
+The section slide for this section was supressed by writing:
 ```typst
 = Motivation <touying:skip>
 ```
 
 
 #bmim.outline-slide(title: "Contents")
+
+
+= This is a first level heading
+
+Content at the first level will appear here.
+If no further content is present, it will also be used as the slide title
+
+== This is a second level heading
+
+Content at the second level will appear here.
+If available, the second level heading will be used instead of the first level
+heading in the slide title.
+
+=== This is third level heading
+
+Content at the third level will appear here.
+This level will not appear in the slide title.
 
 
 = Formatting
@@ -65,15 +82,7 @@ The section slide for this section was supressed by writing
 
 #lorem(100)
 
-
-== Headings
-
-=== 2nd Level
-==== 3nd Level
-===== 4th Level
-====== 5th Level
-
-== Formatting
+== Text
 
 It is recommended that you _emphasize important things_ in your talk.
 If you should mention even more important things, give them a
@@ -87,7 +96,7 @@ fn main() {
 }
 ```
 
-This page is a good website: https://umit-tirol.at
+Here is a link to a very good website: https://umit-tirol.at
 
 
 == Math
@@ -103,10 +112,16 @@ $
 
 This is a bullet list:
 - #lorem(20)
-- #lorem(20)
+- A nested entry:
+  - #lorem(10):
+    - Another level
+  - #lorem(10)
 
 This is a numbered list:
-+ #lorem(20)
++ #lorem(10)
+  + #lorem(10)
+    + #lorem(5)
+  + #lorem(10)
 + #lorem(20)
 
 This is a term list:
@@ -173,7 +188,7 @@ In this template, a citation will create a footnote@netwok2020.
 
 = Animations
 
-#lorem(50)
+Put a `#pause` between parts of your slide you want to uncover.
 
 #pause
 
@@ -184,7 +199,7 @@ In this template, a citation will create a footnote@netwok2020.
 #lorem(50)
 
 
-== Speacker Notes
+== Speaker Notes
 
 This slide contains a speaker-note.
 You won't see it unless you use
