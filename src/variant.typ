@@ -8,15 +8,6 @@
 
 #let bmim-common(body) = context {
   let opts = options.final()
-  set text(
-    lang: opts.lang,
-    size: opts.size,
-    font: opts.font,
-    weight: "regular",
-  )
-  set par(
-    justify: true
-  )
   set page(
     margin: (
       left: 2cm,
@@ -25,8 +16,19 @@
       bottom: 2.5cm,
     ),
   )
-  show raw: set text(font: "Source Code Pro", size: opts.size)
 
+  set par(
+    justify: true
+  )
+
+  set text(
+    lang: opts.lang,
+    size: opts.size,
+    font: opts.font,
+    weight: "regular",
+  )
+  set strong(delta: 250)
+  show raw: set text(font: "Source Code Pro", size: opts.size)
   show math.equation: set text(font: "STIX Two Math")
 
   show figure.where(kind: table): set figure(supplement: opts.spell.tab)

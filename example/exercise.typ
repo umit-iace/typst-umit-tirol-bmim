@@ -23,7 +23,7 @@
     points: 10,
     label: <task:sub1>,
     description: [
-      Geben Sie eine Realisierung der Übertragungsfunktion in
+      Geben Sie eine Realisierung der _Übertragungsfunktion_ in
       Regelungsnormalform an.
     ],
     solution: [
@@ -39,7 +39,7 @@
     label: <task:sub2>,
     description: [
       Ist die interne Dynamik des Systems stabil?
-      Begründen Sie Ihre Antwort.
+      *Begründen* Sie Ihre Antwort.
     ],
     solution: [
       Die Eigenwerte der internen Dynamik entsprechen den Zählernullstellen.

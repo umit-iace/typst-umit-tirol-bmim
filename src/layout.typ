@@ -220,8 +220,8 @@
     let foot = [
       #opts.spell.exam - #course
       #if opts.show-solution != none [
-        #set text(color.red, stroke: 0.5pt+color.red)
-        #opts.spell.with #opts.spell.sol
+        #set text(color.red)
+        *#opts.spell.with #opts.spell.sol*
       ]
     ]
     let pagenum = counter(page).display("1/1", both: true)
@@ -251,8 +251,8 @@
     let foot = [
       #course - #title
       #if opts.show-solution != none [
-        #set text(color.red, stroke: 0.5pt+color.red)
-        #opts.spell.with #opts.spell.sol
+        #set text(color.red)
+        *#opts.spell.with #opts.spell.sol*
       ]
     ]
     let pagenum = counter(page).display("1")
@@ -271,8 +271,8 @@
     let foot = [
       #opts.spell.lab - #course - #title
       #if opts.show-solution != none [
-        #set text(color.red, stroke: 0.5pt+color.red)
-        #opts.spell.with #opts.spell.sol
+        #set text(color.red)
+        *#opts.spell.with #opts.spell.sol*
       ]
     ]
     let pagenum = counter(page).display("1")
