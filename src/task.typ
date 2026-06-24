@@ -54,14 +54,10 @@
 #let solution-inline(solution) = {
   block(
     width: 100%,
-    fill: color.red.lighten(0%),
-    inset: 2pt,
+    stroke: 2pt + color.red.lighten(0%),
+    inset: .5em,
     breakable: true,
     block(
-      stroke: 0.5pt,
-      width: 100%,
-      fill: white,
-      inset: 0.3em,
       breakable: true,
     )[
       *Lösung:*

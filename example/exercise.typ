@@ -2,7 +2,7 @@
 
 #show: bmim.exercise(
   title: "Übung 1",
-  course: ([Vorlesung],[VL]),
+  course: ([VO Vertiefende Konzepte der Vorlesungstechnik],[VKV]),
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   show-solution: "inline",
   lang: "de",

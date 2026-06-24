@@ -10,8 +10,9 @@
   let opts = options.final()
   set text(
     lang: opts.lang,
-    font: opts.font,
     size: opts.size,
+    font: opts.font,
+    weight: "regular",
   )
   set par(
     justify: true
@@ -26,7 +27,7 @@
   )
   show raw: set text(font: "Source Code Pro", size: opts.size)
 
-  set enum(numbering: "a)")
+  show math.equation: set text(font: "STIX Two Math")
 
   show figure.where(kind: table): set figure(supplement: opts.spell.tab)
   show figure.where(kind: table): it => {
@@ -117,6 +118,8 @@
 
   show heading.where(level: 1): heading-colored
 
+  set enum(numbering: "a)")
+
   context {
     let tbArgs = (
       course: course,
@@ -181,7 +184,9 @@
     footer: (footer.exercise)(course, title),
   )
 
-  show heading.where(level: 1): heading-colored
+  show heading.where(level: 1): heading-colored2
+
+  set enum(numbering: "a)")
 
   context {
     let tbArgs = (
@@ -495,6 +500,8 @@
   counter(page).update(1)
 
   show: headings-on-odd-page
+
+  set enum(numbering: "a)")
 
   body
 

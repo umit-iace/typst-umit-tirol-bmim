@@ -19,6 +19,19 @@
   ]
 }
 
+#let heading-colored2(it) = context {
+  let opts = options.final()
+  if it.numbering == none [
+    #block(it.body)
+  ] else [
+    #block(counter(heading).display(it.numbering)  + h(1em) + it.body)
+  ]
+  line(
+    length: 33%,
+    stroke: .1em + opts.theme.primary,
+  )
+}
+
 #let underline-space(fraction) = box(height: -1pt, line(length: fraction))
 
 #let banner(..args) = {
@@ -462,21 +475,21 @@
 
     [
       #set align(center)
-
-      *#args.title - #course*
+      #text(size: 2em)[#args.title] \
+      #text(size: 1.2em)[#course]
+      #line(length: 66%)
     ]
-    v(1em)
     grid(
       columns: (2fr, 1fr),
       gutter: 0.5em,
       align: (right, left),
-      strong[
+      text[
         #opts.spell.on #args.date.day(). #translatedMonth(args.date, opts.lang)
         #args.date.year(), #opts.spell.ho:
       ],
       grid(
         row-gutter: 0.5em,
-        ..args.authors.map(author => strong(author)),
+        ..args.authors.map(author => text(author)),
       ),
     )
   },
