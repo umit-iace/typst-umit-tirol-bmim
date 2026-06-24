@@ -47,6 +47,7 @@
   let all-sections = query(outline.entry.where(level: 1))
   let current-section = utils.current-heading(level: 1)
   show text: set text(size: size, fill: opts.theme.background)
+  let showAni = args.named().at("progressAnimation", default: false)
 
   grid(
     columns: if args.named().at("slide", default: false) {(auto, 1fr)} else {(auto)},
@@ -62,7 +63,7 @@
         }
       )
     ),
-    if args.named().at("slide", default: false) {
+    if args.named().at("slide", default: false) and showAni {
       grid.cell(
         box(
           width: 100%,
@@ -162,8 +163,9 @@
   },
   poster: header-colored(),
   report: header-colored(),
-  slides: (heading: none) => context {
+  slides: (heading: none, progressAnimation: none) => context {
     let opts = options.final()
+    let showAni = type(progressAnimation) == dictionary and progressAnimation.at("section", default: false)
     let logo-left = if type(opts.logo) == dictionary {
       opts.logo.at("left", default: auto)
     } else {
@@ -194,7 +196,7 @@
           logo-left
         },
         pad( x: -1pt,
-          banner(slide: true, size: 17.6pt, move(dy: 0.5pt, heading))
+          banner(slide: true, size: 17.6pt, progressAnimation: showAni, move(dy: 0.5pt, heading))
         ),
         if logo-right == auto {
           pad(
@@ -321,11 +323,12 @@
       counter(page).display("1")
     )
   },
-  slides: (author:none, title:none, date:none, pagenum:none, progressAnimation:true) => context {
+  slides: (author:none, title:none, date:none, pagenum:none, progressAnimation:none) => context {
     let opts = options.final()
+    let showAni = type(progressAnimation) == dictionary and progressAnimation.at("slides", default: false)
     block(
       [
-        #if progressAnimation {
+        #if showAni {
           block(
             inset: (bottom: -page.height * 5.7%),
             components.progress-bar(height: page.height * 3.3%, opts.theme.highlight, opts.theme.primary)
@@ -335,7 +338,7 @@
           stroke: (
             top: opts.theme.secondary + 0pt,
           ),
-          fill: if progressAnimation {none} else {opts.theme.primary},
+          fill: if showAni {none} else {opts.theme.primary},
           inset: (left: page.margin.left, right: page.margin.right, top: -page.height * 0.525%, bottom: page.height * 0.9%),
           grid(
             columns: (auto, 70%, 1fr, 5%),

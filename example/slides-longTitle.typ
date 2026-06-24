@@ -39,6 +39,10 @@
       image("./../assets/logo_lfui_color_invert.png", height: 48pt)
     ),
   ),
+  progressAnimation: (
+    slides: true,
+    section: true,
+  ),
 )
 
 #bmim.title-slide()
