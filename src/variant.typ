@@ -11,14 +11,10 @@
   set text(
     lang: opts.lang,
     font: opts.font,
-    spacing: .5em,
     size: opts.size,
   )
   set par(
-    leading: 0.55em, spacing: 0.55em, justify: true,
-    justification-limits: (
-      tracking: (min: -0.01em, max: 0.02em),
-    )
+    justify: true
   )
   set page(
     margin: (
@@ -27,9 +23,8 @@
       top: 2.5cm,
       bottom: 2.5cm,
     ),
-    // header-ascent: 0mm,
   )
-  show raw: set text(font: "CMU Typewriter Text", size: opts.size)
+  show raw: set text(font: "Source Code Pro", size: opts.size)
 
   set enum(numbering: "a)")
 
@@ -69,7 +64,10 @@
     it
   }
 
-  show heading.where(label: <bmim:nonumber>): set heading(numbering: none, outlined: false)
+  show heading.where(label: <bmim:nonumber>): set heading(
+    numbering: none, 
+    outlined: false
+  )
 
   // ### Outline
   set outline(depth: 2)
@@ -590,10 +588,16 @@
         show heading: set text(fill: self.colors.primary)
 
         set list(
-          marker: text(
-            fill: self.colors.primary,
-            sym.triangle.filled.r
-          ))
+            marker: depth => [
+              #let msize = (1-depth/5) * 1em  //scale symbol with depth
+              #text(
+                baseline: (msize - 1em)/2,  //center the symbol vertically 
+                size: msize,
+                fill: self.colors.primary,
+                sym.triangle.filled.r,
+              )
+            ],
+        )
 
         show figure.caption: set text(size: 0.6em)
         show figure.where(kind: table): set figure.caption(position: top)

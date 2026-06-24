@@ -10,8 +10,8 @@
   task-show: (..args) => {},
   task-show-points: true,
   task-wrap-counter: none,
-  font: ("New Computer Modern",),
-  size: 12pt,
+  font: ("Source Serif 4",),
+  size: 11pt,
   logo: auto, // none, auto, (left: // , right: //)
   titleblock: auto, // none, auto, function
 ))
