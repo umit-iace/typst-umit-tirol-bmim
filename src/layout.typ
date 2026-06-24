@@ -482,12 +482,17 @@
     let opts = options.final()
     let course = if type(args.course) == array { args.course.at(0) } else { args.course }
 
-    [
-      #set align(center)
-      #text(size: 2em)[#args.title] \
-      #text(size: 1.2em)[#course]
-      #line(length: 66%)
-    ]
+    align(center,
+      box(
+        width: 77%,
+        stroke: (bottom: 1pt),
+        inset: (bottom: 7pt),
+        [
+          #text(size: 2em)[#args.title]
+          #v(-1.5em)
+          #text(size: 1.2em)[#course]
+        ])
+    )
     grid(
       columns: (2fr, 1fr),
       gutter: 0.5em,
