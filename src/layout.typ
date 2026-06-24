@@ -21,15 +21,21 @@
 
 #let heading-colored2(it) = context {
   let opts = options.final()
+  set text(weight: "semibold")
   if it.numbering == none [
-    #block(it.body)
+    #block(
+      width: if opts.task-show-points {100%} else {33%},
+      inset: (bottom: 5pt),
+      stroke: (bottom: 0.1em + opts.theme.primary),
+      [#it.body]
+    )
   ] else [
-    #block(counter(heading).display(it.numbering)  + h(1em) + it.body)
+    #block(
+      inset: (bottom: 5pt),
+      stroke: (bottom: 0.1em + opts.theme.primary),
+      [#counter(heading).display(it.numbering)  + #h(1em) + #it.body]
+    )
   ]
-  line(
-    length: 33%,
-    stroke: .1em + opts.theme.primary,
-  )
 }
 
 #let underline-space(fraction) = box(height: -1pt, line(length: fraction))
