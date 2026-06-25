@@ -60,14 +60,14 @@
     item-cnt.update(i => i + it.children.len())
   }
 
-  // set heading(numbering: "1.1")
+  show heading: set text(weight: "semibold")
   show heading.where(level: 1): it => {
     item-cnt.update(0)
     it
   }
 
   show heading.where(label: <bmim:nonumber>): set heading(
-    numbering: none, 
+    numbering: none,
     outlined: false
   )
 

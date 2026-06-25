@@ -6,7 +6,6 @@
 
 #let heading-colored(it) = context {
   let opts = options.final()
-  set text(weight: "semibold")
   if it.numbering == none [
     #block(
       width: if opts.task-show-points {100%} else {33%},
