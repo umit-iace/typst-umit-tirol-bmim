@@ -29,7 +29,6 @@
   )
   set strong(delta: 250)
   show raw: set text(font: "Source Code Pro", size: opts.size)
-  show math.equation: set text(font: "STIX Two Math")
 
   show figure.where(kind: table): set figure(supplement: opts.spell.tab)
   show figure.where(kind: table): it => {

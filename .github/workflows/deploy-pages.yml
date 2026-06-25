@@ -28,8 +28,24 @@ jobs:
 
       - name: Install fonts
         run: |
-          sudo apt update
-          sudo apt install -y lmodern cm-super fonts-cmu fonts-adobe-sourcesans3 fonts-adobe-source-serif-pro
+          apt install -y ttf-bitstream-vera
+          cd $(mktemp -d /tmp/script.XXXXXXX)
+          TEMP_DIR=$(pwd)
+          mkdir -p ~/.fonts
+          wget https://github.com/adobe-fonts/source-code-pro/releases/download/2.042R-u%2F1.062R-i%2F1.026R-vf/OTF-source-code-pro-2.042R-u_1.062R-i.zip
+          unzip OTF-source-code-pro-2.042R-u_1.062R-i.zip
+          cp -f OTF/*.otf ~/.fonts/
+          rm -rf OTF
+          wget https://github.com/adobe-fonts/source-serif/releases/download/4.005R/source-serif-4.005_Desktop.zip
+          unzip source-serif-4.005_Desktop.zip
+          cp -f source-serif-4.005_Desktop/OTF/*.otf ~/.fonts/
+          rm -rf source-serif-4.005_Desktop
+          wget https://github.com/adobe-fonts/source-sans/releases/download/3.052R/OTF-source-sans-3.052R.zip
+          unzip OTF-source-sans-3.052R.zip
+          cp -f OTF/*.otf ~/.fonts/
+          rm -rf OTF
+          fc-cache -f -v
+          rm -rf $TEMP_DIR
 
       - name: Install Touying Exporter
         run: pip install touying

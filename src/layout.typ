@@ -302,7 +302,6 @@
     )
   },
   poster: (event,date,location,contact, ..args) => context {
-    set text(font: "CMU Typewriter Text")
     let opts = options.final()
     // let ext = 5%
     let ext = 0.4em+1pt

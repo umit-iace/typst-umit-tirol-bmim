@@ -35,22 +35,35 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 Create a new typst project based on this template locally.
 
 ```bash
-typst init @preview/ratsch-bmim
-cd ratsch-bmim
+% typst init @preview/ratsch-bmim
+% cd ratsch-bmim
 ```
 
 Or create a project on the typst web app based on this template.
 
+## Fonts
+
+Several fonts are used:
+- Source Sans 3 for text in slides
+- Source Serif 4 for body text
+- Source Code Pro for code
+- Bitstream Vera Sans for text in letter
+
+To install these under arch linux:
+  ```bash
+  % yay -S adobe-source-sans-fonts adobe-source-serif-fonts adobe-source-code-pro-fonts otf-xcharter-math ttf-bitstream-vera
+  ```
+
 ### Compile (and watch) example
 
 ```bash
-typst w ./example/<variant>.typ --root .
+% typst w ./example/<variant>.typ --root .
 ```
 
 ### Compile (and watch) your typst file
 
 ```bash
-typst w main.typ
+% typst w main.typ
 ```
 
 This will watch your file and recompile it to a pdf when the file is saved.
