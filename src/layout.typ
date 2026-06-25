@@ -50,11 +50,11 @@
   let showAni = args.named().at("progressAnimation", default: false)
 
   grid(
-    columns: if args.named().at("slide", default: false) {(auto, 1fr)} else {(auto)},
+    columns: if args.named().at("slide", default: false) and showAni {(auto, 1fr)} else {(auto)},
     gutter: 1pt,
     grid.cell(
       box(
-        width: 80%,
+        width: if args.named().at("slide", default: false) and showAni {80%} else {100%},
         height: height,
         if args.pos().len() != 0 {
           set align(horizon+center)
