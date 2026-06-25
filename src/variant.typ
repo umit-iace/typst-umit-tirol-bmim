@@ -272,7 +272,7 @@
 
   set std.page(
     header: header.lecture,
-    footer: (footer.lecture)(),
+    footer: (footer.lecture)(course),
   )
 
   body
@@ -379,7 +379,7 @@
 
   let margin = (x: 1.5em, y: 4em)
   set std.page(
-    article: page,
+    paper: page,
     columns: if orientation == "landscape" { 3 } else { 2 },
     flipped: orientation == "landscape",
     margin: margin,

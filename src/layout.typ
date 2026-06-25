@@ -273,7 +273,25 @@
   },
   exercise: (course, title) => bmim-footer(course, title),
   report: (course, title) => bmim-footer(course, title),
-  lecture: (course, title) => bmim-footer(course, title),
+  lecture: (course) => context{
+    let opts = options.final()
+    let course = if type(course) == array { course.at(1) } else { course }
+    set text(size: 0.8em)
+    line(length: 100%, stroke: 0.5pt)
+    let foot = [
+      #course
+      #if opts.show-solution != none [
+        #set text(color.red)
+        *#opts.spell.with #opts.spell.sol*
+      ]
+    ]
+    let pagenum = counter(page).display("1")
+    if calc.odd(here().page()) {
+      foot; h(1fr); pagenum
+    } else {
+      pagenum; h(1fr); foot
+    }
+  },
   letter: () => context {
     image(
       "./../assets/footer_umit_gr.png",
