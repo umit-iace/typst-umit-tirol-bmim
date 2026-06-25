@@ -6,21 +6,6 @@
 
 #let heading-colored(it) = context {
   let opts = options.final()
-  set block(
-    width: 100%,
-    fill: opts.theme.primary.lighten(90%),
-    inset: 4pt,
-  )
-  place(hide(it))
-  if it.numbering == none [
-    #block(it.body)
-  ] else [
-    #block(counter(heading).display(it.numbering)  + h(1em) + it.body)
-  ]
-}
-
-#let heading-colored2(it) = context {
-  let opts = options.final()
   set text(weight: "semibold")
   if it.numbering == none [
     #block(

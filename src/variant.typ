@@ -117,7 +117,7 @@
     footer: (footer.exam)(course, title),
   )
 
-  show heading.where(level: 1): heading-colored2
+  show heading.where(level: 1): heading-colored
 
   set enum(numbering: "a)")
 
@@ -185,7 +185,7 @@
     footer: (footer.exercise)(course, title),
   )
 
-  show heading.where(level: 1): heading-colored2
+  show heading.where(level: 1): heading-colored
 
   set enum(numbering: "a)")
 
@@ -236,7 +236,7 @@
   )
 
   set heading(numbering: "1.")
-  show heading.where(level: 1): heading-colored2
+  show heading.where(level: 1): heading-colored
 
   context {
     let tbArgs = (
