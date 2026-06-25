@@ -364,6 +364,7 @@
     let opts = options.final()
     let course = if type(course) == array { course.at(1) } else { course }
     set text(size: 11pt)
+    set par(spacing: 0.5em)
     line(length: 100%, stroke: 0.5pt)
     let foot = [
       #course - Übungsaufgaben
