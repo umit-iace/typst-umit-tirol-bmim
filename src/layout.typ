@@ -153,7 +153,7 @@
 #let header = (
   exam: header-colored(),
   exercise: header-colored(),
-  lab: header-colored(),
+  report: header-colored(),
   lecture: header-colored(),
   letter: () => context {
     image(
@@ -162,7 +162,7 @@
     )
   },
   poster: header-colored(),
-  report: header-colored(),
+  article: header-colored(),
   slides: (heading: none, progressAnimation: none) => context {
     let opts = options.final()
     let showAni = type(progressAnimation) == dictionary and progressAnimation.at("section", default: false)
@@ -219,6 +219,27 @@
   },
 )
 
+#let bmim-footer(course, title) = context {
+    let opts = options.final()
+    let course = if type(course) == array { course.at(1) } else { course }
+    let title = if type(title) == array { title.join([ \- ]) } else { title }
+    set text(size: 0.8em)
+    line(length: 100%, stroke: 0.5pt)
+    let foot = [
+      #course - #title
+      #if opts.show-solution != none [
+        #set text(color.red)
+        *#opts.spell.with #opts.spell.sol*
+      ]
+    ]
+    let pagenum = counter(page).display("1")
+    if calc.odd(here().page()) {
+      foot; h(1fr); pagenum
+    } else {
+      pagenum; h(1fr); foot
+    }
+}
+
 #let footer = (
   exam: (course, title) => context {
     let opts = options.final()
@@ -250,48 +271,9 @@
       #foot
     ]
   },
-  exercise: (course, title) => context {
-    let opts = options.final()
-    let course = if type(course) == array { course.at(1) } else { course }
-    let title = if type(title) == array { title.join([ \- ]) } else { title }
-    set text(size: 0.8em)
-    line(length: 100%, stroke: 0.5pt)
-    let foot = [
-      #course - #title
-      #if opts.show-solution != none [
-        #set text(color.red)
-        *#opts.spell.with #opts.spell.sol*
-      ]
-    ]
-    let pagenum = counter(page).display("1")
-    if calc.odd(here().page()) {
-      foot; h(1fr); pagenum
-    } else {
-      pagenum; h(1fr); foot
-    }
-  },
-  lab: (course, title) => context {
-    let opts = options.final()
-    let course = if type(course) == array { course.at(1) } else { course }
-    let title = if type(title) == array { title.join([ \- ]) } else { title }
-    set text(size: 0.8em)
-    line(length: 100%, stroke: 0.5pt)
-    let foot = [
-      #opts.spell.lab - #course - #title
-      #if opts.show-solution != none [
-        #set text(color.red)
-        *#opts.spell.with #opts.spell.sol*
-      ]
-    ]
-    let pagenum = counter(page).display("1")
-    if calc.odd(here().page()) {
-      foot; h(1fr); pagenum
-    } else {
-      pagenum; h(1fr); foot
-    }
-  },
-  lecture: () => context {
-  },
+  exercise: (course, title) => bmim-footer(course, title),
+  report: (course, title) => bmim-footer(course, title),
+  lecture: (course, title) => bmim-footer(course, title),
   letter: () => context {
     image(
       "./../assets/footer_umit_gr.png",
@@ -317,7 +299,7 @@
       )
     )
   },
-  report: (course, title) => context {
+  article: (course, title) => context {
     align(
       if calc.odd(here().page()) { right } else {left},
       counter(page).display("1")
@@ -425,6 +407,12 @@
       gutter: 0.5em,
       align: (right, left),
       text[
+        #if opts.show-solution != none {
+          set text(color.red)
+          strong[
+            #opts.spell.with #opts.spell.sol,
+          ]
+        }
         #if args.date != none [
           #opts.spell.on 
           #args.date.day(). #translatedMonth(args.date, opts.lang)
@@ -492,53 +480,17 @@
       ..tableData.filter(x => x != none)
     )
   },
-  exercise: (args) => context {
-    bmim-title(args)
-  },
-  lab:      (args) => context {
-    let course = if type(args.course) == array { args.course.at(0) } else { args.course }
+  exercise: (args) => bmim-title(args),
+  report:      (args) => context {
+    let margs = args
+    margs.date = none
+    bmim-title(margs)
     let opts = options.final()
     set align(center)
-    rect(
-      width: 100%,
-      inset: (top: 0.2em, bottom: 0.2em, left: 0.2em, right: 0.2em),
-      stroke: 1pt,
-      rect(
-        width: 100%,
-        inset: (top: 1em, bottom: 1em),
-        stroke: (paint: black.lighten(20%), thickness: 1.3pt),
-        strong[
-          #opts.spell.lab \
-          #sym.hyph \
-          #course \
-          #line(length: 95%)
-          #if type(args.title) == array {
-            args.title.at(0)
-            linebreak()
-            args.title.at(1)
-          } else {
-            args.title
-          }
-        ]
-      )
-    )
     grid(
-      columns: 2,
-      gutter: 0.75em,
+      columns: (2fr, 1fr),
+      gutter: 0.5em,
       align: (right, left),
-      [
-        #if opts.show-solution != none {
-          set text(color.red)
-          strong[
-            #opts.spell.with #opts.spell.sol,
-          ]
-        }
-        #opts.spell.ho:
-      ],
-      grid(
-        row-gutter: 0.5em,
-        ..args.authors.map(author => text(author)),
-      ),
       [
         #opts.spell.lc:
       ],
@@ -627,7 +579,7 @@
       #authors.join([\ ])
     ])
   },
-  report:   (args) => context place(
+  article:   (args) => context place(
     top, float: true, scope: "parent",
     block(inset: (top: 2em, bottom: 1em), {
       set par(spacing: 1em)

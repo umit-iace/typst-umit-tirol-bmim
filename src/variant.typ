@@ -213,7 +213,7 @@
   }
 }}
 
-#let lab(
+#let report(
   title: none, // either [Title] , or ([Topic], [Title])
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
@@ -232,12 +232,12 @@
   show ref: task.show-ref
 
   set std.page(
-    header: header.lab,
-    footer: (footer.lab)(course, title),
+    header: header.report,
+    footer: (footer.report)(course, title),
   )
 
   set heading(numbering: "1.")
-  show heading.where(level: 1): heading-colored
+  show heading.where(level: 1): heading-colored2
 
   context {
     let tbArgs = (
@@ -249,7 +249,7 @@
     let tb = if type(options.final().titleblock) == function {
       (options.final().titleblock)(tbArgs)
     } else if options.final().titleblock == auto {
-      (titleblock.lab)(tbArgs)
+      (titleblock.report)(tbArgs)
     }
     tb
   }
@@ -379,7 +379,7 @@
 
   let margin = (x: 1.5em, y: 4em)
   set std.page(
-    paper: page,
+    article: page,
     columns: if orientation == "landscape" { 3 } else { 2 },
     flipped: orientation == "landscape",
     margin: margin,
@@ -394,7 +394,7 @@
   body
 }}
 
-#let report(
+#let article(
   title: none, // str or content
   course: none, // either [Course Name] , or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
@@ -410,8 +410,8 @@
   set text(spacing: 100%)
   set page(
     columns: 2,
-    header: header.report,
-    footer: (footer.report)(course, title),
+    header: header.article,
+    footer: (footer.article)(course, title),
   )
 
   show heading.where(level: 2): set text(weight: "light", size: options.final().size)
@@ -426,7 +426,7 @@
     let tb = if type(options.final().titleblock) == function {
       (options.final().titleblock)(tbArgs)
     } else if options.final().titleblock == auto {
-      (titleblock.report)(tbArgs)
+      (titleblock.article)(tbArgs)
     }
     tb
   }
