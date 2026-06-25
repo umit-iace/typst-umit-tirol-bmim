@@ -6,6 +6,7 @@
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   show-solution: "inline",
   lang: "de",
+  date: none,
 )
 
 #set math.equation(numbering: "(1.1)")

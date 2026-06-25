@@ -118,7 +118,7 @@
     footer: (footer.exam)(course, title),
   )
 
-  show heading.where(level: 1): heading-colored
+  show heading.where(level: 1): heading-colored2
 
   set enum(numbering: "a)")
 

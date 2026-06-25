@@ -405,30 +405,44 @@
   },
 )
 
-#let titleblock = (
-  exam:     (args) => context {
+#let bmim-title(args) = {
     let opts = options.final()
     let course = if type(args.course) == array { args.course.at(0) } else { args.course }
 
-    [
-      #set align(center)
-
-      *#args.title - #course*
-    ]
-    v(1em)
+    align(center,
+      box(
+        width: 77%,
+        stroke: (bottom: 1pt),
+        inset: (bottom: 7pt),
+        [
+          #text(size: 2em)[#args.title]
+          #v(-1.5em)
+          #text(size: 1.2em)[#course]
+        ])
+    )
     grid(
       columns: (2fr, 1fr),
       gutter: 0.5em,
       align: (right, left),
-      strong[
-        #opts.spell.on #args.date.day(). #translatedMonth(args.date, opts.lang)
-        #args.date.year(), #opts.spell.ho:
+      text[
+        #if args.date != none [
+          #opts.spell.on 
+          #args.date.day(). #translatedMonth(args.date, opts.lang)
+          #args.date.year(), 
+        ]
+        #opts.spell.ho:
       ],
       grid(
         row-gutter: 0.5em,
-        ..args.authors.map(author => strong(author)),
+        ..args.authors.map(author => text(author)),
       ),
     )
+}
+
+#let titleblock = (
+  exam:     (args) => context {
+    let opts = options.final()
+    bmim-title(args)
     v(1.25em)
     grid(
       columns: (1fr, 1fr),
@@ -451,18 +465,18 @@
       if args.show-hints {
         {
           set list(spacing: 1.3em)
-          set text(size: 10pt)
           [
             *Hinweise*
-            #v(0.75em)
+            #set text(size: 0.9em)
             #pad(left: 1.4em)[
-              - Die Prüfung umfasst #context task.total-count() Aufgaben, die Bearbeitungszeit beträgt #args.total-time.
-              - Es können insgesamt #context task.total-points() Punkte erreicht werden.
+              - Die Prüfung umfasst *#context task.total-count()* Aufgaben, die Bearbeitungszeit beträgt *#args.total-time*.
+              - Es können insgesamt *#context task.total-points()* Punkte erreicht werden.
               - Zugelassene Hilfsmittel:
-                - *ein handschriftlich* beschriebener A4 Zettel; *Muss* am Ende der Klausur abgegeben werden.
-                - *keine* weiteren Unterlagen
-                - *keine* elektronischen Geräte
-              - Bitte schreiben Sie *leserlich* und geben Sie den *Lösungsweg* vollständig an.
+                - *Ein handschriftlich* beschriebener A4 Zettel, am Ende der Klausur *abzugeben*.
+              - *Nicht zugelassene* Hilfsmittel:
+                - Jegliche Unterlagen
+                - Elektronische Geräte
+              - Schreiben Sie *leserlich* und geben Sie den *Lösungsweg* vollständig an.
               - Schreiben Sie *nicht* mit Bleistift und *nicht* mit Rotstift.
             ]
           ]
@@ -473,39 +487,13 @@
     table(
       inset: 0.5em,
       gutter: 0.5em,
-      stroke: 0.5pt,
+      stroke: 0.1em,
       align:left,
       ..tableData.filter(x => x != none)
     )
   },
   exercise: (args) => context {
-    let opts = options.final()
-    let course = if type(args.course) == array { args.course.at(0) } else { args.course }
-
-    align(center,
-      box(
-        width: 77%,
-        stroke: (bottom: 1pt),
-        inset: (bottom: 7pt),
-        [
-          #text(size: 2em)[#args.title]
-          #v(-1.5em)
-          #text(size: 1.2em)[#course]
-        ])
-    )
-    grid(
-      columns: (2fr, 1fr),
-      gutter: 0.5em,
-      align: (right, left),
-      text[
-        #opts.spell.on #args.date.day(). #translatedMonth(args.date, opts.lang)
-        #args.date.year(), #opts.spell.ho:
-      ],
-      grid(
-        row-gutter: 0.5em,
-        ..args.authors.map(author => text(author)),
-      ),
-    )
+    bmim-title(args)
   },
   lab:      (args) => context {
     let course = if type(args.course) == array { args.course.at(0) } else { args.course }
