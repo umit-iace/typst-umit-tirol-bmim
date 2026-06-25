@@ -153,7 +153,7 @@
                     if opts.lang == "de" {
                       image("./../assets/logo_umit_white_gr.svg", height: 36pt)
                     } else {
-                      image("./../assets/logo_umit_white_gr.svg", height: 36pt)
+                      image("./../assets/logo_umit_white_en.svg", height: 36pt)
                     }
                   )
                 } else {
