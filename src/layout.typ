@@ -224,6 +224,7 @@
     let course = if type(course) == array { course.at(1) } else { course }
     let title = if type(title) == array { title.join([ \- ]) } else { title }
     set text(size: 0.8em)
+    set par(spacing: 0.5em)
     line(length: 100%, stroke: 0.5pt)
     let foot = [
       #course - #title
@@ -245,6 +246,7 @@
     let opts = options.final()
     let course = if type(course) == array { course.at(1) } else { course }
     set text(size: 11pt)
+    set par(spacing: 0.5em)
     line(length: 100%, stroke: 0.25mm)
     let foot = [
       #opts.spell.exam - #course
@@ -277,6 +279,7 @@
     let opts = options.final()
     let course = if type(course) == array { course.at(1) } else { course }
     set text(size: 0.8em)
+    set par(spacing: 0.5em)
     line(length: 100%, stroke: 0.5pt)
     let foot = [
       #course
