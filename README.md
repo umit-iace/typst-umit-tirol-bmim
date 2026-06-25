@@ -7,9 +7,9 @@
 - **Admonitions** (with localization and plural support).
 - Subset of predefined colors (see [colors.typ](src/colors.typ)).
 - Variants:
+    - article
     - exams
     - exercise
-    - lab
     - lecture
     - letter
     - poster
@@ -20,9 +20,9 @@
 ## Example
 
 See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of last run for example variants:
+- [example/article.typ](example/report.typ) for the corresponding article Typst file.
 - [example/exam.typ](example/exam.typ) for the corresponding exam Typst file,
 - [example/exercise.typ](example/exercise.typ) for the corresponding exercise Typst file.
-- [example/lab.typ](example/lab.typ) for the corresponding laboratory Typst file.
 - [example/lecture.typ](example/lecture.typ) for the corresponding lecture notes Typst file.
 - [example/letter.typ](example/letter.typ) for the corresponding letter Typst file.
 - [example/poster.typ](example/poster.typ) for the corresponding poster Typst file.
