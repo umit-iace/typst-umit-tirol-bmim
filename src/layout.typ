@@ -33,7 +33,7 @@
     #block(
       inset: (bottom: 5pt),
       stroke: (bottom: 0.1em + opts.theme.primary),
-      [#counter(heading).display(it.numbering)  + #h(1em) + #it.body]
+      [#counter(heading).display(it.numbering) #it.body]
     )
   ]
 }
@@ -481,7 +481,7 @@
     )
   },
   exercise: (args) => bmim-title(args),
-  report:      (args) => context {
+  report: (args) => context {
     let margs = args
     margs.date = none
     bmim-title(margs)
