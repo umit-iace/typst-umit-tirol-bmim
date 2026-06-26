@@ -7,5 +7,36 @@
   date: datetime(day: 1, month: 3, year: 2024),
 )
 
-= Kapitel
+#outline()
 
+== Wiederholung
+
+#lorem(2)
+
+=== Ganz was neues
+
+#lorem(50)
+
+=== oder doch nicht
+
+#lorem(50)
+
+= Neuer Part
+
+== Jetzt was neues
+
+#lorem(50)
+
+=== Erstmal Grundlagen
+
+#lorem(50)
+
+= Neuer Part
+
+== Jetzt was neues
+
+#lorem(50)
+
+=== Erstmal Grundlagen
+
+#lorem(50)

@@ -122,6 +122,7 @@
   set enum(numbering: "a)")
 
   context {
+    let opts = options.final()
     let tbArgs = (
       course: course,
       title: title,
@@ -129,6 +130,9 @@
       date: date,
       total-time: total-time,
       show-hints: show-hints,
+      lang: opts.lang,
+      spell: opts.spell,
+      show-solution: opts.show-solution,
     )
     let tb = if type(options.final().titleblock) == function {
       (options.final().titleblock)(tbArgs)
@@ -190,11 +194,15 @@
   set enum(numbering: "a)")
 
   context {
+    let opts = options.final()
     let tbArgs = (
       course: course,
       title: title,
       authors: authors,
       date: date,
+      lang: opts.lang,
+      spell: opts.spell,
+      show-solution: opts.show-solution,
     )
     let tb = if type(options.final().titleblock) == function {
       (options.final().titleblock)(tbArgs)
@@ -235,15 +243,20 @@
     footer: (footer.report)(course, title),
   )
 
+
   set heading(numbering: "1.")
   show heading.where(level: 1): heading-colored
 
   context {
+    let opts = options.final()
     let tbArgs = (
       course: course,
       title: title,
       authors: authors,
       date: date,
+      lang: opts.lang,
+      spell: opts.spell,
+      show-solution: opts.show-solution,
     )
     let tb = if type(options.final().titleblock) == function {
       (options.final().titleblock)(tbArgs)
@@ -271,8 +284,28 @@
 
   set std.page(
     header: header.lecture,
-    footer: (footer.lecture)(course),
+    footer: (footer.lecture)(course, date),
   )
+
+  set heading(numbering: "1.")
+
+  context {
+    let opts = options.final()
+    let tbArgs = (
+      course: course,
+      title: title,
+      authors: authors,
+      date: date,
+      lang: opts.lang,
+      spell: opts.spell,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.lecture)(tbArgs)
+    }
+    tb
+  }
 
   body
 }}
@@ -417,10 +450,13 @@
   show heading.where(level: 2): emph
 
   context {
+    let opts = options.final()
     let tbArgs = (
       title: title,
       authors: authors,
       date: date,
+      lang: opts.lang,
+      spell: opts.spell,
     )
     let tb = if type(options.final().titleblock) == function {
       (options.final().titleblock)(tbArgs)
@@ -453,10 +489,14 @@
   show ref: task.show-ref
 
   context {
+    let opts = options.final()
     let tbArgs = (
       course: course,
       authors: authors,
       date: date,
+      lang: opts.lang,
+      spell: opts.spell,
+      show-solution: opts.show-solution,
     )
     let tb = if type(options.final().titleblock) == function {
       (options.final().titleblock)(tbArgs)

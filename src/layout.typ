@@ -130,7 +130,9 @@
   exam: header-colored(),
   exercise: header-colored(),
   report: header-colored(),
-  lecture: header-colored(),
+  lecture: context {
+      none
+  },
   letter: () => context {
     image(
       "./../assets/logo_umit_blue_gr.png",
@@ -251,18 +253,14 @@
   },
   exercise: (course, title) => bmim-footer(course, title),
   report: (course, title) => bmim-footer(course, title),
-  lecture: (course) => context{
+  lecture: (course, date) => context{
     let opts = options.final()
     let course = if type(course) == array { course.at(1) } else { course }
     set text(size: 0.8em)
     set par(spacing: 0.5em)
     line(length: 100%, stroke: 0.5pt)
     let foot = [
-      #course
-      #if opts.show-solution != none [
-        #set text(color.red)
-        *#opts.spell.with #opts.spell.sol*
-      ]
+      #course, Version #print-date(date)
     ]
     let pagenum = counter(page).display("1")
     if calc.odd(here().page()) {
@@ -496,7 +494,46 @@
       ],
     )
   },
-  lecture: () => context {
+  lecture: (args) => context {
+    let course = if type(args.course) == array { args.course.at(0) } else { args.course }
+    set align(center+horizon)
+    set par(spacing: 3em)
+
+    [
+      #smallcaps[
+        #set text(1.3em)
+        Skriptum zur Lehrveranstaltung
+      ]
+
+      #{
+        set text(1.5em)
+        strong(course)
+      }
+
+      #{
+        set text(1.3em)
+        args.authors.map(smallcaps).join([, ])
+      }
+      #par[]
+      #par[]
+      #[
+        #set text(1.1em)
+        Institut für Automatisierungs- und Regelungstechnik
+
+        #grid(
+          columns: (auto, auto),
+          grid.cell(
+            pad(
+              left: -0.6em,
+              right: -0.2em,
+              image("./../assets/logo_iace_black.svg", height: 2.65em)
+            )
+          )
+        )
+      ]
+      #print-date(args.date)
+    ]
+    pagebreak(to: "odd")
   },
   letter: (
     recipient-pro,
