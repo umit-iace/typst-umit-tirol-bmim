@@ -6,20 +6,12 @@
 
 #let heading-colored(it) = context {
   let opts = options.final()
-  if it.numbering == none [
-    #block(
-      width: if opts.task-show-points {100%} else {33%},
-      inset: (bottom: 5pt),
-      stroke: (bottom: 0.1em + opts.theme.primary),
-      [#it.body]
-    )
-  ] else [
-    #block(
-      inset: (bottom: 5pt),
-      stroke: (bottom: 0.1em + opts.theme.primary),
-      [#counter(heading).display(it.numbering) #it.body]
-    )
-  ]
+  block(
+    width: if opts.task-show-points {100%} else {33%},
+    inset: (bottom: 5pt),
+    stroke: (bottom: 0.1em + opts.theme.primary),
+    [#if it.numbering == none [#it.body] else [#counter(heading).display(it.numbering) #it.body]]
+  )
 }
 
 #let underline-space(fraction) = box(height: -1pt, line(length: fraction))

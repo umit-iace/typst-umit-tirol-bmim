@@ -8,7 +8,7 @@
   logo-with-text: true,
   show-solution: none, // none, "inline", "bottom"
   task-show: (..args) => {},
-  task-show-points: true,
+  task-show-points: false,
   task-wrap-counter: none,
   font: ("Source Serif 4",),
   size: 11pt,

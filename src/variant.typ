@@ -73,9 +73,9 @@
 
   // ### Outline
   set outline(depth: 2)
-  set outline.entry(fill: repeat[.~])
 
   show outline.entry.where(level: 1): it => {
+    set strong(delta: 150)
     if it.element.func() != heading {
       return it
     }
