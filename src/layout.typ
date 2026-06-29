@@ -161,10 +161,18 @@
     }
   },
   letter: () => context {
-    image(
-      "./../assets/logo_umit_blue_gr.png",
-      width: 33%
-    )
+    let opts = options.final()
+    if opts.lang == "de" {
+      image(
+        "./../assets/logo_umit_blue_gr.png",
+        width: 33%
+      )
+    } else {
+      image(
+        "./../assets/logo_umit_blue_en.png",
+        width: 33%
+      )
+    }
   },
   poster: header-colored(),
   article: header-colored(),
@@ -298,10 +306,18 @@
     }
   },
   letter: () => context {
-    image(
-      "./../assets/footer_umit_gr.png",
-      width: 100%
-    )
+    let opts = options.final()
+    if opts.lang == "de" {
+      image(
+        "./../assets/footer_umit_gr.png",
+        width: 100%
+      )
+    } else {
+      image(
+        "./../assets/footer_umit_en.png",
+        width: 100%
+      )
+    }
   },
   poster: (event,date,location,contact, ..args) => context {
     let opts = options.final()

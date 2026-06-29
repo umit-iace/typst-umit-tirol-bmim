@@ -2,7 +2,6 @@
 
 #show: bmim.letter(
   lang: "de",
-  // lang: "en",
   subject: [Schreiben zur Wiederkehr des PID-Reglers],
   date: datetime.today(),
   location: "Hall in Tirol",
