@@ -286,11 +286,6 @@
 ) = { body => {
   show: bmim-common
 
-  set std.page(
-    header: header.lecture,
-    footer: (footer.lecture)(course, date),
-  )
-
   context {
     let opts = options.final()
     let tbArgs = (
@@ -308,6 +303,10 @@
     }
     tb
   }
+
+  set std.page(
+    footer: (footer.lecture)(course, date),
+  )
 
   set outline(depth: 3)
   let headings-on-odd-page(it) = {
@@ -335,9 +334,6 @@
   }
 
   [
-    #set std.page(
-      header: none,
-    )
     #set page(numbering: "i")
     #heading(numbering: none, outlined: true)[Inhaltsverzeichnis]
     #outline(title: none)
@@ -348,7 +344,10 @@
 
   show: headings-on-odd-page
 
-
+  set std.page(
+    header: header.lecture,
+    footer: (footer.lecture)(course, date),
+  )
 
   body
 }}

@@ -133,37 +133,31 @@
   lecture: context {
     set par(spacing: 0.5em)
 
-    if counter(page).get().first() == 1 {
-      if not page-is-chap-start() {
-        header-colored()
-      }
+    if page-is-chap-start() {
+      none
     } else {
-      if page-is-chap-start() {
-        none
-      } else {
-        let page-num = here().page()
-        let before = query(heading).filter(h => h.location().page() <= page-num)
+      let page-num = here().page()
+      let before = query(heading).filter(h => h.location().page() <= page-num)
 
-        let chapters = before.filter(h => h.level == 1)
-        let sections = before.filter(h => h.level == 2)
-        let chapNum = counter(heading.where(level: 1)).display()
+      let chapters = before.filter(h => h.level == 1)
+      let sections = before.filter(h => h.level == 2)
+      let chapNum = counter(heading.where(level: 1)).display()
 
-        if calc.even(here().page()) {
-          if chapters == () {
-            return
-          }
-          let chapT = chapters.last().body
-          [#chapNum; #h(1em); #chapT; #h(1fr)]
-        } else {
-          if sections.len() > 0 {
-            let sec = sections.last()
-            let secNum = counter(heading).at(sec.location()).map(str).join(".")
-            let secT = sec.body
-            [#h(1fr); #secNum; #h(1em); #secT]
-          }
+      if calc.even(here().page()) {
+        if chapters == () {
+          return
         }
-        line(length: 100%, stroke: 0.25mm)
+        let chapT = chapters.last().body
+        [#chapNum; #h(1em); #chapT; #h(1fr)]
+      } else {
+        if sections.len() > 0 {
+          let sec = sections.last()
+          let secNum = counter(heading).at(sec.location()).map(str).join(".")
+          let secT = sec.body
+          [#h(1fr); #secNum; #h(1em); #secT]
+        }
       }
+      line(length: 100%, stroke: 0.25mm)
     }
   },
   letter: () => context {
@@ -531,15 +525,59 @@
   lecture: (args) => context {
     let course = if type(args.course) == array { args.course.at(0) } else { args.course }
     set std.page(
-      footer: none,
+      header: context {
+        let opts = options.final()
+        if counter(page).get().first() == 1 {
+          pad(
+            top: page.margin.top * 0.3,
+            left: -page.margin.left * 0.4,
+            right: -page.margin.left * 0.4,
+            rect(
+              fill: opts.theme.primary,
+              width: 100% + page.margin.left * 0.4,
+              height: 80%,
+            )
+          )
+          pad(
+            top: page.margin.top * 0.3,
+            left: -page.margin.left * 0.4,
+            grid(
+              columns: (auto, 1fr, auto),
+              grid.cell(
+                pad(
+                  left: page.margin.left * 0.4,
+                  bottom: page.margin.top * 0.12,
+                  image(
+                    "./../assets/logo_iace_white.svg", height: page.margin.top * 0.254
+                  )
+                )
+              ),
+              grid.cell(
+                banner()
+              ),
+              grid.cell(
+                pad(
+                  bottom: page.margin.top * 0.135,
+                  image(
+                    "./../assets/logo_umit_white_wo.svg", height: page.margin.top * 0.17
+                  )
+                )
+              ),
+            )
+          )
+        } else {
+          none
+        }
+      }
     )
+
     set align(center+horizon)
     set par(spacing: 3em)
 
     [
       #smallcaps[
         #set text(1.5em)
-        Skriptum zur Lehrveranstaltung
+        Skriptum zur Lehrveranstaltung \
       ]
 
       #{
