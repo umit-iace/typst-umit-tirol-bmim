@@ -120,23 +120,15 @@
     let tasknum = t-points.get().len()
 
     let points = t-points.final().at(tasknum, default:())
-    let description = if is-super [
-      #args.pos().first()
-
-      #set enum(
-        full: true,
-        numbering: (..nums, last) => {
-          text(
-            numbering(("a)","a)").at(nums.pos().len(), default: "1."), last)
-          )
-        }
-      )
-      #args.pos().slice(1).map(it => {
+    let enumCnt = t-count.step(level:wrap.lvl+2)
+    let description = if is-super {
+      args.pos().first()
+      enumCnt
+      args.pos().slice(1).map(it => {
         let lbl = if "label" in it [ #t-mark#it.label ]
-        let enumCnt = t-count.step(level:wrap.lvl+2)
-        [+ #enumCnt#lbl #it.description]
+        [+ #lbl #it.description #enumCnt]
       }).join()
-    ] else { args.named().description }
+    } else { args.named().description }
 
     // show descriptions
     (opts.task-show)(
