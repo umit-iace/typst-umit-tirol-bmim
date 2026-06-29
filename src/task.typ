@@ -125,7 +125,8 @@
 
           #args.pos().slice(1).map(it => {
             let lbl = if "label" in it [ #t-mark#it.label ]
-            [+ #t-count.step(level:wrap.lvl+2)#lbl #it.description]
+            let enumCnt = t-count.step(level:wrap.lvl+2)
+            [+ #enumCnt#lbl #it.description]
           }).join()
     ] else { args.named().description }
 

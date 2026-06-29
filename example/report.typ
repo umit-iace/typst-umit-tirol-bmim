@@ -7,6 +7,7 @@
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   date: datetime.today(),
   show-solution: "inline",
+  task-show-points: true
 )
 
 #set math.equation(numbering: "(1.1)")
@@ -54,7 +55,7 @@
       This is a subtask description, it will tell you what to do.
     ],
     solution: [
-      This is the solution of the subtask. 
+      This is the solution of the subtask.
       We concolude that $1+1=2$.
       w/e @task:main2 before @task:sub2
     ]
@@ -67,7 +68,7 @@
     ],
     solution: [
       This time the solution is $2+2=4$.
-      w/e @task:main1 before @task:sub1 with @eq:main1.
+      w/e @task:main1 before @task:sub1 with @eq:main1 und @task:sub3.
     ]
   ),
   (
@@ -154,6 +155,51 @@ It is important to remember Newton's third law @newton-third, and Hook's law
   solution: [
     Solution of @task:main2 is $1+1=2$.
   ]
+)
+
+#task(
+  label: <task:main11>,
+  [
+    Test Problem with an equation
+    $
+      p & = s + 4
+    $<eq:main11>
+    and some citation @netwok2020.
+  ],
+  (
+    points: 10,
+    label: <task:sub11>,
+    description: [
+      This is a subtask description, it will tell you what to do.
+    ],
+    solution: [
+      This is the solution of the subtask. 
+      We concolude that $1+1=2$.
+      w/e @task:main11 before @task:sub12
+    ]
+  ),
+  (
+    points: 10,
+    label: <task:sub12>,
+    description: [
+      This is another subtask description, better carry it out to the letter.
+    ],
+    solution: [
+      This time the solution is $2+2=4$.
+      w/e @task:main11 before @task:sub11 with @eq:main11.
+    ]
+  ),
+  (
+    points: 10,
+    label: <task:sub13>,
+    description: [
+      This is yet another subtask description, better carry it out to the letter.
+    ],
+    solution: [
+      This time the solution is $2+2=4$.
+      w/e @task:main11 before @task:sub11 with @eq:main11 and @task:sub13.
+    ]
+  )
 )
 
 #show: backmatter
