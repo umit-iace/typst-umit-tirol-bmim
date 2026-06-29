@@ -295,7 +295,7 @@
   },
   article: (course, title) => context {
     align(
-      if calc.odd(here().page()) { right } else {left},
+      center,
       counter(page).display("1")
     )
   },
@@ -613,21 +613,37 @@
       #authors.join([\ ])
     ])
   },
-  article:   (args) => context place(
-    top, float: true, scope: "parent",
-    block(inset: (top: 2em, bottom: 1em), {
-      set par(spacing: 1em)
-      let opts = options.final()
-      let title = text(opts.theme.highlight, 2em, strong(args.title))
-      let w = measure(title).width
-      title
-      line(length: w+0.5em, stroke: 1pt)
-      args.authors.join(", ")
-      par[#opts.spell.date: #print-date(args.date)]
-      line(length: w+0.5em, stroke: 3pt)
-
-    })
-  ),
+  article:   (args) => context {
+    let opts = options.final()
+    place(top,
+      float: true,
+      scope: "parent",
+      block(
+        {
+          set par(spacing: .7em, leading: .7em)
+          text(size: 2.5em, weight: "semibold", args.title)
+          linebreak()
+          text(size: 1.5em, weight: "semibold", args.subtitle)
+          line(length: 33%)
+          text(size: 0.9em, weight: "medium")[
+            #args.authors.join(", ")
+            #linebreak()
+            #opts.spell.date: #print-date(args.date)
+          ]
+        })
+    )
+  },
+  // place(
+  //   top, float: true, scope: "parent",
+  //   block(inset: (top: 2em, bottom: 1em), {
+  //     set par(spacing: 1em)
+  //     // let w = measure(title).width
+  //     // line(length: w+0.5em, stroke: 1pt)
+  //     args.authors.join(", ")
+  //     // line(length: w+0.5em, stroke: 3pt)
+  //
+  //   })
+  // ),
   slides: () => context {},
   workbook: (args) => context {
     let opts = options.final()

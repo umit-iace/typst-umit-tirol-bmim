@@ -27,17 +27,22 @@
     font: opts.font,
     weight: "regular",
   )
-  set strong(delta: 250)
+  set strong(delta: 250) // Source serif is quite heavy, this will lighten the bold settings
   show raw: set text(font: "Source Code Pro", size: opts.size)
 
-  show figure.where(kind: table): set figure(supplement: opts.spell.tab)
+  show figure.where(kind: table): set figure(
+    placement: bottom,
+    supplement: opts.spell.tab
+  )
   show figure.where(kind: table): it => {
     set figure.caption(position: top)
-    show figure.caption: smallcaps
-    show figure.caption: set align(center)
+    show figure.caption: set align(start)
     it
   }
-  show figure.where(kind: image): set figure(supplement: opts.spell.fig)
+  show figure.where(kind: image): set figure(
+    placement: top,
+    supplement: opts.spell.fig
+  )
   show figure.where(kind: image): it => {
     show figure.caption: set align(start)
     it
@@ -46,7 +51,7 @@
   show figure: fig => {
     show figure.caption: cap => context [
       #let n = numbering(cap.numbering, ..cap.counter.at(fig.location()))
-      *#cap.supplement~#n*~#sym.minus#cap.body
+      *#cap.supplement~#n*:~#cap.body
     ]
     fig
   }
@@ -71,7 +76,7 @@
     outlined: false
   )
 
-  // ### Outline
+  // Outline
   set outline(depth: 2)
 
   show outline.entry.where(level: 1): it => {
@@ -427,6 +432,7 @@
 
 #let article(
   title: none, // str or content
+  subtitle: none,
   course: none, // either [Course Name] , or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
@@ -437,21 +443,59 @@
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
   )
   show: bmim-common
-  set heading(numbering: none)
-  set text(spacing: 100%)
+  // overwrite defaults
   set page(
+    margin: (
+      left: 1.5cm,
+      right: 1.5cm,
+      top: 2.5cm,
+      bottom: 1.5cm,
+    ),
     columns: 2,
     header: header.article,
     footer: (footer.article)(course, title),
   )
+  set par(
+    justify: true,
+    first-line-indent: 1.5em,
+    leading: .5em,
+    spacing: .6em,
+  )
 
-  show heading.where(level: 2): set text(weight: "light", size: options.final().size)
-  show heading.where(level: 2): emph
+  set heading(numbering: "1.1") // numbered
+  // level 1 headings are bigger
+  show heading.where(level: 1): it => {
+    // set align(center)
+    text(weight: "medium", style: "normal", size: 1.1em)[
+      #it
+    ]
+  }
+  // level 2 headings are light and in italic
+  show heading.where(level: 2): set text( 
+      weight: "light",
+      style: "oblique",
+      size: 0.9em,
+  )
+  // level 3 headings are inline
+  show heading.where(level: 3): it => box(
+    text(
+      weight: "semibold",
+      // style: "oblique",
+      size: 1em, 
+    )[
+      #it.body.
+    ]
+  )
+
+  show figure.caption: set text(size: 0.9em)
+
+  set enum(full: true, numbering: "a)")
 
   context {
     let opts = options.final()
     let tbArgs = (
       title: title,
+      subtitle: subtitle,
       authors: authors,
       date: date,
       lang: opts.lang,
