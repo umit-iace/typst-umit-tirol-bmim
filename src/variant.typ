@@ -291,8 +291,6 @@
     footer: (footer.lecture)(course, date),
   )
 
-  set heading(numbering: "1.")
-
   context {
     let opts = options.final()
     let tbArgs = (
@@ -310,6 +308,47 @@
     }
     tb
   }
+
+  set outline(depth: 3)
+  let headings-on-odd-page(it) = {
+    show heading.where(level: 1): it => {
+      pagebreak(to: "odd")
+      it
+    }
+    it
+  }
+  set heading(numbering: "1.1")
+  show heading.where(level:2): heading-colored
+  show heading.where(level:1): it => context {
+    set block(inset: (y: 2em))
+    show: strong
+    show: block
+    if it.numbering == none { it.body; return }
+    let n(..c) = numbering(it.numbering, ..c)
+    [
+      #set text(1.3em)
+      Kapitel #n(..counter(heading).get())
+      #v(1em)
+      #set text(1.5em)
+      #it.body
+    ]
+  }
+
+  [
+    #set std.page(
+      header: none,
+    )
+    #set page(numbering: "i")
+    #heading(numbering: none, outlined: true)[Inhaltsverzeichnis]
+    #outline(title: none)
+    #pagebreak(to: "odd", weak: true)
+  ]
+  set page(numbering: "1")
+  counter(page).update(1)
+
+  show: headings-on-odd-page
+
+
 
   body
 }}

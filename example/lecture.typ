@@ -7,36 +7,49 @@
   date: datetime(day: 1, month: 3, year: 2024),
 )
 
-#outline()
-
-== Wiederholung
+= Wiederholung
 
 #lorem(2)
 
-=== Ganz was neues
+== Ganz was neues
+
+#lorem(150)
+#lorem(150)
+#lorem(150)
+
+== oder doch nicht
 
 #lorem(50)
-
-=== oder doch nicht
-
+#lorem(50)
 #lorem(50)
 
-= Neuer Part
 
-== Jetzt was neues
+= Jetzt was neues
 
-#lorem(50)
+#lorem(250)@netwok2020
+#lorem(250)
+#lorem(250)
 
-=== Erstmal Grundlagen
+== Erstmal Grundlagen
 
-#lorem(50)
+#lorem(500)
+#lorem(500)
+#lorem(500)
 
-= Neuer Part
+= Jetzt was anderes neues
 
-== Jetzt was neues
+#lorem(400)
+#lorem(400)
 
-#lorem(50)
+== Keine Grundlagen
 
-=== Erstmal Grundlagen
+#lorem(250)
+#lorem(250)
+#lorem(250)
 
-#lorem(50)
+== Doch Grundlagen
+
+#lorem(250)
+#lorem(250)
+
+#bibliography("sources.bib", title: "Literatur")

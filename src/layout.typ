@@ -131,7 +131,40 @@
   exercise: header-colored(),
   report: header-colored(),
   lecture: context {
-      none
+    set par(spacing: 0.5em)
+
+    if counter(page).get().first() == 1 {
+      if not page-is-chap-start() {
+        header-colored()
+      }
+    } else {
+      if page-is-chap-start() {
+        none
+      } else {
+        let page-num = here().page()
+        let before = query(heading).filter(h => h.location().page() <= page-num)
+
+        let chapters = before.filter(h => h.level == 1)
+        let sections = before.filter(h => h.level == 2)
+        let chapNum = counter(heading.where(level: 1)).display()
+
+        if calc.even(here().page()) {
+          if chapters == () {
+            return
+          }
+          let chapT = chapters.last().body
+          [#chapNum; #h(1em); #chapT; #h(1fr)]
+        } else {
+          if sections.len() > 0 {
+            let sec = sections.last()
+            let secNum = counter(heading).at(sec.location()).map(str).join(".")
+            let secT = sec.body
+            [#h(1fr); #secNum; #h(1em); #secT]
+          }
+        }
+        line(length: 100%, stroke: 0.25mm)
+      }
+    }
   },
   letter: () => context {
     image(
@@ -258,11 +291,12 @@
     let course = if type(course) == array { course.at(1) } else { course }
     set text(size: 0.8em)
     set par(spacing: 0.5em)
+
     line(length: 100%, stroke: 0.5pt)
     let foot = [
       #course, Version #print-date(date)
     ]
-    let pagenum = counter(page).display("1")
+    let pagenum = counter(page).display()
     if calc.odd(here().page()) {
       foot; h(1fr); pagenum
     } else {
@@ -409,9 +443,9 @@
           ]
         }
         #if args.date != none [
-          #opts.spell.on 
+          #opts.spell.on
           #args.date.day(). #translatedMonth(args.date, opts.lang)
-          #args.date.year(), 
+          #args.date.year(),
         ]
         #opts.spell.ho:
       ],
@@ -496,44 +530,39 @@
   },
   lecture: (args) => context {
     let course = if type(args.course) == array { args.course.at(0) } else { args.course }
+    set std.page(
+      footer: none,
+    )
     set align(center+horizon)
     set par(spacing: 3em)
 
     [
       #smallcaps[
-        #set text(1.3em)
+        #set text(1.5em)
         Skriptum zur Lehrveranstaltung
       ]
 
       #{
-        set text(1.5em)
+        set text(2em)
         strong(course)
       }
 
       #{
-        set text(1.3em)
+        set text(1.2em)
         args.authors.map(smallcaps).join([, ])
       }
       #par[]
       #par[]
       #[
-        #set text(1.1em)
-        Institut für Automatisierungs- und Regelungstechnik
-
-        #grid(
-          columns: (auto, auto),
-          grid.cell(
-            pad(
-              left: -0.6em,
-              right: -0.2em,
-              image("./../assets/logo_iace_black.svg", height: 2.65em)
-            )
-          )
-        )
+        #set text(1.2em)
+        Institut für Automatisierungs- und Regelungstechnik \
       ]
-      #print-date(args.date)
+      #par[]
+      #par[]
+      #print-semester(args.date)
     ]
-    pagebreak(to: "odd")
+    pagebreak(to: "odd", weak: true)
+    counter(page).update(1)
   },
   letter: (
     recipient-pro,

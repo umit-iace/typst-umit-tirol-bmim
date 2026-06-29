@@ -23,6 +23,20 @@
   } else [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
 }
 
+#let print-semester(date) = {
+  let opts = options.final()
+  if type(date) != datetime {
+    none
+  } else {
+    if date.month() > 3 and date.month() < 10 {
+      [Sommersemester #date.year()]
+    } else {
+      let followYear = date + duration(days: 365)
+      [Wintersemester #date.year()/#followYear.year()]
+    }
+  }
+}
+
 #let heading-prefix-numbering(..args, loc: none) = context {
   let hdr = counter(heading).at(
     if loc == none { here() } else { loc }
@@ -35,6 +49,12 @@
   return query(heading.where(level: 1))
     .map(it => it.location().page())
     .contains(here().page())
+}
+
+#let current-title(lvl: 1) = context {
+  let headings = query(heading.where(level: lvl).before(here()))
+  if headings == () { return none}
+  headings.last().body
 }
 
 #let page-number() = numbering(here().page-numbering(), here().page())
@@ -64,3 +84,4 @@
   let l = line(length: m.length, stroke: m.stroke)
   for _y in y { place(top + left, dx: m.xdist, dy: _y, l) }
 }
+
