@@ -65,3 +65,39 @@
     Solution of @task:main2 is $1+1=2$.
   ]
 )
+
+#task(
+  label: <task:main3>,
+  [
+    Test Problem with a equation
+    $
+      p & = s + 4
+    $<eq:main3>
+  ],
+  (
+    points: 10,
+    label: <task:sub3>,
+    description: [
+      Test Problem
+
+      Take a look in the solution
+    ],
+    solution: [
+      Solution is $1+1=2$.
+      w/e @task:main3 before @task:sub3
+    ]
+  ),
+  (
+    points: 10,
+    label: <task:sub4>,
+    description: [
+      Test Problem
+
+      Take a look in the solution
+    ],
+    solution: [
+      Solution is $1+1=2$.
+      w/e @task:main3 before @task:sub3 with @eq:main3.
+    ]
+  )
+)

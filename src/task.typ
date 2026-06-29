@@ -127,7 +127,7 @@
         full: true,
         numbering: (..nums, last) => {
           text(
-            numbering(("1.","a)").at(nums.pos().len(), default: "1."), last)
+            numbering(("a)","a)").at(nums.pos().len(), default: "1."), last)
           )
         }
       )
