@@ -43,13 +43,13 @@
   }
 ]
 
-#let style-enum(lbl, tasknum, name, points, task) = context [
-  #let opts = options.final()
-  #set enum(numbering: (..n) => context {
+#let style-enum(lbl, tasknum, name, points, task) = context {
+  let opts = options.final()
+  set enum(numbering: (..n) => context {
     numbering("1.1.a", ..t-count.get())
   })
-  + #lbl#task
-]
+  lbl + enum(task)
+}
 
 #let solution-inline(solution) = {
   block(
