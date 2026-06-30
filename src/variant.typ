@@ -317,8 +317,26 @@
     it
   }
   set heading(numbering: "1.1")
-  show heading.where(level:2): heading-colored
+  show heading: it => {
+    // Clever trick to reduce spacing between consecutive headings
+    // See https://github.com/typst/typst/issues/2953
+    let previous_headings = query(selector(heading).before(here(),
+      inclusive: false))
+    if previous_headings.len() > 0 {
+      let prev_loc = previous_headings.last().location().position()
+      let it_loc = it.location().position()
+      if (it_loc.page == prev_loc.page 
+        and it_loc.x == prev_loc.x 
+        and it_loc.y - prev_loc.y < 60pt) { // threshold
+        // amount to reduce spacing, could make this dependent on it.level
+        v(-0.3em) 
+      }
+      else {}
+    }
+    [#it #v(0.2em)]
+  }
   show heading.where(level:1): it => context {
+    set text(weight: "regular")
     set block(inset: (y: 2em))
     show: strong
     show: block
@@ -332,6 +350,13 @@
       #it.body
     ]
   }
+  show heading.where(level:2): set text(size: 1.4em)
+  show heading.where(level:3): set text(size: 1.2em)
+  show heading.where(level:4): set text(size: 1.1em)
+  show heading.where(level:5): it => text(
+    weight: 700,
+    // style: "oblique",
+    it.body) + [.]
 
   [
     #set page(numbering: "i")
@@ -348,6 +373,11 @@
     header: header.lecture,
     footer: (footer.lecture)(course, date),
   )
+  let appendix(body) = {
+    set heading(numbering: "A", supplement: [opts.spell.appendix])
+    counter(heading).update(0)
+    body
+  }
 
   body
 }}
