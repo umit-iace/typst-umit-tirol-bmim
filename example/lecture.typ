@@ -99,7 +99,7 @@ TODO: Lemma, Satz, Definition, Übung, Beispiel, Erinnerung, Anmerkung, Tabelle,
 #lorem(250)
 
 #show: backmatter
- 
+
 = Details
 
 *TODO:* "Kapitel" sollte ab hier Anhang heißen, Anhang sollte in Gliederung abgetrennt werden.
@@ -108,11 +108,11 @@ TODO: Lemma, Satz, Definition, Übung, Beispiel, Erinnerung, Anmerkung, Tabelle,
 
 == Mehr Details
 
-#lorem(100)
+#lorem(1500)
 
 == Andere Details
 
-#lorem(100)
+#lorem(500)
 
 = Das ließt niemand mehr
 

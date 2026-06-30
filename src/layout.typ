@@ -141,7 +141,9 @@
 
       let chapters = before.filter(h => h.level == 1)
       let sections = before.filter(h => h.level == 2)
-      let chapNum = counter(heading.where(level: 1)).display()
+      let sec = sections.last()
+      let chapNum = numbering(chapters.last().numbering, counter(heading).at(sec.location()).at(0))
+      let secNum = counter(heading).at(sec.location()).enumerate().map(((idx, cnt)) => if idx == 0 {chapNum} else {str(cnt)}).join(".")
 
       if calc.even(here().page()) {
         if chapters == () {
@@ -151,8 +153,6 @@
         [#chapNum; #h(1em); #chapT; #h(1fr)]
       } else {
         if sections.len() > 0 {
-          let sec = sections.last()
-          let secNum = counter(heading).at(sec.location()).map(str).join(".")
           let secT = sec.body
           [#h(1fr); #secNum; #h(1em); #secT]
         }

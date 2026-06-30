@@ -325,17 +325,21 @@
     if previous_headings.len() > 0 {
       let prev_loc = previous_headings.last().location().position()
       let it_loc = it.location().position()
-      if (it_loc.page == prev_loc.page 
-        and it_loc.x == prev_loc.x 
+      if (it_loc.page == prev_loc.page
+        and it_loc.x == prev_loc.x
         and it_loc.y - prev_loc.y < 60pt) { // threshold
         // amount to reduce spacing, could make this dependent on it.level
-        v(-0.3em) 
+        v(-0.3em)
       }
       else {}
     }
     [#it #v(0.2em)]
   }
   show heading.where(level:1): it => context {
+    let apx = query(<appendix>).any(e => e == it)
+    if apx {
+      return
+    }
     set text(weight: "regular")
     set block(inset: (y: 2em))
     show: strong
@@ -344,7 +348,11 @@
     let n(..c) = numbering(it.numbering, ..c)
     [
       #set text(1.3em)
-      Kapitel #n(..counter(heading).get())
+      #if state("backmatter").get() != none [
+        Anhang #n(..counter(heading).get())
+      ] else [
+        Kapitel #n(..counter(heading).get())
+      ]
       #v(1em)
       #set text(1.5em)
       #it.body

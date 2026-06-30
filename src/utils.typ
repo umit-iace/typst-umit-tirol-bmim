@@ -2,9 +2,16 @@
 #import "options.typ": *
 
 #let backmatter(content) = {
-  set heading(numbering: "A.1")
+  set heading(numbering: "A.1", supplement: "Anhang")
   counter(heading).update(0)
   state("backmatter").update(true)
+  {
+    show heading: none
+    [
+      #pagebreak(to: "odd", weak: true)
+      #heading(numbering: none)[Anhang] <appendix>
+    ]
+  }
   content
 }
 
