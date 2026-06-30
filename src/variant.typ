@@ -373,11 +373,6 @@
     header: header.lecture,
     footer: (footer.lecture)(course, date),
   )
-  let appendix(body) = {
-    set heading(numbering: "A", supplement: [opts.spell.appendix])
-    counter(heading).update(0)
-    body
-  }
 
   body
 }}
