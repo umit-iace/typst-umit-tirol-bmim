@@ -83,6 +83,8 @@
       Der relative Grad des Systems ist eins.
       Dies kann entweder direkt aus der Ausgangsmatrix $c^(sans(upright(T)))=(1,1,1)$ abgelesen werden oder aber durch Differentiation des
       Ausgangs:
+
+      #set math.equation(numbering: none)
       $
         dot(y)(t) & = dot(x)_1(t) + 2 dot(x)_2(t) + dot(x)_3(t) = x_2(t) + 2 x_3(t) + x_2(t) - x_3(t) + u(t) = 2 x_2(t) + x_3(t) + u(t).
       $
@@ -94,6 +96,11 @@
   points: 5,
   description: [ single points task description referencing @task:main and also
   @task:sub1],
-  solution: [ this is how to also reference from solution @task:sub2],
+  solution: [
+    This is how to also reference from solution @task:sub2 and an additional equation
+    $
+      1 + 1 & = 2 thin s
+    $
+  ],
 )
 
