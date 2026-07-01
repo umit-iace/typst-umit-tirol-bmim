@@ -46,7 +46,12 @@
 #let style-enum(lbl, tasknum, name, points, task) = context {
   let opts = options.final()
   set enum(numbering: (..n) => context {
-    numbering("1.1.a", ..t-count.get())
+    let level = t-count.get().len()
+    if level == 3 {
+      numbering("a)", t-count.get().at(2))
+    } else {
+      numbering("1.1.a)", ..t-count.get())
+    }
   })
   lbl + enum(task)
 }
@@ -147,6 +152,9 @@
         [$Sigma$ #p P.]
       )
     )}
+
+    // Fixing the enum formatting for the solution
+    set enum(numbering: "a)")
 
     let sol-style = if is-super { (it, p) => [+ #it \ #show-points(p) ] }
                     else { (it, p) => [#it \ #show-points(p) ] }
