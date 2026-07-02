@@ -127,9 +127,9 @@
 }
 
 #let header = (
+  article: header-colored(),
   exam: header-colored(),
   exercise: header-colored(),
-  report: header-colored(),
   lecture: context {
     set par(spacing: 0.5em)
 
@@ -175,7 +175,7 @@
     }
   },
   poster: header-colored(),
-  article: header-colored(),
+  report: header-colored(),
   slides: (heading: none, progressAnimation: none) => context {
     let opts = options.final()
     let showAni = type(progressAnimation) == dictionary and progressAnimation.at("section", default: false)
@@ -232,35 +232,32 @@
   },
 )
 
-#let bmim-footer(course, title) = context {
+#let bmim-footer(foot, pagenum: context {counter(page).display("1")} ) = context {
     let opts = options.final()
-    let course = if type(course) == array { course.at(1) } else { course }
-    let title = if type(title) == array { title.join([ \- ]) } else { title }
     set text(size: 0.8em)
     set par(spacing: 0.5em)
     line(length: 100%, stroke: 0.5pt)
-    let foot = [
-      #course - #title
-      #if opts.show-solution != none [
-        #set text(color.red)
-        *#opts.spell.with #opts.spell.sol*
-      ]
-    ]
-    let pagenum = counter(page).display("1")
-    if calc.odd(here().page()) {
-      foot; h(1fr); pagenum
+    if opts.oneside {
+        foot; h(1fr); pagenum
     } else {
-      pagenum; h(1fr); foot
+      if calc.odd(here().page()) {
+        foot; h(1fr); pagenum
+      } else {
+        pagenum; h(1fr); foot
+      }
     }
 }
 
 #let footer = (
+  article: () => context {
+    align(
+      center,
+      counter(page).display("1")
+    )
+  },
   exam: (course, title) => context {
     let opts = options.final()
     let course = if type(course) == array { course.at(1) } else { course }
-    set text(size: 11pt)
-    set par(spacing: 0.5em)
-    line(length: 100%, stroke: 0.25mm)
     let foot = [
       #opts.spell.exam - #course
       #if opts.show-solution != none [
@@ -268,42 +265,33 @@
         *#opts.spell.with #opts.spell.sol*
       ]
     ]
-    let pagenum = counter(page).display("1/1", both: true)
-    if calc.odd(here().page()) and here().page() != 1 [
-      #foot
-      #h(1fr)
-      Matrikelnr: #underline-space(25%)
-      #h(1fr)
-      #pagenum
-    ]
-    else if here().page() == 1 [
-      #foot
-      #h(1fr)
-      #pagenum
-    ] else [
-      #pagenum
-      #h(1fr)
-      #foot
-    ]
+    if calc.odd(here().page()) and here().page() != 1 {
+      bmim-footer([#foot #h(1fr) Matrikelnr: #underline-space(25%)], pagenum: counter(page).display("1/1", both: true))
+    } else {
+      bmim-footer(foot, pagenum: counter(page).display("1/1", both: true))
+    }
   },
-  exercise: (course, title) => bmim-footer(course, title),
-  report: (course, title) => bmim-footer(course, title),
+  exercise: (course, title) => context {
+    let opts = options.final()
+    let course = if type(course) == array { course.at(1) } else { course }
+    let title = if type(title) == array { title.join([ \- ]) } else { title }
+    let foot = [
+      #course - #title
+      #if opts.show-solution != none [
+        #set text(color.red)
+        *#opts.spell.with #opts.spell.sol*
+      ]
+    ]
+    bmim-footer(foot)
+  },
   lecture: (course, date) => context{
     let opts = options.final()
     let course = if type(course) == array { course.at(1) } else { course }
-    set text(size: 0.8em)
-    set par(spacing: 0.5em)
 
-    line(length: 100%, stroke: 0.5pt)
     let foot = [
       #course, Version #print-date(date)
     ]
-    let pagenum = counter(page).display()
-    if calc.odd(here().page()) {
-      foot; h(1fr); pagenum
-    } else {
-      pagenum; h(1fr); foot
-    }
+    bmim-footer(foot, pagenum: counter(page).display())
   },
   letter: () => context {
     let opts = options.final()
@@ -337,11 +325,18 @@
       )
     )
   },
-  article: (course, title) => context {
-    align(
-      center,
-      counter(page).display("1")
-    )
+  report: (course, title) => context {
+    let opts = options.final()
+    let course = if type(course) == array { course.at(1) } else { course }
+    let title = if type(title) == array { title.join([ \- ]) } else { title }
+    let foot = [
+      #course - #title
+      #if opts.show-solution != none [
+        #set text(color.red)
+        *#opts.spell.with #opts.spell.sol*
+      ]
+    ]
+    bmim-footer(foot)
   },
   slides: (author:none, title:none, date:none, pagenum:none, progressAnimation:none) => context {
     let opts = options.final()
@@ -381,27 +376,10 @@
   workbook: (course) => context {
     let opts = options.final()
     let course = if type(course) == array { course.at(1) } else { course }
-    set text(size: 11pt)
-    set par(spacing: 0.5em)
-    line(length: 100%, stroke: 0.5pt)
     let foot = [
-      #course - Übungsaufgaben
+      #course - #opts.spell.exercises
     ]
-    let pagenum = counter(page).display("1")
-    if calc.odd(here().page()) and here().page() != 1 [
-      #foot
-      #h(1fr)
-      #pagenum
-    ]
-    else if here().page() == 1 [
-      #foot
-      #h(1fr)
-      #pagenum
-    ] else [
-      #pagenum
-      #h(1fr)
-      #foot
-    ]
+    bmim-footer(foot)
   },
 )
 

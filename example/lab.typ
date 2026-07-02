@@ -60,6 +60,7 @@
   date: datetime.today(),
   show-solution: "inline",
   titleblock: tb,
+  oneside: false,
 )
 
 #set math.equation(numbering: "(1.1)")

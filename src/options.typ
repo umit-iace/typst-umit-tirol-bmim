@@ -14,6 +14,7 @@
   size: 11pt,
   logo: auto, // none, auto, (left: // , right: //)
   titleblock: auto, // none, auto, function
+  oneside: true
 ))
 
 #let option-set(dict) = {

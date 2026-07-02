@@ -104,6 +104,7 @@
   show-solution: none, // none, "inline", "bottom"
   empty-sheets: auto, // none, auto (= 1 per task), int
   show-hints: true, // false, true
+  oneside: false, // false, true
   ..chosen // other options: theme, logo-with-text, size, etc
 ) = { body => {
   if total-time == none {
@@ -112,6 +113,7 @@
   option-set(
     (task-show: task.style-heading)
     + (show-solution: show-solution)
+    + (oneside: oneside)
     + chosen.named()
   )
   show: bmim-common
@@ -278,8 +280,13 @@
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
+  oneside: false, // false, true
   ..chosen
 ) = { body => {
+  option-set(
+    (oneside: oneside)
+    + chosen.named()
+  )
   show: bmim-common
 
   context {
@@ -520,7 +527,7 @@
     ),
     columns: 2,
     header: header.article,
-    footer: (footer.article)(course, title),
+    footer: (footer.article)(),
   )
   set par(
     justify: true,
@@ -585,6 +592,7 @@
   show-solution: none, // none, "inline", "bottom"
   task-show-points: false,
   date: datetime.today(),
+  oneside: false, // false, true
   ..chosen,
 ) = { body => {
   option-set(
@@ -592,6 +600,7 @@
     + (show-solution: show-solution)
     + (task-wrap-counter: (counter(heading), 1))
     + (task-show-points: task-show-points)
+    + (oneside: oneside)
     + chosen.named()
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
   )
