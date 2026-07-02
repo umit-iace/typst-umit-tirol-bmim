@@ -1,6 +1,14 @@
 #import "data.typ": *
 #import "options.typ": *
 
+#let abstract(body) = {
+  // abstract environment for the article class
+  set par(leading: .5em)
+  set text(font: "Source Sans 3", spacing: 80%, size: 1.1em)
+  text(weight: "semibold", fill: color-cd2026.blue)[Abstract.]
+  text(style: "normal")[#body]
+}
+
 #let backmatter(content) = {
   set heading(numbering: "A.1", supplement: "Anhang")
   counter(heading).update(0)

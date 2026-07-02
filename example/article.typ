@@ -1,5 +1,6 @@
-#import "/src/lib.typ" as bmim: important, hint, example, color-cd2026
+#import "/src/lib.typ" as bmim: abstract
 
+// main class
 #show: bmim.article(
   title: [Control of controllable Continua],
   subtitle: [A very demanding task],
@@ -8,13 +9,11 @@
 
 )
 
-// todo move to library
-#let abstract(body) = {
-  set par(leading: .5em)
-  set text(font: "Source Sans 3", spacing: 80%, size: 1.1em)
-  text(weight: "semibold", fill: color-cd2026.blue)[Abstract.]
-  text(style: "normal")[#body]
-}
+// various environments
+#import "@preview/theorion:0.6.0": *
+#import cosmos.clouds: *
+#show: show-theorion
+
 
 #abstract[
   #lorem(60)
@@ -90,11 +89,15 @@ After that you should find the correct number in @tab:try.
 
 == Admonitions
 
-#important[#lorem(20)]
+#warning-block[#lorem(20)]
 
-#example[#lorem(20)]
+#caution-block[#lorem(20)]
 
-#hint[#lorem(40)]
+#tip-block[#lorem(20)]
+
+#note-block[#lorem(40)]
+
+Find even more environments in the `theorion` package: https://typst.app/universe/package/theorion/.
 
 = A section without number <bmim:nonumber>
 

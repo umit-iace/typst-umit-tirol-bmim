@@ -517,10 +517,10 @@
     )
   },
   lecture: (args) => context {
+    let opts = options.final()
     let course = if type(args.course) == array { args.course.at(0) } else { args.course }
     set std.page(
       header: context {
-        let opts = options.final()
         if counter(page).get().first() == 1 {
           pad(
             top: page.margin.top * 0.3,
@@ -569,6 +569,17 @@
     set par(spacing: 3em)
 
     [
+      // maybe some time in the distant future ...
+      // #set page(background: box(
+      //   width: 100%, 
+      //   height: 100%, 
+      //   fill: gradient.linear(
+      //     opts.theme.primary, 
+      //     black,
+      //     angle: 90deg
+      //   )
+      // ))
+      // #set text(fill: opts.theme.background)
       #smallcaps[
         #set text(1.5em)
         Skriptum zur Lehrveranstaltung \

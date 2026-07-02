@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: example, hint, backmatter
+#import "/src/lib.typ" as bmim: backmatter
 
 #show: bmim.lecture(
   lang: "de",
@@ -6,6 +6,11 @@
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   date: datetime(day: 1, month: 3, year: 2024),
 )
+
+// various environments
+#import "@preview/theorion:0.6.0": *
+#import cosmos.clouds: *
+#show: show-theorion
 
 = Ein Kapitel
 
@@ -53,16 +58,24 @@
 
 == Umgebungen
 
+Für alle Umgebungen wird das `theorion` Paket (https://typst.app/universe/package/theorion/) genutzt.
 
-#example(
-  lorem(150)
-)
+#definition[
+  Eine wichtige Definition.
+]
 
-#hint(
-  lorem(150)
-)
+#theorem[
+  #lorem(50)
+]
 
-TODO: Lemma, Satz, Definition, Übung, Beispiel, Erinnerung, Anmerkung, Tabelle, Abbildung
+#proof[
+  #lorem(50)
+]
+
+#example[
+  #lorem(150)
+]
+
 
 = Jetzt was neues
 
@@ -102,13 +115,17 @@ TODO: Lemma, Satz, Definition, Übung, Beispiel, Erinnerung, Anmerkung, Tabelle,
 
 = Details
 
-*TODO:* "Kapitel" sollte ab hier Anhang heißen, Anhang sollte in Gliederung abgetrennt werden.
+#lorem(100)
 
-// #lorem(50)
 
 == Mehr Details
 
-#lorem(1500)
+Wir haben den Beweis:
+#proof[
+  #lorem(150)
+]
+
+#lorem(100)
 
 == Andere Details
 
