@@ -109,7 +109,6 @@
   if total-time == none {
     panic("Exam needs total-time option set")
   }
-  set enum(numbering: "a)")
   option-set(
     (task-show: task.style-heading)
     + (show-solution: show-solution)
@@ -195,8 +194,6 @@
 
   show heading.where(level: 1): heading-colored
 
-  set enum(numbering: "a)")
-
   context {
     let opts = options.final()
     let tbArgs = (
@@ -232,7 +229,6 @@
   show-solution: none, // none, "inline", "bottom"
   ..chosen,
 ) = { body => {
-  set enum(numbering: "a)")
   option-set(
     (task-show: task.style-enum)
     + (task-wrap-counter: (counter(heading), 1))
@@ -655,8 +651,6 @@
   counter(page).update(1)
 
   show: headings-on-odd-page
-
-  set enum(numbering: "a)")
 
   body
 

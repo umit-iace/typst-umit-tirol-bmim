@@ -50,7 +50,7 @@
     if level == 3 {
       numbering("a)", t-count.get().at(2))
     } else {
-      numbering("1.1.a)", ..t-count.get())
+      numbering("1.1.a", ..t-count.get())
     }
   })
   lbl + enum(task)
@@ -122,6 +122,8 @@
   }
 
   {
+    // Fixing the enum formatting for the subtasks and their solution
+    set enum(numbering: "a)")
     let tasknum = t-points.get().len()
 
     let points = t-points.final().at(tasknum, default:())
@@ -152,9 +154,6 @@
         [$Sigma$ #p P.]
       )
     )}
-
-    // Fixing the enum formatting for the solution
-    set enum(numbering: "a)")
 
     let sol-style = if is-super { (it, p) => [+ #it \ #show-points(p) ] }
                     else { (it, p) => [#it \ #show-points(p) ] }
