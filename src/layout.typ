@@ -33,9 +33,9 @@
         width: if args.named().at("slide", default: false) and showAni {80%} else {100%},
         height: height,
         if args.pos().len() != 0 {
-          set align(horizon+center)
+          set align(if showAni { horizon+left } else { horizon+center })
           show text: set text(size: size, fill: opts.theme.background)
-          pad(..args.pos())
+          pad(x: 15pt, {pad(..args.pos())})
         }
       )
     ),
