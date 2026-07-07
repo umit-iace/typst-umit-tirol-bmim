@@ -7,10 +7,12 @@
 #let heading-colored(it) = context {
   let opts = options.final()
   block(
-    width: if opts.task-show-points {100%} else {33%},
+    width: 100%,
     inset: (bottom: 5pt),
-    stroke: (bottom: 0.1em + opts.theme.primary),
-    [#if it.numbering == none [#it.body] else [#counter(heading).display(it.numbering) #it.body]]
+    [
+      #if it.numbering == none [#it.body] else [#counter(heading).display(it.numbering) #it.body]
+      #place(bottom+left, dy: 5pt, line(length: 33%, stroke: 0.1em + opts.theme.primary))
+    ]
   )
 }
 
