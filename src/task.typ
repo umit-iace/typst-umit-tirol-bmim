@@ -73,6 +73,9 @@
 }
 
 #let solution-bottom = context [
+  // Fixing the enum formatting for the subtasks and their solution
+  #set enum(numbering: "a)")
+
   = Lösungen <bmim:nonumber>
   #for (num, solution) in t-solutions.final().enumerate(start:0) [
 
@@ -155,8 +158,11 @@
       )
     )}
 
-    let sol-style = if is-super { (it, p) => [+ #it \ #show-points(p) ] }
-                    else { (it, p) => [#it \ #show-points(p) ] }
+    let sol-style = if is-super {
+      (it, p) => [+ #it \ #show-points(p) ]
+    } else {
+      (it, p) => [#it \ #show-points(p) ]
+    }
     let solution = (
       if is-super {
         args.pos().slice(1).map(sub => sub.solution).zip(points)
