@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: backmatter
+#import "./preamble.typ": *
 
 #show: bmim.lecture(
   lang: "de",

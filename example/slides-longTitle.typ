@@ -1,5 +1,4 @@
-#import "@preview/touying:0.7.4": *
-#import "/src/lib.typ" as bmim: example, tip, hint, important
+#import "./preamble.typ": *
 
 #show: bmim.slides(
   title: (
@@ -131,16 +130,6 @@ This is a numbered list:
 This is a term list:
 / Controller: Technical device that does very nice things.
 / Student: Human beeing that struggles with the concept of a controller
-
-== Admonitions
-
-Here we have some admonitions:
-
-#example[#lorem(30)]
-#hint[#lorem(30)]
-#important[#lorem(30)]
-#tip[#lorem(30)]
-
 
 == Highlighting
 

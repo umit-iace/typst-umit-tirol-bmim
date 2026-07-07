@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim
+#import "./preamble.typ": *
 
 #show: bmim.letter(
   lang: "de",

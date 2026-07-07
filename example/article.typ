@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: abstract
+#import "./preamble.typ": *
 
 // main class
 #show: bmim.article(

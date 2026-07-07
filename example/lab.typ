@@ -1,56 +1,4 @@
-#import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, important, tip, example, hint, translatedMonth
-
-#let tb(args) = context {
-  let course = if type(args.course) == array { args.course.at(0) } else { args.course }
-  set align(center)
-  rect(
-    width: 100%,
-    inset: (top: 0.2em, bottom: 0.2em, left: 0.2em, right: 0.2em),
-    stroke: 1pt,
-    rect(
-      width: 100%,
-      inset: (top: 1em, bottom: 1em),
-      stroke: (paint: black.lighten(20%), thickness: 1.3pt),
-      strong[
-        Labor \
-        #sym.hyph \
-        #course \
-        #line(length: 95%)
-        #if type(args.title) == array {
-          args.title.at(0)
-          linebreak()
-          args.title.at(1)
-        } else {
-          args.title
-        }
-      ]
-    )
-  )
-  grid(
-    columns: 2,
-    gutter: 0.75em,
-    align: (right, left),
-    [
-      #if args.show-solution != none {
-        set text(bmim.color.red)
-        strong[
-          #args.spell.with #args.spell.sol,
-        ]
-      }
-      #args.spell.ho:
-    ],
-    grid(
-      row-gutter: 0.5em,
-      ..args.authors.map(author => text(author)),
-    ),
-    [
-      #args.spell.lc:
-    ],
-    [
-      #args.date.day(). #translatedMonth(args.date, args.lang) #args.date.year()
-    ],
-  )
-}
+#import "./preamble.typ": *
 
 #show: bmim.report(
   title: ("Labor VU"),
@@ -62,6 +10,11 @@
   titleblock: tb,
   oneside: false,
 )
+
+#show: show-example
+#show: show-important
+#show: show-tip
+#show: show-hint
 
 #set math.equation(numbering: "(1.1)")
 
@@ -220,12 +173,12 @@ It is important to remember Newton's third law @newton-third, and Hook's law
 
 #lorem(80)
 
+#hint[#lorem(2)]
+
 #important[Test]
 
 #tip[Test]
 
 #example[#lorem(20)]
-
-#hint[Test]
 
 #bibliography("sources.bib", title: "Bibliography")

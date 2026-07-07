@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: poster-box
+#import "./preamble.typ": *
 
 #show: bmim.poster(
   title:[],

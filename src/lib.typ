@@ -1,5 +1,4 @@
 #import "variant.typ": exam, report, poster, article, workbook, lecture, letter, exercise, slides
-#import "admonition.typ": hint, important, tip, example
 #import "task.typ": task
 #import "utils.typ": backmatter, heading-prefix-numbering, translatedMonth, abstract
 #import "list.typ": enum-label, wrapped-enum-numbering

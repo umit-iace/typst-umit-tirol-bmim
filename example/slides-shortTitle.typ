@@ -1,5 +1,4 @@
-#import "@preview/touying:0.7.3": *
-#import "/src/lib.typ" as bmim: example, tip, hint
+#import "./preamble.typ": *
 
 #show: bmim.slides(
   title: (
@@ -78,14 +77,6 @@ green)[highlighted in green]. This is #highlight(fill: red)[highlighted in red].
   + This is a speaker note.
   + You won't see it unless you use `config-common(show-notes-on-second-screen: right)`
 ]
-
-== Admonitions
-
-A slide with admonitions
-
-#example[Test]
-
-#hint[Test]
 
 == References
 

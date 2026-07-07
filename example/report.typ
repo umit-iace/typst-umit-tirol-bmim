@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, important, tip, example, hint
+#import "./preamble.typ": *
 
 #show: bmim.report(
   title: ("Task description"),
@@ -211,13 +211,5 @@ It is important to remember Newton's third law @newton-third, and Hook's law
 = Appendix Section
 
 #lorem(80)
-
-#important[Test]
-
-#tip[Test]
-
-#example[#lorem(20)]
-
-#hint[Test]
 
 #bibliography("sources.bib", title: "Bibliography")

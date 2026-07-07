@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: task
+#import "./preamble.typ": *
 
 #show: bmim.exam(
   title: "Eingangstest",
