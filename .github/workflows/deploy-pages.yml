@@ -57,7 +57,7 @@ jobs:
       - name: Build HTML File
         run: |
           mkdir -p build_output
-          touying compile ./example/slides.typ --root . --output build_output/index.html --format html
+          touying compile ./example/slides-longTitle.typ --root . --output build_output/index.html --format html
 
       - name: Upload Artifacts
         id: deployment
