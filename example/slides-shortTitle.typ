@@ -82,3 +82,10 @@ green)[highlighted in green]. This is #highlight(fill: red)[highlighted in red].
 
 #magic.bibliography(title: none)
 
+#show: appendix
+
+= Appendix <touying:unoutlined>
+
+== Appendix Slide
+
+This slide contains additional content.
