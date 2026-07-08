@@ -215,3 +215,11 @@ You won't see it unless you use
 ```
 #code
 #eval(code.text, mode: "markup")
+
+#show: appendix
+
+= Appendix <touying:unoutlined>
+
+== Appendix Slide
+
+This slide contains additional content.
