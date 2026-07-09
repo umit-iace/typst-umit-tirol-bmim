@@ -28,7 +28,7 @@ jobs:
 
       - name: Install fonts
         run: |
-          apt install -y ttf-bitstream-vera
+          sudo apt install -y ttf-bitstream-vera
           cd $(mktemp -d /tmp/script.XXXXXXX)
           TEMP_DIR=$(pwd)
           mkdir -p ~/.fonts
