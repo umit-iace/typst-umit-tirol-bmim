@@ -1,64 +1,96 @@
-#import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, important, tip, example, hint
+#import "./preamble.typ": *
 
-#show: bmim.lab(
-  title: ("Title"),
+#show: bmim.report(
+  title: ("Labor VU"),
   lang: "de",
-  course: ("Vorlesung", "VL"),
+  course: ("Lehrveranstaltung", "LV"),
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
-  date: datetime(day: 1, month: 3, year: 2024),
+  date: datetime.today(),
   show-solution: "inline",
+  titleblock: tb,
+  oneside: false,
 )
+
+#show: show-example
+#show: show-important
+#show: show-tip
+#show: show-hint
 
 #set math.equation(numbering: "(1.1)")
 
 #outline()
 
-= First Section
+= A Section
 
 #lorem(10) @netwok2020
 
-== First Subsection with number
+#task(
+  points: 10,
+  label: <task:main1>,
+  description: [
+    A single task without any subtasks
+    $
+      p & = s + 4
+    $<eq:main2>
+    and @netwok2020.
+
+    Take a look in the solution
+  ],
+  solution: [
+    Solution of @task:main1 is $1+1=2$.
+  ]
+)
+
+== A numbered Subsection
 
 #lorem(10)
 
 #task(
-  label: <task:main1>,
+  label: <task:main2>,
   [
-    Test Problem with a equation
+    Test Problem with an equation
     $
       p & = s + 4
     $<eq:main1>
-    and @netwok2020.
+    and some citation @netwok2020.
   ],
   (
     points: 10,
     label: <task:sub1>,
     description: [
-      Test Problem
-
-      Take a look in the solution
+      This is a subtask description, it will tell you what to do.
     ],
     solution: [
-      Solution is $1+1=2$.
-      w/e @task:main1 before @task:sub2
+      This is the solution of the subtask. 
+      We concolude that $1+1=2$.
+      w/e @task:main2 before @task:sub2
     ]
   ),
   (
     points: 10,
     label: <task:sub2>,
     description: [
-      Test Problem
-
-      Take a look in the solution
+      This is another subtask description, better carry it out to the letter.
     ],
     solution: [
-      Solution is $1+1=2$.
+      This time the solution is $2+2=4$.
+      w/e @task:main1 before @task:sub1 with @eq:main1.
+    ]
+  ),
+  (
+    points: 10,
+    label: <task:sub3>,
+    description: [
+      This is yet another subtask description, better carry it out to the letter.
+    ],
+    solution: [
+      This time the solution is $2+2=4$.
       w/e @task:main1 before @task:sub1 with @eq:main1.
     ]
   )
 )
 
-=== First Subsubsection
+=== A numbered Subsubsection
 
 #lorem(10)
 
@@ -100,9 +132,25 @@ It is important to remember Newton's third law @newton-third, and Hook's law
 
 #task(
   points: 10,
-  label: <task:main2>,
+  label: <task:main3>,
   description: [
-    Test Problem with a equation
+    A task with no subtasks
+    $
+      p & = s + 4
+    $<eq:main2>
+    and @netwok2020.
+
+    Take a look in the solution
+  ],
+  solution: [
+    Solution of @task:main2 is $1+1=2$.
+  ]
+)
+#task(
+  points: 10,
+  label: <task:main4>,
+  description: [
+    A task with no subtasks
     $
       p & = s + 4
     $<eq:main2>
@@ -125,12 +173,12 @@ It is important to remember Newton's third law @newton-third, and Hook's law
 
 #lorem(80)
 
+#hint[#lorem(2)]
+
 #important[Test]
 
 #tip[Test]
 
 #example[#lorem(20)]
-
-#hint[Test]
 
 #bibliography("sources.bib", title: "Bibliography")

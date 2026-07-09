@@ -8,38 +8,41 @@
 
 #let bmim-common(body) = context {
   let opts = options.final()
-  set text(
-    lang: opts.lang,
-    font: opts.font,
-    spacing: .5em,
-    size: opts.size,
-  )
-  set par(
-    leading: 0.55em, spacing: 0.55em, justify: true,
-    justification-limits: (
-      tracking: (min: -0.01em, max: 0.02em),
-    )
-  )
   set page(
     margin: (
       left: 2cm,
       right: 2cm,
-      top: 1.9cm,
+      top: 2.5cm,
       bottom: 2.5cm,
     ),
   )
-  show raw: set text(font: "CMU Typewriter Text", size: opts.size)
 
-  set enum(numbering: "a)")
+  set par(
+    justify: true
+  )
 
-  show figure.where(kind: table): set figure(supplement: opts.spell.tab)
+  set text(
+    lang: opts.lang,
+    size: opts.size,
+    font: opts.font,
+    weight: "regular",
+  )
+  set strong(delta: 250) // Source serif is quite heavy, this will lighten the bold settings
+  show raw: set text(font: "Source Code Pro", size: opts.size)
+
+  show figure.where(kind: table): set figure(
+    placement: bottom,
+    supplement: opts.spell.tab
+  )
   show figure.where(kind: table): it => {
     set figure.caption(position: top)
-    show figure.caption: smallcaps
-    show figure.caption: set align(center)
+    show figure.caption: set align(start)
     it
   }
-  show figure.where(kind: image): set figure(supplement: opts.spell.fig)
+  show figure.where(kind: image): set figure(
+    placement: top,
+    supplement: opts.spell.fig
+  )
   show figure.where(kind: image): it => {
     show figure.caption: set align(start)
     it
@@ -48,7 +51,7 @@
   show figure: fig => {
     show figure.caption: cap => context [
       #let n = numbering(cap.numbering, ..cap.counter.at(fig.location()))
-      *#cap.supplement~#n*~#sym.minus#cap.body
+      *#cap.supplement~#n*:~#cap.body
     ]
     fig
   }
@@ -62,19 +65,22 @@
     item-cnt.update(i => i + it.children.len())
   }
 
-  // set heading(numbering: "1.1")
+  show heading: set text(weight: "semibold")
   show heading.where(level: 1): it => {
     item-cnt.update(0)
     it
   }
 
-  show heading.where(label: <bmim:nonumber>): set heading(numbering: none, outlined: false)
+  show heading.where(label: <bmim:nonumber>): set heading(
+    numbering: none,
+    outlined: false
+  )
 
-  // ### Outline
+  // Outline
   set outline(depth: 2)
-  set outline.entry(fill: repeat[.~])
 
   show outline.entry.where(level: 1): it => {
+    set strong(delta: 150)
     if it.element.func() != heading {
       return it
     }
@@ -98,6 +104,7 @@
   show-solution: none, // none, "inline", "bottom"
   empty-sheets: auto, // none, auto (= 1 per task), int
   show-hints: true, // false, true
+  oneside: false, // false, true
   ..chosen // other options: theme, logo-with-text, size, etc
 ) = { body => {
   if total-time == none {
@@ -106,6 +113,7 @@
   option-set(
     (task-show: task.style-heading)
     + (show-solution: show-solution)
+    + (oneside: oneside)
     + chosen.named()
   )
   show: bmim-common
@@ -118,7 +126,27 @@
 
   show heading.where(level: 1): heading-colored
 
-  (titleblock.exam)(course, title, authors, date, total-time, show-hints)
+  context {
+    let opts = options.final()
+    let tbArgs = (
+      course: course,
+      title: title,
+      authors: authors,
+      date: date,
+      total-time: total-time,
+      show-hints: show-hints,
+      lang: opts.lang,
+      spell: opts.spell,
+      show-solution: opts.show-solution,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.exam)(tbArgs)
+    }
+    tb
+  }
+
   body
 
   if show-solution == "bottom" {
@@ -168,7 +196,24 @@
 
   show heading.where(level: 1): heading-colored
 
-  (titleblock.exercise)(course, title, authors, date)
+  context {
+    let opts = options.final()
+    let tbArgs = (
+      course: course,
+      title: title,
+      authors: authors,
+      date: date,
+      lang: opts.lang,
+      spell: opts.spell,
+      show-solution: opts.show-solution,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.exercise)(tbArgs)
+    }
+    tb
+  }
 
   body
 
@@ -178,7 +223,7 @@
   }
 }}
 
-#let lab(
+#let report(
   title: none, // either [Title] , or ([Topic], [Title])
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
@@ -197,13 +242,31 @@
   show ref: task.show-ref
 
   set std.page(
-    header: header.lab,
-    footer: (footer.lab)(course, title),
+    header: header.report,
+    footer: (footer.report)(course, title),
   )
 
   set heading(numbering: "1.")
   show heading.where(level: 1): heading-colored
-  (titleblock.lab)(course, title, authors, date)
+
+  context {
+    let opts = options.final()
+    let tbArgs = (
+      course: course,
+      title: title,
+      authors: authors,
+      date: date,
+      lang: opts.lang,
+      spell: opts.spell,
+      show-solution: opts.show-solution,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.report)(tbArgs)
+    }
+    tb
+  }
 
   body
 
@@ -217,11 +280,109 @@
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
+  oneside: false, // false, true
   ..chosen
 ) = { body => {
+  option-set(
+    (oneside: oneside)
+    + chosen.named()
+  )
+  show: bmim-common
+
+  context {
+    let opts = options.final()
+    let tbArgs = (
+      course: course,
+      title: title,
+      authors: authors,
+      date: date,
+      lang: opts.lang,
+      spell: opts.spell,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.lecture)(tbArgs)
+    }
+    tb
+  }
+
+  set std.page(
+    footer: (footer.lecture)(course, date),
+  )
+
+  set outline(depth: 3)
+  let headings-on-odd-page(it) = {
+    show heading.where(level: 1): it => {
+      pagebreak(to: "odd")
+      it
+    }
+    it
+  }
+  set heading(numbering: "1.1")
+  show heading: it => {
+    // Clever trick to reduce spacing between consecutive headings
+    // See https://github.com/typst/typst/issues/2953
+    let previous_headings = query(selector(heading).before(here(),
+      inclusive: false))
+    if previous_headings.len() > 0 {
+      let prev_loc = previous_headings.last().location().position()
+      let it_loc = it.location().position()
+      if (it_loc.page == prev_loc.page
+        and it_loc.x == prev_loc.x
+        and it_loc.y - prev_loc.y < 60pt) { // threshold
+        // amount to reduce spacing, could make this dependent on it.level
+        v(-0.3em)
+      }
+      else {}
+    }
+    [#it #v(0.2em)]
+  }
+  show heading.where(level:1): it => context {
+    let apx = query(<appendix>).any(e => e == it)
+    if apx {
+      return
+    }
+    set text(weight: "regular")
+    set block(inset: (y: 2em))
+    show: strong
+    show: block
+    if it.numbering == none { it.body; return }
+    let n(..c) = numbering(it.numbering, ..c)
+    [
+      #set text(1.3em)
+      #if state("backmatter").get() != none [
+        Anhang #n(..counter(heading).get())
+      ] else [
+        Kapitel #n(..counter(heading).get())
+      ]
+      #v(1em)
+      #set text(1.5em)
+      #it.body
+    ]
+  }
+  show heading.where(level:2): set text(size: 1.4em)
+  show heading.where(level:3): set text(size: 1.2em)
+  show heading.where(level:4): set text(size: 1.1em)
+  show heading.where(level:5): it => text(
+    weight: 700,
+    // style: "oblique",
+    it.body) + [.]
+
+  [
+    #set page(numbering: "i")
+    #heading(numbering: none, outlined: true)[Inhaltsverzeichnis]
+    #outline(title: none)
+    #pagebreak(to: "odd", weak: true)
+  ]
+  set page(numbering: "1")
+  counter(page).update(1)
+
+  show: headings-on-odd-page
+
   set std.page(
     header: header.lecture,
-    footer: (footer.lecture)(),
+    footer: (footer.lecture)(course, date),
   )
 
   body
@@ -336,8 +497,9 @@
   body
 }}
 
-#let report(
+#let article(
   title: none, // str or content
+  subtitle: none,
   course: none, // either [Course Name] , or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
@@ -348,18 +510,71 @@
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
   )
   show: bmim-common
-  set heading(numbering: none)
-  set text(spacing: 100%)
+  // overwrite defaults
   set page(
+    margin: (
+      left: 1.5cm,
+      right: 1.5cm,
+      top: 2.5cm,
+      bottom: 1.5cm,
+    ),
     columns: 2,
-    header: header.report,
-    footer: (footer.report)(course, title),
+    header: header.article,
+    footer: (footer.article)(),
+  )
+  set par(
+    justify: true,
+    first-line-indent: 1.5em,
+    leading: .5em,
+    spacing: .6em,
   )
 
-  show heading.where(level: 2): set text(weight: "light", size: options.final().size)
-  show heading.where(level: 2): emph
+  set heading(numbering: "1.1") // numbered
+  // level 1 headings are bigger
+  show heading.where(level: 1): it => {
+    // set align(center)
+    text(weight: "medium", style: "normal", size: 1.1em)[
+      #it
+    ]
+  }
+  // level 2 headings are light and in italic
+  show heading.where(level: 2): set text( 
+      weight: "light",
+      style: "oblique",
+      size: 0.9em,
+  )
+  // level 3 headings are inline
+  show heading.where(level: 3): it => box(
+    text(
+      weight: "semibold",
+      // style: "oblique",
+      size: 1em, 
+    )[
+      #it.body.
+    ]
+  )
 
-  (titleblock.report)(course, title, authors, date)
+  show figure.caption: set text(size: 0.9em)
+
+  set enum(full: true, numbering: "a)")
+
+  context {
+    let opts = options.final()
+    let tbArgs = (
+      title: title,
+      subtitle: subtitle,
+      authors: authors,
+      date: date,
+      lang: opts.lang,
+      spell: opts.spell,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.article)(tbArgs)
+    }
+    tb
+  }
 
   body
 }}
@@ -370,6 +585,7 @@
   show-solution: none, // none, "inline", "bottom"
   task-show-points: false,
   date: datetime.today(),
+  oneside: false, // false, true
   ..chosen,
 ) = { body => {
   option-set(
@@ -377,13 +593,30 @@
     + (show-solution: show-solution)
     + (task-wrap-counter: (counter(heading), 1))
     + (task-show-points: task-show-points)
+    + (oneside: oneside)
     + chosen.named()
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
   )
   show: bmim-common
   show ref: task.show-ref
 
-  (titleblock.workbook)(course, authors, date)
+  context {
+    let opts = options.final()
+    let tbArgs = (
+      course: course,
+      authors: authors,
+      date: date,
+      lang: opts.lang,
+      spell: opts.spell,
+      show-solution: opts.show-solution,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.workbook)(tbArgs)
+    }
+    tb
+  }
 
   set page(
     header: header.workbook,
@@ -439,12 +672,15 @@
   authors-short: none, // none or [short author]
   date: none, // datetime
   bib: none, // none or "path/to/bibfile"
-  aspect-ratio: "16-9", // "16-9" or "4-3"
-  font: "CMU Sans Serif",
+  aspect-ratio: "16-9", // "16-10" or "16-9" or "4-3"
+  font: "Source Sans 3",
   align: horizon,
+  progressAnimation: none, // shows the progress in footer: dict with slide/section
   size: 18pt,
   handout: false, // render as handout: false, true
-  notes: none, // show speaker notes: none, right, bottom; sh
+  notes: none, // show speaker notes: none, right, bottom
+  margins: (x: 27pt, ),
+  section-slide: auto, // auto, none, function
   ..chosen,
 ) = { body => context {
   option-set(
@@ -453,28 +689,32 @@
     + chosen.named()
   )
   let opts = options.final()
+
   set text(
     lang: opts.lang,
     font: opts.font,
-    spacing: .5em,
     size: opts.size,
   )
 
   show: touying-slides.with(
     config-page(
-      paper: "presentation-" + aspect-ratio,
+      ..utils.page-args-from-aspect-ratio(aspect-ratio),
+      margin: (
+        top: page.height * 3.5%,
+        bottom: page.height * 2.6%,
+        x: margins.x,
+      ),
       header: self => {
         set std.align(top)
         utils.call-or-display(self, self.store.header)
       },
       footer: self => {
         set std.align(bottom)
-        set text(size: .5em)
+        set text(size: 9pt)
         utils.call-or-display(self, self.store.footer)
       },
-      header-ascent: 0em,
-      footer-descent: 0em,
-      margin: (top: 2em, bottom: 1.25em, x: 1.5em),
+      header-ascent: 0pt,
+      footer-descent: 0pt,
     ),
     config-info(
       title: title,
@@ -487,7 +727,11 @@
       location: location,
     ),
     config-common(
-      new-section-slide-fn: new-section-slide,
+      new-section-slide-fn: if section-slide != auto {
+        section-slide
+      } else {
+        new-section-slide
+      },
       show-bibliography-as-footnote: bib,
       handout: handout,
       show-notes-on-second-screen: notes,
@@ -498,11 +742,27 @@
       init: (self: none, body) => {
         set std.align(align)
         set text(size: opts.size)
-        set list(marker: text(size: 1.25em, baseline: -0.075em, fill: self.colors.primary, sym.triangle.filled.r))
+
+        show heading: set text(fill: self.colors.primary)
+
+        set list(
+            marker: depth => [
+              #let msize = (1-depth/5) * 1em  //scale symbol with depth
+              #text(
+                baseline: (msize - 1em)/2,  //center the symbol vertically 
+                size: msize,
+                fill: self.colors.primary,
+                sym.triangle.filled.r,
+              )
+            ],
+        )
+
         show figure.caption: set text(size: 0.6em)
+        show figure.where(kind: table): set figure.caption(position: top)
+
         show footnote.entry: set text(size: 0.6em)
         set footnote.entry(gap: 0.2em)
-        show heading: set text(fill: self.colors.primary)
+
         show link: it => if type(it.dest) == str {
           set text(fill: self.colors.primary)
           it
@@ -512,12 +772,7 @@
 
         show strong: self.methods.alert.with(self: self)
 
-        show quote: it => slides-quote(it, self.store.quotes)
-
-        show bibliography: set text(size: 15pt)
-        show bibliography: set par(spacing: 0.5em, leading: 0.4em)
-
-        show figure.where(kind: table): set figure.caption(position: top)
+        show raw: set text(font: "Source Code Pro")
 
         body
       },
@@ -530,7 +785,7 @@
       alpha: 20%,
       heading: self => utils.display-current-heading(depth: self.slide-level),
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
-      header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading)),
+      header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading), progressAnimation: progressAnimation),
       footer: self => (footer.slides)(
         author: if authors-short == none {
           if type(authors) != array {authors} else {authors.at(0)}
@@ -540,8 +795,8 @@
         title: if type(title) != array { title } else { title.at(1) },
         date: date,
         pagenum: utils.call-or-display(self, self.store.footer-pagenum),
+        progressAnimation: progressAnimation,
       ),
-      quotes: ("« ", " »"),
     ),
   )
   body

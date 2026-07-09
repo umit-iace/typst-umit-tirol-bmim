@@ -1,15 +1,23 @@
-#import "@preview/touying:0.7.3": *
-#import "/src/lib.typ" as bmim: example, tip, hint
+#import "./preamble.typ": *
 
 #show: bmim.slides(
-  title: ("Control design stratgies for better results",
-  "Control it better"),
-  subtitle: "Reactions are bad",
+  title: (
+    "Control design strategies for better results",
+    "Control it better"
+  ),
+  subtitle: "Because reactions are bad",
   lang: "en",
-  conference: "94th Conference of Applied Mathematics and Health Care",
-  institution: "Institut für Automatisierungs und Regelungstechnik\n UMIT TIROL, Hall in Tirol, Österreich",
+  conference: "94th Conference of Applied Mathematics and Slide Care",
+  institution: (
+    [$zwj^(1)$Institut für Automatisierungs und Regelungstechnik, UMIT TIROL, Hall in Tirol, Österreich],
+    [$zwj^(2)$Institut für Mechatronik, Universität Innsbruck, Innsbruck, Österreich],
+  ),
   location: "Irgendwo",
-  authors: ([John Doel], [Jane Doe$zwj^(star)$], [Max Mustermann]),
+  authors: (
+    [#text(weight: "bold", size: 1.05em)[Jane Doe$zwj^(1)$]],
+    [John Doel$zwj^(2)$],
+    [Max Mustermann$zwj^(1)$]
+  ),
   authors-short: [Doel et al.],
   date: datetime(day: 1, month: 3, year: 2024),
   bib: bibliography(title: none, "sources.bib"),
@@ -27,7 +35,7 @@ A slide with a motivation.
 
 #lorem(50)
 
-#bmim.outline-slide(title: "")
+#bmim.outline-slide(title: "Contents")
 
 = Modeling
 
@@ -70,15 +78,14 @@ green)[highlighted in green]. This is #highlight(fill: red)[highlighted in red].
   + You won't see it unless you use `config-common(show-notes-on-second-screen: right)`
 ]
 
-== Admonitions
-
-A slide with admonitions
-
-#example[Test]
-
-#hint[Test]
-
 == References
 
 #magic.bibliography(title: none)
 
+#show: appendix
+
+= Appendix <touying:unoutlined>
+
+== Appendix Slide
+
+This slide contains additional content.

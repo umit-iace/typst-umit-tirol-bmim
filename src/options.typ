@@ -2,17 +2,19 @@
 #import "data.typ": *
 
 #let options = state("bmim-options", (
-  theme: color-theme.blue,
+  theme: color-theme.cd26,
   lang: "de", // "de", "en"
   spell: i18n.de,
-  logo-with-text: false,
+  logo-with-text: true,
   show-solution: none, // none, "inline", "bottom"
   task-show: (..args) => {},
-  task-show-points: true,
+  task-show-points: false,
   task-wrap-counter: none,
-  font: ("New Computer Modern",),
-  size: 12pt,
+  font: ("Source Serif 4",),
+  size: 11pt,
   logo: auto, // none, auto, (left: // , right: //)
+  titleblock: auto, // none, auto, function
+  oneside: true
 ))
 
 #let option-set(dict) = {
