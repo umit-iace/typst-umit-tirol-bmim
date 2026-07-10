@@ -61,12 +61,9 @@ jobs:
       - name: Build Examples
         run: |
           mkdir -p build_output
-          for file in `ls example/*.typ`; do
-            ex=${file##*/}
-            pdf=${ex%typ}pdf
-            typst c ${file} --root ./
-            mv ${file%typ}pdf build_output/bmim-${pdf}
-          done
+          cd scripts/
+          ./build_examples.sh
+          for f in ../example/*.pdf; do mv "$f" "../build_output/bmim-$(basename "$f").pdf"; done
 
       - name: Upload Artifacts
         id: deployment
