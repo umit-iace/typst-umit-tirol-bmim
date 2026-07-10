@@ -42,19 +42,6 @@ Create a new typst project based on this template locally.
 
 Or create a project on the typst web app based on this template.
 
-## Fonts
-
-Several fonts are used:
-- Source Sans 3 for text in slides
-- Source Serif 4 for body text
-- Source Code Pro for code
-- Bitstream Vera Sans for text in letter
-
-To install these under arch linux:
-  ```bash
-  % yay -S adobe-source-sans-fonts adobe-source-serif-fonts adobe-source-code-pro-fonts otf-xcharter-math ttf-bitstream-vera
-  ```
-
 ### Compile (and watch) example
 
 ```bash
@@ -73,6 +60,19 @@ This will watch your file and recompile it to a pdf when the file is saved.
 
 - Store the package in `~/.local/share/typst/packages/local/ratsch-bmim/0.4.0`
 - Import from it with `#import "@local/ratsch-bmim:0.4.0": *`
+
+## Fonts
+
+Several fonts are used:
+- Source Sans 3 for text in slides
+- Source Serif 4 for body text
+- Source Code Pro for code
+- Bitstream Vera Sans for text in letter
+
+To install these under arch linux:
+  ```bash
+  % yay -S adobe-source-sans-fonts adobe-source-serif-fonts adobe-source-code-pro-fonts otf-xcharter-math ttf-bitstream-vera
+  ```
 
 ## License
 
