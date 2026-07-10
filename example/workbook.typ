@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: task, hint
+#import "./preamble.typ": *
 
 #show: bmim.workbook(
   course: [Vorlesung],

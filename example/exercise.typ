@@ -1,11 +1,12 @@
-#import "/src/lib.typ" as bmim: task
+#import "./preamble.typ": *
 
 #show: bmim.exercise(
   title: "Übung 1",
-  course: ([Vorlesung],[VL]),
+  course: ([VO Vertiefende Konzepte der Vorlesungstechnik],[VKV]),
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   show-solution: "inline",
   lang: "de",
+  date: none,
 )
 
 #set math.equation(numbering: "(1.1)")
@@ -23,7 +24,7 @@
     points: 10,
     label: <task:sub1>,
     description: [
-      Geben Sie eine Realisierung der Übertragungsfunktion in
+      Geben Sie eine Realisierung der _Übertragungsfunktion_ in
       Regelungsnormalform an.
     ],
     solution: [
@@ -39,7 +40,7 @@
     label: <task:sub2>,
     description: [
       Ist die interne Dynamik des Systems stabil?
-      Begründen Sie Ihre Antwort.
+      *Begründen* Sie Ihre Antwort.
     ],
     solution: [
       Die Eigenwerte der internen Dynamik entsprechen den Zählernullstellen.
@@ -82,6 +83,8 @@
       Der relative Grad des Systems ist eins.
       Dies kann entweder direkt aus der Ausgangsmatrix $c^(sans(upright(T)))=(1,1,1)$ abgelesen werden oder aber durch Differentiation des
       Ausgangs:
+
+      #set math.equation(numbering: none)
       $
         dot(y)(t) & = dot(x)_1(t) + 2 dot(x)_2(t) + dot(x)_3(t) = x_2(t) + 2 x_3(t) + x_2(t) - x_3(t) + u(t) = 2 x_2(t) + x_3(t) + u(t).
       $
@@ -93,6 +96,11 @@
   points: 5,
   description: [ single points task description referencing @task:main and also
   @task:sub1],
-  solution: [ this is how to also reference from solution @task:sub2],
+  solution: [
+    This is how to also reference from solution @task:sub2 and an additional equation
+    $
+      1 + 1 & = 2 thin s
+    $
+  ],
 )
 

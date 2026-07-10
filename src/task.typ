@@ -43,25 +43,26 @@
   }
 ]
 
-#let style-enum(lbl, tasknum, name, points, task) = context [
-  #let opts = options.final()
-  #set enum(numbering: (..n) => context {
-    numbering("1.1.a", ..t-count.get())
+#let style-enum(lbl, tasknum, name, points, task) = context {
+  let opts = options.final()
+  set enum(numbering: (..n) => context {
+    let level = t-count.get().len()
+    if level == 3 {
+      numbering("a)", t-count.get().at(2))
+    } else {
+      numbering("1.1.a", ..t-count.get())
+    }
   })
-  + #lbl#task
-]
+  lbl + enum(task)
+}
 
 #let solution-inline(solution) = {
   block(
     width: 100%,
-    fill: color.red.lighten(0%),
-    inset: 2pt,
+    stroke: 2pt + color.red.lighten(0%),
+    inset: .5em,
     breakable: true,
     block(
-      stroke: 0.5pt,
-      width: 100%,
-      fill: white,
-      inset: 0.3em,
       breakable: true,
     )[
       *Lösung:*
@@ -72,6 +73,9 @@
 }
 
 #let solution-bottom = context [
+  // Fixing the enum formatting for the subtasks and their solution
+  #set enum(numbering: "a)")
+
   = Lösungen <bmim:nonumber>
   #for (num, solution) in t-solutions.final().enumerate(start:0) [
 
@@ -121,17 +125,20 @@
   }
 
   {
+    // Fixing the enum formatting for the subtasks and their solution
+    set enum(numbering: "a)")
     let tasknum = t-points.get().len()
 
     let points = t-points.final().at(tasknum, default:())
-    let description = if is-super [
-          #args.pos().first()
-
-          #args.pos().slice(1).map(it => {
-            let lbl = if "label" in it [ #t-mark#it.label ]
-            [+ #t-count.step(level:wrap.lvl+2)#lbl #it.description]
-          }).join()
-    ] else { args.named().description }
+    let enumCnt = t-count.step(level:wrap.lvl+2)
+    let description = if is-super {
+      args.pos().first()
+      enumCnt
+      args.pos().slice(1).map(it => {
+        let lbl = if "label" in it [ #t-mark#it.label ]
+        [+ #lbl #it.description #enumCnt]
+      }).join()
+    } else { args.named().description }
 
     // show descriptions
     (opts.task-show)(
@@ -151,8 +158,11 @@
       )
     )}
 
-    let sol-style = if is-super { (it, p) => [+ #it \ #show-points(p) ] }
-                    else { (it, p) => [#it \ #show-points(p) ] }
+    let sol-style = if is-super {
+      (it, p) => [+ #it \ #show-points(p) ]
+    } else {
+      (it, p) => [#it \ #show-points(p) ]
+    }
     let solution = (
       if is-super {
         args.pos().slice(1).map(sub => sub.solution).zip(points)

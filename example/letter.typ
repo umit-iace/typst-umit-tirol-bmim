@@ -1,23 +1,26 @@
-#import "/src/lib.typ" as bmim
+#import "./preamble.typ": *
 
 #show: bmim.letter(
   lang: "de",
-  // lang: "en",
   subject: [Schreiben zur Wiederkehr des PID-Reglers],
   date: datetime.today(),
   location: "Hall in Tirol",
-  recipient-institution: [Maier und Schmidt AG],
-  recipient-pro: [Herrn Dr.],
-  recipient-name: [Joe Mustermann],
-  recipient-address: [Auenweg 3\ 6060 Hall in Tirol],
-  sender-department: none,
-  sender-institute: [Institut für Automatisierungs- und Regelungstechnik],
-  sender-pos: [Universitätsassistent],
-  sender-name: [Dipl.-Ing. Max Doe],
-  sender-tel: "+43(0) 50 8648 5678",
-  sender-fax: none,
-  sender-email: "max.doe@umit-tirol.at",
-  sender-signature: image("test_signature.pdf"),
+  recipient: (
+    institution: [Maier und Schmidt AG],
+    pro: [Herrn Dr.],
+    name: [Joe Mustermann],
+    address: [Auenweg 3\ 6060 Hall in Tirol],
+  ),
+  sender: (
+    department: none,
+    institute: [Institut für Automatisierungs- und Regelungstechnik],
+    pos: [Universitätsassistent],
+    name: [Dipl.-Ing. Max Doe],
+    tel: "+43(0) 50 8648 5678",
+    fax: none,
+    email: "max.doe@umit-tirol.at",
+    signature: image("test_signature.pdf"),
+  )
 )
 
 Sehr geehrte Damen und Herren,
