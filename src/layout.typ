@@ -386,8 +386,6 @@
 )
 
 #let finalblock = (
-  lecture: () => context {
-  },
   letter: (sender) => context {
     let opts = options.final()
 
@@ -525,39 +523,28 @@
       header: context {
         if counter(page).get().first() == 1 {
           pad(
-            top: page.margin.top * 0.3,
             left: -page.margin.left * 0.4,
-            right: -page.margin.left * 0.4,
-            rect(
-              fill: opts.theme.primary,
-              width: 100% + page.margin.left * 0.4,
-              height: 80%,
-            )
-          )
-          pad(
-            top: page.margin.top * 0.3,
-            left: -page.margin.left * 0.4,
+            bottom: -page.margin.top * 0.4,
             grid(
-              columns: (auto, 1fr, auto),
+              columns: (1fr, 1fr),
               grid.cell(
-                pad(
-                  left: page.margin.left * 0.4,
-                  bottom: page.margin.top * 0.12,
-                  image(
-                    "./../assets/logo_iace_white.svg", height: page.margin.top * 0.254
+                align(left,{
+                  pad(
+                    left: page.margin.left * 0.4,
+                    image(
+                      "./../assets/logo_iace_white.svg", height: page.margin.top * 0.508
+                    )
                   )
-                )
+                })
               ),
               grid.cell(
-                banner()
-              ),
-              grid.cell(
-                pad(
-                  bottom: page.margin.top * 0.135,
-                  image(
-                    "./../assets/logo_umit_white_wo.svg", height: page.margin.top * 0.17
+                align(right, {
+                  pad(
+                    image(
+                      "./../assets/logo_umit_white_wo.svg", height: page.margin.top * 0.34
+                    )
                   )
-                )
+                })
               ),
             )
           )
@@ -571,17 +558,16 @@
     set par(spacing: 3em)
 
     [
-      // maybe some time in the distant future ...
-      // #set page(background: box(
-      //   width: 100%, 
-      //   height: 100%, 
-      //   fill: gradient.linear(
-      //     opts.theme.primary, 
-      //     black,
-      //     angle: 90deg
-      //   )
-      // ))
-      // #set text(fill: opts.theme.background)
+      #set page(background: box(
+        width: 100%,
+        height: 100%,
+        fill: gradient.linear(
+          opts.theme.primary,
+          black,
+          angle: 90deg
+        )
+      ))
+      #set text(fill: opts.theme.background)
       #smallcaps[
         #set text(1.5em)
         Skriptum zur Lehrveranstaltung \
