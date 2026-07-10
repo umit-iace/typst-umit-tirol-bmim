@@ -60,10 +60,11 @@ jobs:
 
       - name: Build Examples
         run: |
+          shopt -s extglob
           mkdir -p build_output
           cd scripts/
           ./build_examples.sh
-          for f in ../example/*.pdf; do mv "$f" "../build_output/bmim-$(basename "$f").pdf"; done
+          for f in ../example/!(*test_signature).pdf; do mv "$f" "../build_output/bmim-$(basename "$f")"; done
 
       - name: Upload Artifacts
         id: deployment
