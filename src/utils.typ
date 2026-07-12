@@ -9,20 +9,6 @@
   text(style: "normal")[#body]
 }
 
-#let backmatter(content) = {
-  set heading(numbering: "A.1", supplement: "Anhang")
-  counter(heading).update(0)
-  state("backmatter").update(true)
-  {
-    show heading: none
-    [
-      #pagebreak(to: "odd", weak: true)
-      #heading(numbering: none)[Anhang] <appendix>
-    ]
-  }
-  content
-}
-
 #let page-is-chap-start() = query(heading.where(level: 1))
   .map(it => it.location().page())
   .contains(here().page())
@@ -44,21 +30,25 @@
   }
 }
 
-#let frontmatter(content) = {
-  set heading(numbering: none, bookmarked: true, outlined: false)
-  set page(numbering: "i")
-  content
-}
-#let mainmatter(content) = context {
-  let opts = options.final()
-  {
-    set page(header: none, numbering: none)
-    pagebreak(to: "odd", weak:true)
+#let headings-on-odd-page(it) = {
+  show heading.where(level: 1): it => {
+    pagebreak(to: "odd")
+    it
   }
-  set heading(numbering: "1.1", bookmarked: auto, outlined: true)
-  show heading.where(level: 1): set heading(supplement: opts.spell.chap)
-  set page(numbering: "1")
-  counter(page).update(1)
+  it
+}
+
+#let backmatter(content) = {
+  set heading(numbering: "A.1", supplement: "Anhang")
+  counter(heading).update(0)
+  state("backmatter").update(true)
+  {
+    show heading: none
+    [
+      #pagebreak(to: "odd", weak: true)
+      #heading(numbering: none)[Anhang] <appendix>
+    ]
+  }
   content
 }
 

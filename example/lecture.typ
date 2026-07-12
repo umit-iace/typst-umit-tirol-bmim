@@ -12,6 +12,8 @@
 #import cosmos.clouds: *
 #show: show-theorion
 
+#set math.equation(numbering: "(1.1)")
+
 = Ein Kapitel
 
 #lorem(100)
@@ -20,6 +22,13 @@
 
 === Ein Unterabschnitt
 
+Eine Abbildung sieht so aus wie @abb
+
+#figure(
+  rect(width: 80%, height: 10%, fill: green)[],
+  caption: [Grünes Rechteck.],
+)<abb>
+
 #lorem(50)
 
 ==== Ein Untertunterabschnitt
@@ -27,6 +36,12 @@
 #lorem(50)
 
 ===== Ein Absatz
+
+Hier ist eine numerierte Gleichung
+$
+  1 + 1 = 2
+$<eqn>
+
 #lorem(100)
 
 ===== Ein anderer Absatz
@@ -34,9 +49,22 @@
 
 ==== Noch ein Untertunterabschnitt
 
+Die Gleichung @eqn wird hier referenziert.
+
 #lorem(150)
 
 === Noch ein Unterabschnitt
+
+Eine Tabelle sieht so aus wie @tab.
+
+#figure(
+  caption: [Ergebnisse.],
+  table(
+    columns: 4,
+    [t], [1], [2], [3],
+    [y], [0.3s], [0.4s], [0.8s],
+  ),
+)<tab>
 
 #lorem(50)
 

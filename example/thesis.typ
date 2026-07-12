@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: frontmatter, mainmatter, backmatter
+#import "./preamble.typ": *
 
 #show: bmim.thesis(
   program: "Master",
@@ -37,38 +37,102 @@
   ),
 )
 
-= Kurzfassung
+#set math.equation(numbering: "(1.1)")
 
-#lorem(40)
+= Kapitel 1
 
-= Abstract
+== 1. Abschnitt
 
-#lorem(40)
+#lorem(150)
 
-#show: frontmatter
+== Abschnitt 2
 
-#show: mainmatter
+Eine Abbildung sieht so aus wie @abb.
 
-= Modellierung
+#figure(
+  rect(width: 80%, height: 10%, fill: green)[],
+  caption: [Grünes Rechteck.],
+)<abb>
 
-#lorem(40)
+#lorem(150)
+
+=== Unterabschnitt 1
+
+#lorem(150)
+
+This is a numbered equation
+
+$
+  1 + 1 & = 0
+$<eqn>
+
+
+= Kapitel 2
+
+== Abschnitt 1
+
+Die Gleichung @eqn wird hier referenziert.
+
+#lorem(100)
+
+== Abschnitt 2
+
+Eine Tabelle sieht so aus wie @tab.
+
+#figure(
+  caption: [Ergebnisse.],
+  table(
+    columns: 4,
+    [t], [1], [2], [3],
+    [y], [0.3s], [0.4s], [0.8s],
+  ),
+)<tab>
+
+#lorem(200)
+
+=== Unterabschnitt 1
+
+#lorem(200)
+@netwok2020
+
+==== Unterunterabschnitt 1
+
+#lorem(200)
+
+== Abschnitt 3
+
+#lorem(200)
 
 #show: backmatter
 
-= Appendix
+= Details
 
-#lorem(40)
+#lorem(100)
+
+
+== Mehr Details
+
+Wir haben den Beweis:
+#proof[
+  #lorem(150)
+]
+
+#lorem(100)
+
+== Andere Details
+
+#lorem(500)
 
 #show outline: set heading(outlined:true)
 #set heading(numbering: none)
 
 #outline(
-  title: [List of Figures],
+  title: [Abbildungsverzeichnis],
   target: std.figure.where(kind: image, outlined: true),
 )
 
 #outline(
-  title:[List of Tables],
+  title:[Tabellenverzeichnis],
   target: std.figure.where(kind: table, outlined: true),
 )
 

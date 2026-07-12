@@ -135,30 +135,30 @@
   lecture: context {
     set par(spacing: 0.5em)
 
-    if page-is-chap-start() {
-      none
+    if page-is-chap-start() { return }
+    let chapter = query(selector(heading.where(level: 1)).before(here()))
+    if chapter.len() == 0 { return }
+    let sub = query(selector(heading.where(level: 2)).after(chapter.last().location()))
+    sub = sub.filter(el => el.location().page() <= here().page())
+
+    if calc.even(here().page()) {
+      if chapter.len() == 0 { return }
+      let cnt = counter(heading).at(here())
+      let nbr = chapter.last().numbering
+      if nbr != none { numbering(nbr, cnt.first())+[.~]+h(0.5em)}
+      chapter.last().body
+      h(1fr)
+      line(length: 100%, stroke: 0.25mm)
     } else {
-      let page-num = here().page()
-      let before = query(heading).filter(h => h.location().page() <= page-num)
-
-      let chapters = before.filter(h => h.level == 1)
-      let sections = before.filter(h => h.level == 2)
-      let sec = sections.last()
-      let chapNum = numbering(chapters.last().numbering, counter(heading).at(sec.location()).at(0))
-      let secNum = counter(heading).at(sec.location()).enumerate().map(((idx, cnt)) => if idx == 0 {chapNum} else {str(cnt)}).join(".")
-
-      if calc.even(here().page()) {
-        if chapters == () {
-          return
-        }
-        let chapT = chapters.last().body
-        [#chapNum; #h(1em); #chapT; #h(1fr)]
-      } else {
-        if sections.len() > 0 {
-          let secT = sec.body
-          [#h(1fr); #secNum; #h(1em); #secT]
-        }
+      h(1fr)
+      if sub.len() == 0 { return align(right, get-page-number()) }
+      let this-sub = sub.last()
+      let nbr = this-sub.numbering
+      if nbr != none {
+        let cnt = counter(heading).at(this-sub.location())
+        numbering(nbr, ..cnt.slice(0,count:2))+[.~]+h(0.5em)
       }
+      this-sub.body
       line(length: 100%, stroke: 0.25mm)
     }
   },
@@ -226,7 +226,8 @@
     )
   },
   thesis: context {
-    get-page-number(store:"push")
+    set par(spacing: 0.5em)
+
     if page-is-chap-start() { return }
     let chapter = query(selector(heading.where(level: 1)).before(here()))
     if chapter.len() == 0 { return }
@@ -234,28 +235,22 @@
     sub = sub.filter(el => el.location().page() <= here().page())
 
     if calc.even(here().page()) {
-      // even page headers
-      {
-        get-page-number()
-        h(1fr)
-        if chapter.len() == 0 { return }
-        let cnt = counter(heading).at(here())
-        let nbr = chapter.last().numbering
-        if nbr != none { numbering(nbr, cnt.first())+[.~] }
-        smallcaps(chapter.last().body)
-      }
+      if chapter.len() == 0 { return }
+      let cnt = counter(heading).at(here())
+      let nbr = chapter.last().numbering
+      if nbr != none { numbering(nbr, cnt.first())+[.~]+h(0.5em)}
+      chapter.last().body
+      h(1fr)
     } else {
-      // odd page headers
-      if sub.len() == 0 { return align(right, get-page-number()) }
+      h(1fr)
       let this-sub = sub.last()
       let nbr = this-sub.numbering
       if nbr != none {
         let cnt = counter(heading).at(this-sub.location())
-        numbering(nbr, ..cnt.slice(0,count:2))+[.~] }
-        smallcaps(this-sub.body)
-        h(1fr)
-        get-page-number()
+        numbering(nbr, ..cnt.slice(0,count:2))+[.~]+h(0.5em)
       }
+      this-sub.body
+    }
   },
   workbook: context {
     if page-is-chap-start() {
@@ -408,8 +403,19 @@
     )
   },
   thesis: context {
-    if not page-is-chap-start() { return }
-    align(right, get-page-number(store:"get"))
+    let opts = options.final()
+    set text(size: 0.8em)
+    set par(spacing: 0.5em)
+    let pagenum = counter(page).display("1")
+    if opts.oneside {
+        h(1fr); pagenum
+    } else {
+      if calc.odd(here().page()) {
+        h(1fr); pagenum
+      } else {
+        pagenum; h(1fr)
+      }
+    }
   },
   workbook: (course) => context {
     let opts = options.final()
@@ -422,6 +428,43 @@
 )
 
 #let finalblock = (
+  thesis: (author, university) => context {
+    set page(numbering: none)
+    set heading(numbering: none, outlined: false, bookmarked: false)
+    [
+      = Verpflichtungs- und\ Einverständniserklärung
+
+      Ich erkläre hiermit an Eides statt durch meine eigenhändige Unterschrift,
+      dass ich die vorliegende Arbeit selbständig verfasst und keine anderen als
+      die angegebenen Quellen und Hilfsmittel verwendet habe. Alle Stellen, die
+      wörtlich oder inhaltlich den angegebenen Quellen entnommen wurden, sind
+      als solche kenntlich gemacht.
+
+      Die vorliegende Arbeit wurde bisher in gleicher oder ähnlicher Form noch
+      nicht als wissenschaftliche Arbeit eingereicht.
+
+      #v(3em)
+      #grid(
+        columns:(35%, 15%, 50%),
+        [
+          #if university == "LFUI" [
+            Innsbruck
+          ] else if university == "UMIT" [
+            Hall in Tirol
+          ] else {
+            panic("The used university is not implemented yet!")
+          }
+          am #box(width:1fr, repeat(gap:0.5em)[.])
+        ],
+        [],
+        [
+          #set align(right)
+          #box(width:1fr, repeat(gap:0.5em)[.])\
+          #author
+        ]
+      )
+    ]
+  },
   letter: (sender) => context {
     let opts = options.final()
 
@@ -720,18 +763,117 @@
         })
     )
   },
-  // place(
-  //   top, float: true, scope: "parent",
-  //   block(inset: (top: 2em, bottom: 1em), {
-  //     set par(spacing: 1em)
-  //     // let w = measure(title).width
-  //     // line(length: w+0.5em, stroke: 1pt)
-  //     args.authors.join(", ")
-  //     // line(length: w+0.5em, stroke: 3pt)
-  //
-  //   })
-  // ),
   slides: () => context {},
+  thesis: (program, university, study, title, subtitle, author, date, advisor) => context {
+    let opts = options.final()
+    let degree = if program == "Bachelor" [Bachelor of Science] else if program == "Master" [Diplomingenieur]
+    let work = if program == "Bachelor" [Bachelorarbeit] else if program == "Master" [Masterarbeit]
+    pad(left: 10mm, {
+      set text(12pt)
+      let large(content) = text(12pt, content)
+      let Large(content) = text(14pt, content)
+      let LARGE(content) = text(17pt, content)
+      let bigskip = v(12pt)
+      let smallskip = v(3pt)
+      v(1em - 27mm)
+      // logo
+      {
+        set text(11.3pt, font: "Nimbus Sans")
+        if university =="LFUI" [
+          #set text(fill: cmyk(0%,0%,0%,90%))
+          #pad(left: -14.6mm, image("./../assets/logo_lfui.svg", width:75mm))
+          Fakultät für Technische\ Wissenschaften
+        ] else {
+          set text(fill: rgb(0, 0, 0))
+          if opts.lang == "de" {
+            image("./../assets/logo_umit_blue_gr.svg", width: 75mm)
+            [Department für Biomedizinische Informatik und Mechatronik]
+          }
+          else {
+            image("./../assets/logo_umit_blue_en.svg", width: 75mm)
+            [Department for Biomedical Informatics and Mechatronics]
+          }
+        }
+      }
+      // text
+      bigskip
+      block(height: 3cm, above:1.25cm, {
+        title
+        Large(subtitle)
+      })
+      bigskip
+      par(text(1.1em, author))
+      bigskip
+      large[
+        #if university == "LFUI" [
+          Innsbruck
+        ] else if university == "UMIT" [
+          Hall in Tirol
+        ] else {
+          panic("The used university is not implemented yet!")
+        }
+      ]
+
+    // align the rest to bottom
+      v(1fr)
+      par(Large(work))
+      bigskip
+      par[
+        verfasst im Rahmen eines gemeinsamen #if program == "Bachelor" [
+          Bachelorstudienprogramms
+        ] else if program == "Master" [
+          Masterstudienprogramms
+        ] else {panic("what")}
+        von LFUI und UMIT TIROL -- Joint Degree Programme
+      ]
+      bigskip
+      par[
+        eingereicht an der
+        #if university == "LFUI" [
+          Leopold-Franzens-Universität Innsbruck,\
+          Fakultät für Technische Wissenschaften \
+        ] else if university == "UMIT" [
+          UMIT TIROL – Private Universität für Gesundheitswissenschaften,
+          Medizinische Informatik und Technik,\
+          Department für Biomedizinische Informatik und Mechatronik \
+        ] else {
+          panic("The used university is not implemented yet!")
+        }
+        zur Erlangung
+        des akademischen Grades
+      ]
+      bigskip
+      par(Large(degree))
+      bigskip
+
+      bigskip
+      par[Beurteiler:]
+      smallskip
+      let adv = advisor.at(0)
+      adv.name
+      smallskip
+      adv.department
+      linebreak()
+      adv.unit
+    })
+    { // advisors
+      pagebreak(to: "odd")
+      v(1fr)
+      let adv = advisor.at(0)
+      let z= h(0pt, weak:true)
+      grid(
+        columns:(1fr, 3.2fr), gutter:1.2em,
+        [Betreuer:],
+        [#adv.name#z,#linebreak() #adv.university#z,#linebreak() #adv.department#z,#linebreak() #adv.unit],
+        ..if advisor.len() > 1 {
+          let adv = advisor.at(1)
+          (align(top,[Mitbetreuer:]),
+          [#adv.name#z,#linebreak() #adv.university#z,#linebreak() #adv.department#z,#linebreak() #adv.unit])
+        }
+      )
+      pagebreak()
+    }
+  },
   workbook: (args) => context {
     let opts = options.final()
     let course = if type(args.course) == array { args.course.at(0) } else { args.course }

@@ -128,7 +128,6 @@
 
   show figure.where(kind: table): set figure.caption(position: top)
   set figure(
-    // placement: top,
     numbering: (..n) => {
       let hdr = counter(heading).get().first()
       let num = query(
@@ -229,6 +228,87 @@
 
   body
 }
+
+#let article(
+  title: none, // str or content
+  subtitle: none,
+  course: none, // either [Course Name] , or ([Course Name], [Short Course Name])
+  authors: none, // array of str or content
+  date: datetime.today(), // datetime or content
+  ..chosen, // other options: theme, logo-with-text, size, lang, etc
+) = { body => context {
+  option-set(
+    chosen.named()
+    + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
+  )
+  show: bmim-common
+  // overwrite defaults
+  set page(
+    margin: (
+      left: 1.5cm,
+      right: 1.5cm,
+      top: 2.5cm,
+      bottom: 1.5cm,
+    ),
+    columns: 2,
+    header: header.article,
+    footer: (footer.article)(),
+  )
+  set par(
+    justify: true,
+    first-line-indent: 1.5em,
+    leading: .5em,
+    spacing: .6em,
+  )
+
+  set heading(numbering: "1.1") // numbered
+  // level 1 headings are bigger
+  show heading.where(level: 1): it => {
+    // set align(center)
+    text(weight: "medium", style: "normal", size: 1.1em)[
+      #it
+    ]
+  }
+  // level 2 headings are light and in italic
+  show heading.where(level: 2): set text( 
+      weight: "light",
+      style: "oblique",
+      size: 0.9em,
+  )
+  // level 3 headings are inline
+  show heading.where(level: 3): it => box(
+    text(
+      weight: "semibold",
+      size: 1em,
+    )[
+      #it.body.
+    ]
+  )
+
+  show figure.caption: set text(size: 0.9em)
+
+  set enum(full: true, numbering: "a)")
+
+  context {
+    let opts = options.final()
+    let tbArgs = (
+      title: title,
+      subtitle: subtitle,
+      authors: authors,
+      date: date,
+      lang: opts.lang,
+      spell: opts.spell,
+    )
+    let tb = if type(options.final().titleblock) == function {
+      (options.final().titleblock)(tbArgs)
+    } else if options.final().titleblock == auto {
+      (titleblock.article)(tbArgs)
+    }
+    tb
+  }
+
+  body
+}}
 
 #let exam(
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
@@ -358,59 +438,6 @@
   }
 }}
 
-#let report(
-  title: none, // either [Title] , or ([Topic], [Title])
-  course: none, // [Course Name] or ([Course Name], [Short Course Name])
-  authors: none, // array of str or content
-  date: datetime.today(), // datetime or content
-  show-solution: none, // none, "inline", "bottom"
-  ..chosen,
-) = { body => {
-  option-set(
-    (task-show: task.style-enum)
-    + (task-wrap-counter: (counter(heading), 1))
-    + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
-    + (show-solution: show-solution)
-    + chosen.named()
-  )
-  show: bmim-common
-  show ref: task.show-ref
-
-  set std.page(
-    header: header.report,
-    footer: (footer.report)(course, title),
-  )
-
-  set heading(numbering: "1.")
-  show heading.where(level: 1): heading-colored
-
-  context {
-    let opts = options.final()
-    let tbArgs = (
-      course: course,
-      title: title,
-      authors: authors,
-      date: date,
-      lang: opts.lang,
-      spell: opts.spell,
-      show-solution: opts.show-solution,
-    )
-    let tb = if type(options.final().titleblock) == function {
-      (options.final().titleblock)(tbArgs)
-    } else if options.final().titleblock == auto {
-      (titleblock.report)(tbArgs)
-    }
-    tb
-  }
-
-  body
-
-  if show-solution == "bottom" {
-    pagebreak(weak:true)
-    task.solution-bottom
-  }
-}}
-
 #let lecture(
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
@@ -447,13 +474,6 @@
   )
 
   set outline(depth: 3)
-  let headings-on-odd-page(it) = {
-    show heading.where(level: 1): it => {
-      pagebreak(to: "odd")
-      it
-    }
-    it
-  }
   set heading(numbering: "1.1")
   show heading: it => {
     // Clever trick to reduce spacing between consecutive headings
@@ -632,86 +652,57 @@
   body
 }}
 
-#let article(
-  title: none, // str or content
-  subtitle: none,
-  course: none, // either [Course Name] , or ([Course Name], [Short Course Name])
+#let report(
+  title: none, // either [Title] , or ([Topic], [Title])
+  course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
-  ..chosen, // other options: theme, logo-with-text, size, lang, etc
-) = { body => context {
+  show-solution: none, // none, "inline", "bottom"
+  ..chosen,
+) = { body => {
   option-set(
-    chosen.named()
+    (task-show: task.style-enum)
+    + (task-wrap-counter: (counter(heading), 1))
     + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
+    + (show-solution: show-solution)
+    + chosen.named()
   )
   show: bmim-common
-  // overwrite defaults
-  set page(
-    margin: (
-      left: 1.5cm,
-      right: 1.5cm,
-      top: 2.5cm,
-      bottom: 1.5cm,
-    ),
-    columns: 2,
-    header: header.article,
-    footer: (footer.article)(),
-  )
-  set par(
-    justify: true,
-    first-line-indent: 1.5em,
-    leading: .5em,
-    spacing: .6em,
+  show ref: task.show-ref
+
+  set std.page(
+    header: header.report,
+    footer: (footer.report)(course, title),
   )
 
-  set heading(numbering: "1.1") // numbered
-  // level 1 headings are bigger
-  show heading.where(level: 1): it => {
-    // set align(center)
-    text(weight: "medium", style: "normal", size: 1.1em)[
-      #it
-    ]
-  }
-  // level 2 headings are light and in italic
-  show heading.where(level: 2): set text( 
-      weight: "light",
-      style: "oblique",
-      size: 0.9em,
-  )
-  // level 3 headings are inline
-  show heading.where(level: 3): it => box(
-    text(
-      weight: "semibold",
-      // style: "oblique",
-      size: 1em, 
-    )[
-      #it.body.
-    ]
-  )
-
-  show figure.caption: set text(size: 0.9em)
-
-  set enum(full: true, numbering: "a)")
+  set heading(numbering: "1.")
+  show heading.where(level: 1): heading-colored
 
   context {
     let opts = options.final()
     let tbArgs = (
+      course: course,
       title: title,
-      subtitle: subtitle,
       authors: authors,
       date: date,
       lang: opts.lang,
       spell: opts.spell,
+      show-solution: opts.show-solution,
     )
     let tb = if type(options.final().titleblock) == function {
       (options.final().titleblock)(tbArgs)
     } else if options.final().titleblock == auto {
-      (titleblock.article)(tbArgs)
+      (titleblock.report)(tbArgs)
     }
     tb
   }
 
   body
+
+  if show-solution == "bottom" {
+    pagebreak(weak:true)
+    task.solution-bottom
+  }
 }}
 
 #let thesis(
@@ -729,27 +720,96 @@
     department: [Department],
     unit: [Working Group],
   ),),
-  size: 11pt,
+  abstract: (
+    english: [Short Abstract],
+    german: [Kurzfassung],
+  ),
+  oneside: false, // false, true
   ..chosen,
 ) = { body => {
   option-set(
-    (size: size)
+    (oneside: oneside)
+    + chosen.named()
   )
-  show: bmim-thesis
+  show: bmim-common
 
-  set document(
-    title: title,
-    author: author.text,
+  set page(
+    "a4",
+    margin: (
+      left: 37.125mm,
+      right: 37.125mm,
+      bottom: 35.5mm,
+      top: 37.5mm,
+    ),
   )
+
+  (titleblock.thesis)(program, university, study, title, subtitle, author, date, advisor)
 
   set std.page(
     header: header.thesis,
     footer: footer.thesis,
   )
 
-  (titleblock.thesis)(program, university, study, title, subtitle, author, date, advisor)
+  set outline(depth: 3)
+  set heading(numbering: "1.1")
+  show heading: it => {
+    // Clever trick to reduce spacing between consecutive headings
+    // See https://github.com/typst/typst/issues/2953
+    let previous_headings = query(selector(heading).before(here(),
+      inclusive: false))
+    if previous_headings.len() > 0 {
+      let prev_loc = previous_headings.last().location().position()
+      let it_loc = it.location().position()
+      if (it_loc.page == prev_loc.page
+        and it_loc.x == prev_loc.x
+        and it_loc.y - prev_loc.y < 60pt) { // threshold
+        // amount to reduce spacing, could make this dependent on it.level
+        v(-0.3em)
+      }
+      else {}
+    }
+    [#it #v(0.2em)]
+  }
+  show heading.where(level:1): it => context {
+    let apx = query(<appendix>).any(e => e == it)
+    if apx {
+      return
+    }
+    set text(weight: "regular")
+    set block(inset: (y: 2em))
+    show: strong
+    show: block
+    if it.numbering == none { it.body; return }
+    let n(..c) = numbering(it.numbering, ..c)
+    [
+      #set text(1.3em)
+      #if state("backmatter").get() != none [
+        Anhang #n(..counter(heading).get())
+      ] else [
+        Kapitel #n(..counter(heading).get())
+      ]
+      #v(1em)
+      #set text(1.5em)
+      #it.body
+    ]
+  }
+  show heading.where(level:2): set text(size: 1.4em)
+  show heading.where(level:3): set text(size: 1.2em)
+  show heading.where(level:4): set text(size: 1.1em)
+  show heading.where(level:5): it => text(
+    weight: 700,
+    it.body) + [.]
 
-  outline()
+  [
+    #set page(numbering: "i")
+    #heading(numbering: none, outlined: true)[Inhaltsverzeichnis]
+    #outline(title: none)
+    #pagebreak(to: "odd", weak: true)
+  ]
+  set page(numbering: "1")
+  counter(page).update(1)
+
+  show: headings-on-odd-page
 
   body
 
