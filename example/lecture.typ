@@ -5,6 +5,7 @@
   course: ("Vorlesung", "VL"),
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   date: datetime(day: 1, month: 3, year: 2024),
+  oneside: false,
 )
 
 // various environments
@@ -13,6 +14,22 @@
 #show: show-theorion
 
 #set math.equation(numbering: "(1.1)")
+
+#heading(numbering: none, outlined: true)[Abbildungsverzeichnis]
+#outline(
+  title: none,
+  target: std.figure.where(kind: image, outlined: true),
+)
+
+#heading(numbering: none, outlined: true)[Tabellenverzeichnis]
+#outline(
+  title: none,
+  target: std.figure.where(kind: table, outlined: true),
+)
+
+#pagebreak(to: "odd", weak: true)
+
+#show: mainmatter
 
 = Ein Kapitel
 

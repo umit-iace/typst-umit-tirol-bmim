@@ -39,6 +39,8 @@
 
 #set math.equation(numbering: "(1.1)")
 
+#show: mainmatter
+
 = Kapitel 1
 
 == 1. Abschnitt
@@ -92,16 +94,16 @@ Eine Tabelle sieht so aus wie @tab.
 
 === Unterabschnitt 1
 
-#lorem(200)
+#lorem(300)
 @netwok2020
 
 ==== Unterunterabschnitt 1
 
-#lorem(200)
+#lorem(400)
 
 == Abschnitt 3
 
-#lorem(200)
+#lorem(500)
 
 #show: backmatter
 
@@ -117,7 +119,7 @@ Wir haben den Beweis:
   #lorem(150)
 ]
 
-#lorem(100)
+#lorem(300)
 
 == Andere Details
 

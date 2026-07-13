@@ -133,6 +133,7 @@
   exam: header-colored(),
   exercise: header-colored(),
   lecture: context {
+    let opts = options.final()
     set par(spacing: 0.5em)
 
     if page-is-chap-start() { return }
@@ -141,25 +142,43 @@
     let sub = query(selector(heading.where(level: 2)).after(chapter.last().location()))
     sub = sub.filter(el => el.location().page() <= here().page())
 
-    if calc.even(here().page()) {
-      if chapter.len() == 0 { return }
-      let cnt = counter(heading).at(here())
-      let nbr = chapter.last().numbering
-      if nbr != none { numbering(nbr, cnt.first())+[.~]+h(0.5em)}
-      chapter.last().body
-      h(1fr)
-      line(length: 100%, stroke: 0.25mm)
+    if opts.oneside {
+        if chapter.len() == 0 { return }
+        let chap-cnt = counter(heading).at(here())
+        let chap-nbr = chapter.last().numbering
+        if chap-nbr != none { numbering(chap-nbr, chap-cnt.first())+[.~]+h(0.5em)}
+        chapter.last().body; h(1fr);
+
+        if sub.len() == 0 { return }
+        let this-sub = sub.last()
+        let sub-nbr = this-sub.numbering
+        if sub-nbr != none {
+          let cnt = counter(heading).at(this-sub.location())
+          numbering(sub-nbr, ..cnt.slice(0,count:2))+[.~]+h(0.5em)
+        }
+        this-sub.body
+        line(length: 100%, stroke: 0.25mm)
     } else {
-      h(1fr)
-      if sub.len() == 0 { return align(right, get-page-number()) }
-      let this-sub = sub.last()
-      let nbr = this-sub.numbering
-      if nbr != none {
-        let cnt = counter(heading).at(this-sub.location())
-        numbering(nbr, ..cnt.slice(0,count:2))+[.~]+h(0.5em)
+      if calc.even(here().page()) {
+        if chapter.len() == 0 { return }
+        let cnt = counter(heading).at(here())
+        let nbr = chapter.last().numbering
+        if nbr != none { numbering(nbr, cnt.first())+[.~]+h(0.5em)}
+        chapter.last().body
+        h(1fr)
+        line(length: 100%, stroke: 0.25mm)
+      } else {
+        h(1fr)
+        if sub.len() == 0 { return }
+        let this-sub = sub.last()
+        let nbr = this-sub.numbering
+        if nbr != none {
+          let cnt = counter(heading).at(this-sub.location())
+          numbering(nbr, ..cnt.slice(0,count:2))+[.~]+h(0.5em)
+        }
+        this-sub.body
+        line(length: 100%, stroke: 0.25mm)
       }
-      this-sub.body
-      line(length: 100%, stroke: 0.25mm)
     }
   },
   letter: () => context {
@@ -243,6 +262,7 @@
       h(1fr)
     } else {
       h(1fr)
+      if sub.len() == 0 { return }
       let this-sub = sub.last()
       let nbr = this-sub.numbering
       if nbr != none {

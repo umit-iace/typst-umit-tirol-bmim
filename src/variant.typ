@@ -521,24 +521,23 @@
   show heading.where(level:4): set text(size: 1.1em)
   show heading.where(level:5): it => text(
     weight: 700,
-    // style: "oblique",
     it.body) + [.]
 
-  [
-    #set page(numbering: "i")
-    #heading(numbering: none, outlined: true)[Inhaltsverzeichnis]
-    #outline(title: none)
-    #pagebreak(to: "odd", weak: true)
-  ]
-  set page(numbering: "1")
-  counter(page).update(1)
-
-  show: headings-on-odd-page
+  show: if oneside {headings-on-next-page } else { headings-on-odd-page }
 
   set std.page(
     header: header.lecture,
     footer: (footer.lecture)(course, date),
   )
+
+  set page(numbering: "i")
+  heading(numbering: none, outlined: true)[Inhaltsverzeichnis]
+  outline(title: none)
+  if oneside {
+    pagebreak(weak: true)
+  } else {
+    pagebreak(to: "odd", weak: true)
+  }
 
   body
 }}

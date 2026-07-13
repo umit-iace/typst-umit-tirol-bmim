@@ -13,29 +13,27 @@
   .map(it => it.location().page())
   .contains(here().page())
 
-#let get-page-number(store:"ignore") = {
-  let _store = state("pgnum", none)
-  if store == "get" {
-    _store.get()
-  } else {
-    let nbr = here().page-numbering()
-    let ret = if nbr == none { nbr } else {
-      numbering(nbr, ..counter(page).get())
-    }
-    if store == "push" {
-      _store.update( ret )
-    } else { //ignore
-      ret
-    }
-  }
-}
-
 #let headings-on-odd-page(it) = {
   show heading.where(level: 1): it => {
     pagebreak(to: "odd")
     it
   }
   it
+}
+
+#let headings-on-next-page(it) = {
+  show heading.where(level: 1): it => {
+    pagebreak()
+    it
+  }
+  it
+}
+
+#let mainmatter(content) = {
+  set page(numbering: "1")
+  counter(page).update(1)
+
+  content
 }
 
 #let backmatter(content) = {

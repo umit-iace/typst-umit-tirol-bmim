@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, abstract, poster-box, translatedMonth
+#import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, mainmatter, backmatter, abstract, poster-box, translatedMonth
 
 // own titleblock
 #let tb(args) = context {
