@@ -35,6 +35,11 @@
       unit: [ Institut für Automatisierungs- und Regelungstechnik ],
     ),
   ),
+  abstract: (
+    english: [#lorem(150)],
+    german: [#lorem(150)],
+  ),
+  oneside: false,
 )
 
 #set math.equation(numbering: "(1.1)")
@@ -128,6 +133,8 @@ Wir haben den Beweis:
 #show outline: set heading(outlined:true)
 #set heading(numbering: none)
 
+
+#state("mainmatter").update(none)
 #outline(
   title: [Abbildungsverzeichnis],
   target: std.figure.where(kind: image, outlined: true),

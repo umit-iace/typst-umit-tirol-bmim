@@ -469,10 +469,6 @@
     tb
   }
 
-  set std.page(
-    footer: (footer.lecture)(course, date),
-  )
-
   set outline(depth: 3)
   set heading(numbering: "1.1")
   show heading: it => {
@@ -522,8 +518,6 @@
   show heading.where(level:5): it => text(
     weight: 700,
     it.body) + [.]
-
-  show: if oneside {headings-on-next-page } else { headings-on-odd-page }
 
   set std.page(
     header: header.lecture,
@@ -744,11 +738,6 @@
 
   (titleblock.thesis)(program, university, study, title, subtitle, author, date, advisor)
 
-  set std.page(
-    header: header.thesis,
-    footer: footer.thesis,
-  )
-
   set outline(depth: 3)
   set heading(numbering: "1.1")
   show heading: it => {
@@ -799,16 +788,36 @@
     weight: 700,
     it.body) + [.]
 
-  [
-    #set page(numbering: "i")
-    #heading(numbering: none, outlined: true)[Inhaltsverzeichnis]
-    #outline(title: none)
-    #pagebreak(to: "odd", weak: true)
-  ]
-  set page(numbering: "1")
-  counter(page).update(1)
+  set std.page(
+    header: header.thesis,
+    footer: footer.thesis,
+  )
 
-  show: headings-on-odd-page
+  set page(numbering: "i")
+
+  heading(numbering: none, outlined: true)[Kurzfassung]
+  abstract.german
+  if oneside {
+    pagebreak(weak: true)
+  } else {
+    pagebreak(to: "odd", weak: true)
+  }
+
+  heading(numbering: none, outlined: true)[Abstract]
+  abstract.english
+  if oneside {
+    pagebreak(weak: true)
+  } else {
+    pagebreak(to: "odd", weak: true)
+  }
+
+  heading(numbering: none, outlined: true)[Inhaltsverzeichnis]
+  outline(title: none)
+  if oneside {
+    pagebreak(weak: true)
+  } else {
+    pagebreak(to: "odd", weak: true)
+  }
 
   body
 
@@ -985,7 +994,7 @@
             marker: depth => [
               #let msize = (1-depth/5) * 1em  //scale symbol with depth
               #text(
-                baseline: (msize - 1em)/2,  //center the symbol vertically 
+                baseline: (msize - 1em)/2,  //center the symbol vertically
                 size: msize,
                 fill: self.colors.primary,
                 sym.triangle.filled.r,

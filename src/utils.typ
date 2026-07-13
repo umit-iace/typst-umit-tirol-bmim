@@ -29,7 +29,12 @@
   it
 }
 
-#let mainmatter(content) = {
+#let mainmatter(content) = context {
+  state("mainmatter").update(true)
+  let opts = options.final()
+
+  show: if opts.oneside {headings-on-next-page } else { headings-on-odd-page }
+
   set page(numbering: "1")
   counter(page).update(1)
 

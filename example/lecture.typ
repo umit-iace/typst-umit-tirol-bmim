@@ -21,6 +21,8 @@
   target: std.figure.where(kind: image, outlined: true),
 )
 
+#pagebreak(to: "odd", weak: true)
+
 #heading(numbering: none, outlined: true)[Tabellenverzeichnis]
 #outline(
   title: none,

@@ -134,6 +134,9 @@
   exercise: header-colored(),
   lecture: context {
     let opts = options.final()
+
+    if state("mainmatter").get() == none {return}
+
     set par(spacing: 0.5em)
 
     if page-is-chap-start() { return }
@@ -245,6 +248,7 @@
     )
   },
   thesis: context {
+    if state("mainmatter").get() == none {return}
     set par(spacing: 0.5em)
 
     if page-is-chap-start() { return }
@@ -426,7 +430,7 @@
     let opts = options.final()
     set text(size: 0.8em)
     set par(spacing: 0.5em)
-    let pagenum = counter(page).display("1")
+    let pagenum = counter(page).display()
     if opts.oneside {
         h(1fr); pagenum
     } else {
@@ -799,26 +803,29 @@
       // logo
       {
         set text(11.3pt, font: "Nimbus Sans")
-        if university =="LFUI" [
-          #set text(fill: cmyk(0%,0%,0%,90%))
-          #pad(left: -14.6mm, image("./../assets/logo_lfui.svg", width:75mm))
-          Fakultät für Technische\ Wissenschaften
-        ] else {
-          set text(fill: rgb(0, 0, 0))
+        if university =="LFUI" {
+          pad(left: -18.5mm, image("./../assets/logo_lfui_color.png", width: 75mm))
+          v(-2em)
+          [Fakultät für Technische\ Wissenschaften]
+        } else {
           if opts.lang == "de" {
-            image("./../assets/logo_umit_blue_gr.svg", width: 75mm)
+            pad(left: -4.4mm, top: 7.5mm, image("./../assets/logo_umit_blue_gr.svg", height: 16.5mm))
+            v(-0.5em)
             [Department für Biomedizinische Informatik und Mechatronik]
+            v(1.3em)
           }
           else {
-            image("./../assets/logo_umit_blue_en.svg", width: 75mm)
+            pad(left: -4.4mm, top: 7.5mm, image("./../assets/logo_umit_blue_en.svg", height: 16.5mm))
+            v(-0.5em)
             [Department for Biomedical Informatics and Mechatronics]
+            v(1.3em)
           }
         }
       }
       // text
       bigskip
       block(height: 3cm, above:1.25cm, {
-        title
+        Large(strong(title))
         Large(subtitle)
       })
       bigskip
@@ -834,7 +841,7 @@
         }
       ]
 
-    // align the rest to bottom
+      // align the rest to bottom
       v(1fr)
       par(Large(work))
       bigskip
@@ -891,8 +898,9 @@
           [#adv.name#z,#linebreak() #adv.university#z,#linebreak() #adv.department#z,#linebreak() #adv.unit])
         }
       )
-      pagebreak()
     }
+    pagebreak(to: "odd", weak: true)
+    counter(page).update(1)
   },
   workbook: (args) => context {
     let opts = options.final()
