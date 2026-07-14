@@ -21,7 +21,7 @@
   target: std.figure.where(kind: image, outlined: true),
 )
 
-#pagebreak(to: "odd", weak: true)
+#pagebreak(weak: true)
 
 #heading(numbering: none, outlined: true)[Tabellenverzeichnis]
 #outline(
@@ -29,7 +29,7 @@
   target: std.figure.where(kind: table, outlined: true),
 )
 
-#pagebreak(to: "odd", weak: true)
+#pagebreak(weak: true)
 
 #show: mainmatter
 
@@ -157,6 +157,14 @@ Für alle Umgebungen wird das `theorion` Paket (https://typst.app/universe/packa
 #lorem(250)
 
 #lorem(250)
+
+== Ein Abschnitt
+
+#lorem(50)
+
+= Ein Kapitel
+
+#lorem(1500)
 
 #show: backmatter
 

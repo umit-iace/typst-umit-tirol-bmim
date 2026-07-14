@@ -135,8 +135,6 @@
   lecture: context {
     let opts = options.final()
 
-    if state("mainmatter").get() == none {return}
-
     set par(spacing: 0.5em)
 
     if page-is-chap-start() { return }
@@ -146,40 +144,45 @@
     sub = sub.filter(el => el.location().page() <= here().page())
 
     if opts.oneside {
-        if chapter.len() == 0 { return }
-        let chap-cnt = counter(heading).at(here())
-        let chap-nbr = chapter.last().numbering
-        if chap-nbr != none { numbering(chap-nbr, chap-cnt.first())+[.~]+h(0.5em)}
-        chapter.last().body; h(1fr);
-
-        if sub.len() == 0 { return }
-        let this-sub = sub.last()
-        let sub-nbr = this-sub.numbering
-        if sub-nbr != none {
-          let cnt = counter(heading).at(this-sub.location())
-          numbering(sub-nbr, ..cnt.slice(0,count:2))+[.~]+h(0.5em)
+        if chapter.len() != 0 {
+          let chap-cnt = counter(heading).at(here())
+          let chap-nbr = chapter.last().numbering
+          if chap-nbr != none { numbering(chap-nbr, chap-cnt.first())+[.~]+h(0.5em)}
+          chapter.last().body
         }
-        this-sub.body
+        h(1fr);
+
+        if sub.len() != 0 {
+          let this-sub = sub.last()
+          let sub-nbr = this-sub.numbering
+          if sub-nbr != none {
+            let cnt = counter(heading).at(this-sub.location())
+            numbering(sub-nbr, ..cnt.slice(0,count:2))+[.~]+h(0.5em)
+          }
+          this-sub.body
+        }
         line(length: 100%, stroke: 0.25mm)
     } else {
       if calc.even(here().page()) {
-        if chapter.len() == 0 { return }
-        let cnt = counter(heading).at(here())
-        let nbr = chapter.last().numbering
-        if nbr != none { numbering(nbr, cnt.first())+[.~]+h(0.5em)}
-        chapter.last().body
+        if chapter.len() != 0 {
+          let cnt = counter(heading).at(here())
+          let nbr = chapter.last().numbering
+          if nbr != none { numbering(nbr, cnt.first())+[.~]+h(0.5em)}
+          chapter.last().body
+        }
         h(1fr)
         line(length: 100%, stroke: 0.25mm)
       } else {
         h(1fr)
-        if sub.len() == 0 { return }
-        let this-sub = sub.last()
-        let nbr = this-sub.numbering
-        if nbr != none {
-          let cnt = counter(heading).at(this-sub.location())
-          numbering(nbr, ..cnt.slice(0,count:2))+[.~]+h(0.5em)
+        if sub.len() != 0 {
+          let this-sub = sub.last()
+          let nbr = this-sub.numbering
+          if nbr != none {
+            let cnt = counter(heading).at(this-sub.location())
+            numbering(nbr, ..cnt.slice(0,count:2))+[.~]+h(0.5em)
+          }
+          this-sub.body
         }
-        this-sub.body
         line(length: 100%, stroke: 0.25mm)
       }
     }
@@ -248,7 +251,6 @@
     )
   },
   thesis: context {
-    if state("mainmatter").get() == none {return}
     set par(spacing: 0.5em)
 
     if page-is-chap-start() { return }
@@ -258,22 +260,24 @@
     sub = sub.filter(el => el.location().page() <= here().page())
 
     if calc.even(here().page()) {
-      if chapter.len() == 0 { return }
-      let cnt = counter(heading).at(here())
-      let nbr = chapter.last().numbering
-      if nbr != none { numbering(nbr, cnt.first())+[.~]+h(0.5em)}
-      chapter.last().body
+      if chapter.len() != 0 {
+        let cnt = counter(heading).at(here())
+        let nbr = chapter.last().numbering
+        if nbr != none { numbering(nbr, cnt.first())+[.~]+h(0.5em)}
+        chapter.last().body
+      }
       h(1fr)
     } else {
       h(1fr)
-      if sub.len() == 0 { return }
-      let this-sub = sub.last()
-      let nbr = this-sub.numbering
-      if nbr != none {
-        let cnt = counter(heading).at(this-sub.location())
-        numbering(nbr, ..cnt.slice(0,count:2))+[.~]+h(0.5em)
+      if sub.len() != 0 {
+        let this-sub = sub.last()
+        let nbr = this-sub.numbering
+        if nbr != none {
+          let cnt = counter(heading).at(this-sub.location())
+          numbering(nbr, ..cnt.slice(0,count:2))+[.~]+h(0.5em)
+        }
+        this-sub.body
       }
-      this-sub.body
     }
   },
   workbook: context {
@@ -478,12 +482,12 @@
           ] else {
             panic("The used university is not implemented yet!")
           }
-          am #box(width:1fr, repeat(gap:0.5em)[.])
+          am #box(width:1fr, repeat(gap:0.25em)[.])
         ],
         [],
         [
           #set align(right)
-          #box(width:1fr, repeat(gap:0.5em)[.])\
+          #box(width:1fr, repeat(gap:0.25em)[.])\
           #author
         ]
       )

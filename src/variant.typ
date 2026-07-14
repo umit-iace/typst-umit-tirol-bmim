@@ -524,8 +524,13 @@
     footer: (footer.lecture)(course, date),
   )
 
+  show selector.or(
+    pagebreak.where(to: "odd"),
+    pagebreak.where(to: "even"),
+  ): set page(header: none, footer: none)
+
   set page(numbering: "i")
-  heading(numbering: none, outlined: true)[Inhaltsverzeichnis]
+  heading(numbering: none, outlined: false)[Inhaltsverzeichnis]
   outline(title: none)
   if oneside {
     pagebreak(weak: true)
@@ -702,7 +707,6 @@
   program: "PhD", // PhD, Master, Bachelor
   university: "LFUI", // UMIT, LFUI
   study: "Mech", // BauUmwelt, Elek, Mech, Bau, Umwelt, Doktorat
-  explanation: false, // todo
   title: [Thesis],
   subtitle: [],
   author: [Jane Doe],
@@ -717,6 +721,7 @@
     english: [Short Abstract],
     german: [Kurzfassung],
   ),
+  thanks: none,
   oneside: false, // false, true
   ..chosen,
 ) = { body => {
@@ -756,7 +761,7 @@
       }
       else {}
     }
-    [#it #v(0.2em)]
+    [#it #v(0.3em)]
   }
   show heading.where(level:1): it => context {
     let apx = query(<appendix>).any(e => e == it)
@@ -764,22 +769,20 @@
       return
     }
     set text(weight: "regular")
-    set block(inset: (y: 2em))
+    set block(inset: (y: 1em))
     show: strong
     show: block
     if it.numbering == none { it.body; return }
     let n(..c) = numbering(it.numbering, ..c)
-    [
-      #set text(1.3em)
-      #if state("backmatter").get() != none [
-        Anhang #n(..counter(heading).get())
-      ] else [
-        Kapitel #n(..counter(heading).get())
-      ]
-      #v(1em)
+    move(dx: -24pt, [
       #set text(1.5em)
-      #it.body
-    ]
+      #if state("backmatter").get() != none [
+        #n(..counter(heading).get())
+      ] else [
+        #n(..counter(heading).get())
+      ]
+      #h(0.3em) #box(width: 1pt, height: 15.5pt, fill: color.gray, outset: (y: 3pt)) #h(0.3em) #it.body
+    ])
   }
   show heading.where(level:2): set text(size: 1.4em)
   show heading.where(level:3): set text(size: 1.2em)
@@ -793,9 +796,24 @@
     footer: footer.thesis,
   )
 
+  show selector.or(
+    pagebreak.where(to: "odd"),
+    pagebreak.where(to: "even"),
+  ): set page(header: none, footer: none)
+
   set page(numbering: "i")
 
-  heading(numbering: none, outlined: true)[Kurzfassung]
+  if thanks != none {
+    heading(numbering: none, outlined: false)[Danksagung]
+    thanks
+    if oneside {
+      pagebreak(weak: true)
+    } else {
+      pagebreak(to: "odd", weak: true)
+    }
+  }
+
+  heading(numbering: none, outlined: false)[Kurzfassung]
   abstract.german
   if oneside {
     pagebreak(weak: true)
@@ -803,7 +821,7 @@
     pagebreak(to: "odd", weak: true)
   }
 
-  heading(numbering: none, outlined: true)[Abstract]
+  heading(numbering: none, outlined: false)[Abstract]
   abstract.english
   if oneside {
     pagebreak(weak: true)
@@ -811,7 +829,7 @@
     pagebreak(to: "odd", weak: true)
   }
 
-  heading(numbering: none, outlined: true)[Inhaltsverzeichnis]
+  heading(numbering: none, outlined: false)[Inhaltsverzeichnis]
   outline(title: none)
   if oneside {
     pagebreak(weak: true)
@@ -870,13 +888,6 @@
   )
 
   set outline(depth: 1)
-  let headings-on-odd-page(it) = {
-    show heading.where(level: 1): it => {
-      pagebreak(to: "odd")
-      it
-    }
-    it
-  }
   set heading(numbering: "1.1")
   show heading.where(level:2): heading-colored
   show heading.where(level:1): it => context {

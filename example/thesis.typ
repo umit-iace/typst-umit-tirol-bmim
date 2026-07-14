@@ -39,16 +39,22 @@
     english: [#lorem(150)],
     german: [#lorem(150)],
   ),
+  thanks: [Vielen Dank an ...],
   oneside: false,
 )
 
 #set math.equation(numbering: "(1.1)")
 
+#outline(
+  title: [Abbildungsverzeichnis],
+  target: std.figure.where(kind: image, outlined: true),
+)
+
 #show: mainmatter
 
-= Kapitel 1
+= Ein Kapitel
 
-== 1. Abschnitt
+== Ein 1. Abschnitt
 
 #lorem(150)
 
@@ -110,6 +116,10 @@ Eine Tabelle sieht so aus wie @tab.
 
 #lorem(500)
 
+= Kapitel 3
+
+#lorem(1500)
+
 #show: backmatter
 
 = Details
@@ -129,16 +139,6 @@ Wir haben den Beweis:
 == Andere Details
 
 #lorem(500)
-
-#show outline: set heading(outlined:true)
-#set heading(numbering: none)
-
-
-#state("mainmatter").update(none)
-#outline(
-  title: [Abbildungsverzeichnis],
-  target: std.figure.where(kind: image, outlined: true),
-)
 
 #outline(
   title:[Tabellenverzeichnis],
