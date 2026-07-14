@@ -31,7 +31,7 @@
   show raw: set text(font: "Source Code Pro", size: opts.size)
 
   show figure.where(kind: table): set figure(
-    placement: bottom,
+    placement: none,
     supplement: opts.spell.tab
   )
   show figure.where(kind: table): it => {
@@ -40,7 +40,7 @@
     it
   }
   show figure.where(kind: image): set figure(
-    placement: top,
+    placement: none,
     supplement: opts.spell.fig
   )
   show figure.where(kind: image): it => {
@@ -900,34 +900,63 @@
     tb
   }
 
-  set page(
-    header: header.workbook,
-    footer: (footer.workbook)(course),
-    numbering: "1",
-  )
-
   set outline(depth: 1)
   set heading(numbering: "1.1")
   show heading.where(level:2): heading-colored
   show heading.where(level:1): it => context {
+    let opts = options.final()
     set block(inset: (y: 2em))
     show: strong
     show: block
     if it.numbering == none { it.body; return }
     let n(..c) = numbering(it.numbering, ..c)
-    [
-      #set text(1.3em)
-      Kapitel #n(..counter(heading).get())
-      #v(1em)
-      #set text(1.5em)
-      #it.body
-    ]
+    box(
+      width: 100%,
+      stroke: (bottom: 1.25pt + opts.theme.primary),
+      align(right, box(
+        fill: opts.theme.primary,
+        inset: (x: 2em, y: 0.4em),
+        text(fill: white, weight: "bold", size: 10pt, tracking: 1pt)[Kapitel]
+      ))
+    )
+    v(-3em)
+    grid(
+      columns: (1fr, auto),
+      align: (top + left, top + right),
+      column-gutter: 1em,
+      grid.cell(
+        text(
+          size: 20pt, weight: "regular", fill: opts.theme.meanlight,
+          upper(it.body)
+        )
+      ),
+      grid.cell(
+        text(
+          size: 20pt, weight: "regular", fill: opts.theme.meanlight,
+          n(..counter(heading).get())
+        )
+      )
+    )
   }
 
-  outline()
-  counter(page).update(1)
+  set page(
+    header: header.workbook,
+    footer: (footer.workbook)(course),
+  )
 
-  show: headings-on-odd-page
+  show selector.or(
+    pagebreak.where(to: "odd"),
+    pagebreak.where(to: "even"),
+  ): set page(header: none, footer: none)
+
+  set page(numbering: "i")
+  heading(numbering: none, outlined: false)[Inhaltsverzeichnis]
+  outline(title: none)
+  if oneside {
+    pagebreak(weak: true)
+  } else {
+    pagebreak(to: "odd", weak: true)
+  }
 
   body
 

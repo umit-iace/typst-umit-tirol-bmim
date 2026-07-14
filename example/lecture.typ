@@ -41,12 +41,12 @@
 
 === Ein Unterabschnitt
 
-Eine Abbildung sieht so aus wie @abb
+Eine Abbildung sieht so aus wie @fig.
 
 #figure(
   rect(width: 80%, height: 10%, fill: green)[],
-  caption: [Grünes Rechteck.],
-)<abb>
+  caption: [Bild mit Beschriftung darunter.],
+)<fig>
 
 #lorem(50)
 
@@ -77,12 +77,12 @@ Die Gleichung @eqn wird hier referenziert.
 Eine Tabelle sieht so aus wie @tab.
 
 #figure(
-  caption: [Ergebnisse.],
   table(
     columns: 4,
     [t], [1], [2], [3],
     [y], [0.3s], [0.4s], [0.8s],
   ),
+  caption: [Tabelle mit Beschriftung darüber.],
 )<tab>
 
 #lorem(50)

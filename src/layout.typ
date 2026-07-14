@@ -451,7 +451,7 @@
     let foot = [
       #course - #opts.spell.exercises
     ]
-    bmim-footer(foot)
+    bmim-footer(foot, pagenum: counter(page).display())
   },
 )
 
@@ -913,6 +913,16 @@
     set par(spacing: 3em)
 
     [
+      #set page(background: box(
+        width: 100%,
+        height: 100%,
+        fill: gradient.linear(
+          opts.theme.primary,
+          black,
+          angle: 90deg
+        )
+      ))
+      #set text(fill: opts.theme.background)
       #smallcaps[
         #set text(1.3em)
         Übungsaufgaben zur Lehrveranstaltung
@@ -939,7 +949,7 @@
             pad(
               left: -0.6em,
               right: -0.2em,
-              image("./../assets/logo_iace_black.svg", height: 2.65em)
+              image("./../assets/logo_iace_white.svg", height: 2.65em)
             )
           )
         )
@@ -947,6 +957,7 @@
       #print-date(args.date)
     ]
     pagebreak(to: "odd")
+    counter(page).update(1)
   },
 )
 

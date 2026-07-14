@@ -94,6 +94,22 @@
 
 #lorem(10)
 
+#figure(
+  image("../assets/background_bettelwurf.jpg", width: 100%),
+  caption: [Bild mit Beschriftung darunter.],
+) <fig:test>
+
+Neben einem Bild in @fig:test gibt es Nummern in @tab:try.
+#lorem(20)
+
+#figure(
+  table(
+    columns: 4,
+    ..(context{counter("a").step(); str(counter("a").get().first())},)*8,
+  ),
+  caption: [Tabelle mit Beschriftung darüber.],
+) <tab:try>
+
 #pagebreak()
 
 == Second Subsection without number <bmim:nonumber>
