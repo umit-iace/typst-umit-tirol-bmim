@@ -79,17 +79,36 @@
   // Outline
   set outline(depth: 2)
 
-  show outline.entry.where(level: 1): it => {
-    set strong(delta: 150)
-    if it.element.func() != heading {
-      return it
-    }
+  show outline.entry.where(level: 1): set block(above: 1em)
 
-    set block(above:1em)
-    strong(link(
-      it.element.location(),
-      it.indented(it.prefix(), {it.body(); h(1fr); it.page()}),
-    ))
+  show outline.entry.where(level: 1): set text(weight: "bold")
+
+  show outline.entry.where(level: 1): set outline.entry(fill: none)
+
+  set outline.entry(fill: {
+    set text(dir: rtl)
+    box(width: 1fr, repeat(justify: false, gap: 0.5em)[.])
+  })
+
+  show outline.entry: it => context {
+    if it.level == 1 {
+      link(
+        it.element.location(),
+        it.indented(it.prefix(), {it.body(); h(1fr); it.page()}),
+      )
+    } else {
+      link(
+        it.element.location(),
+        if it.prefix() == none {
+          it.indented(none, it.inner())
+        } else {
+          it.indented(
+            it.prefix(),
+            it.body() + it.fill + box(width: 2em, align(right, it.page())),
+          )
+        }
+      )
+    }
   }
 
   body
