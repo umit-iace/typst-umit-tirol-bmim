@@ -915,8 +915,8 @@
       stroke: (bottom: 1.25pt + opts.theme.primary),
       align(right, box(
         fill: opts.theme.primary,
-        inset: (x: 2em, y: 0.4em),
-        text(fill: white, weight: "bold", size: 10pt, tracking: 1pt)[Kapitel]
+        inset: (x: 1.5em, y: 0.5em),
+        text(fill: white, weight: "bold", size: 16pt, tracking: 1pt)[Kapitel]
       ))
     )
     v(-3em)
@@ -926,13 +926,13 @@
       column-gutter: 1em,
       grid.cell(
         text(
-          size: 20pt, weight: "regular", fill: opts.theme.meanlight,
+          size: 32pt, weight: "regular", fill: opts.theme.primary.lighten(20%),
           upper(it.body)
         )
       ),
       grid.cell(
         text(
-          size: 20pt, weight: "regular", fill: opts.theme.meanlight,
+          size: 32pt, weight: "regular", fill: opts.theme.primary.lighten(20%),
           n(..counter(heading).get())
         )
       )
