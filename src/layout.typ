@@ -796,7 +796,7 @@
     let opts = options.final()
     let degree = if program == "Bachelor" [Bachelor of Science] else if program == "Master" [Diplomingenieur]
     let work = if program == "Bachelor" [Bachelorarbeit] else if program == "Master" [Masterarbeit]
-    pad(left: 10mm, {
+    pad(left: 0mm, right: -5mm, {
       set text(12pt)
       let large(content) = text(12pt, content)
       let Large(content) = text(14pt, content)
@@ -833,8 +833,10 @@
         Large(subtitle)
       })
       bigskip
-      par(text(1.1em, author))
-      bigskip
+      large[
+        #author
+      ]
+      v(8pt)
       large[
         #if university == "LFUI" [
           Innsbruck
@@ -842,13 +844,12 @@
           Hall in Tirol
         ] else {
           panic("The used university is not implemented yet!")
-        }
+        }, #date
       ]
 
       // align the rest to bottom
       v(1fr)
-      par(Large(work))
-      bigskip
+      Large(work)
       par[
         verfasst im Rahmen eines gemeinsamen #if program == "Bachelor" [
           Bachelorstudienprogramms
@@ -857,37 +858,35 @@
         ] else {panic("what")}
         von LFUI und UMIT TIROL -- Joint Degree Programme
       ]
-      bigskip
+      smallskip
       par[
         eingereicht an der
         #if university == "LFUI" [
-          Leopold-Franzens-Universität Innsbruck,\
-          Fakultät für Technische Wissenschaften \
+          Leopold-Franzens-Universität Innsbruck,
+          Fakultät für Technische Wissenschaften
         ] else if university == "UMIT" [
-          UMIT TIROL – Private Universität für Gesundheitswissenschaften,
-          Medizinische Informatik und Technik,\
-          Department für Biomedizinische Informatik und Mechatronik \
+          UMIT TIROL – Privatuniversität für Gesundheitswissenschaften und -technologie,
+          Department für Biomedizinische Informatik und Mechatronik
         ] else {
           panic("The used university is not implemented yet!")
         }
         zur Erlangung
         des akademischen Grades
       ]
-      bigskip
+      smallskip
       par(Large(degree))
       bigskip
 
       bigskip
-      par[Beurteiler:]
-      smallskip
+      [Beurteiler:]
+      linebreak()
       let adv = advisor.at(0)
       adv.name
-      smallskip
-      adv.department
       linebreak()
       adv.unit
     })
-    { // advisors
+
+    if program == "Master" { // advisors
       pagebreak(to: "odd")
       v(1fr)
       let adv = advisor.at(0)
@@ -895,11 +894,11 @@
       grid(
         columns:(1fr, 3.2fr), gutter:1.2em,
         [Betreuer:],
-        [#adv.name#z,#linebreak() #adv.university#z,#linebreak() #adv.department#z,#linebreak() #adv.unit],
+        [#adv.name#z, #adv.university#z, #adv.department#z, #adv.unit],
         ..if advisor.len() > 1 {
           let adv = advisor.at(1)
           (align(top,[Mitbetreuer:]),
-          [#adv.name#z,#linebreak() #adv.university#z,#linebreak() #adv.department#z,#linebreak() #adv.unit])
+          [#adv.name#z, #adv.university#z, #adv.department#z, #adv.unit])
         }
       )
     }

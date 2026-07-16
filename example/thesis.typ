@@ -10,13 +10,12 @@
     verteilt-parametrischen Systemen
   ],
   author: [John Doe, Bsc],
-  date: [October 2025],
+  date: [Oktober 2025],
   advisor: (
     (
       name: [ Dr. Max Mustermann ],
       university: [
-        UMIT TIROL - Private Universität für Gesundheitswissenschaften,
-        Medizinische Informatik und Technik
+        UMIT TIROL – Privatuniversität für Gesundheitswissenschaften und -technologie
       ],
       department: [
         Department für Biomedizinische Informatik und Mechatronik
@@ -26,8 +25,7 @@
     (
       name: [ Univ.-Prof. Max Doe ],
       university: [
-        UMIT TIROL - Private Universität für Gesundheitswissenschaften,
-        Medizinische Informatik und Technik
+        UMIT TIROL – Privatuniversität für Gesundheitswissenschaften und -technologie
       ],
       department:[
         Department für Biomedizinische Informatik und Mechatronik
