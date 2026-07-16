@@ -915,24 +915,24 @@
       stroke: (bottom: 1.25pt + opts.theme.primary),
       align(right, box(
         fill: opts.theme.primary,
-        inset: (x: 1.5em, y: 0.5em),
+        inset: (x: 0.8em, y: 0.5em),
         text(fill: white, weight: "bold", size: 16pt, tracking: 1pt)[Kapitel]
       ))
     )
-    v(-3em)
+    v(-2.75em)
     grid(
-      columns: (1fr, auto),
+      columns: (85%, 15%),
       align: (top + left, top + right),
-      column-gutter: 1em,
+      column-gutter: 0em,
       grid.cell(
         text(
-          size: 32pt, weight: "regular", fill: opts.theme.primary.lighten(20%),
+          size: 27pt, weight: "regular", fill: opts.theme.primary.lighten(20%),
           upper(it.body)
         )
       ),
       grid.cell(
         text(
-          size: 32pt, weight: "regular", fill: opts.theme.primary.lighten(20%),
+          size: 27pt, weight: "regular", fill: opts.theme.primary.lighten(20%),
           n(..counter(heading).get())
         )
       )
@@ -961,7 +961,13 @@
   body
 
   if show-solution == "bottom" {
-    pagebreak(weak:true)
+    if oneside {
+      pagebreak(weak: true)
+    } else {
+      pagebreak(to: "odd", weak: true)
+    }
+
+    set page(numbering: "1")
     task.solution-bottom
   }
 }}

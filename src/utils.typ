@@ -40,14 +40,19 @@
   content
 }
 
-#let backmatter(content) = {
+#let backmatter(content, to: "odd") = context {
+  let opts = options.final()
   set heading(numbering: "A.1", supplement: "Anhang")
   counter(heading).update(0)
   state("backmatter").update(true)
   {
     show heading: none
     [
-      #pagebreak(to: "odd", weak: true)
+      #if opts.oneside [
+        #pagebreak(weak: true)
+      ] else [
+        #pagebreak(to: to, weak: true)
+      ]
       #heading(numbering: none)[Anhang] <appendix>
     ]
   }

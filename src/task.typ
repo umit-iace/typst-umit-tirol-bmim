@@ -80,7 +80,7 @@
   #for (num, solution) in t-solutions.final().enumerate(start:0) [
 
     #show heading: set block(above: 0pt)
-    #block(above:1.2em, below:0pt,sticky:true, [#t-mark#t-label-sol(num)])
+    #block(above:1.2em, below:0pt, sticky:true, [#t-mark#t-label-sol(num)])
     == Lösung zu #ref(t-label(num)) <bmim:nonumber>
 
     #solution
