@@ -48,6 +48,8 @@
   target: std.figure.where(kind: image, outlined: true),
 )
 
+#pagebreak(to: "odd", weak: true)
+
 #show: mainmatter
 
 = Ein Kapitel
