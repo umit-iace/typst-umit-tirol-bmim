@@ -332,9 +332,9 @@
             bottom: page.height * 0.9%
           ),
           grid(
-            columns: (15%, 1fr, 10%, 5%),
+            columns: (3cm, 1fr, 3cm, 2cm),
             gutter: 2%,
-            align: (left, left, center, right),
+            align: (left, left, right, right),
             rows: page.height * 2.8%,
             text(white)[#author],
             text(white)[#title],
