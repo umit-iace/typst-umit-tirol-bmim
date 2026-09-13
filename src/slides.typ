@@ -85,7 +85,12 @@
               #title.at(0, default:none)
               #if subtitle != none {
                 parbreak()
-                text(size: 16pt, subtitle)
+                text(
+                  size: 12pt,
+                  font: "Source Serif 4",
+                  weight: "regular",
+                  subtitle
+                )
               }
             ]
         },
@@ -94,9 +99,9 @@
       v(2em)
       grid(
         columns: (1fr, 1fr),
-        gutter: 1pt,
+        gutter: 7pt,
         grid.cell(
-          align(left+bottom,{
+          align(left+top,{
             let loc-str = ""
             if location != none {
               loc-str = [, #location]
@@ -119,7 +124,7 @@
           })
         ),
         grid.cell(
-          align(center+bottom,
+          align(center+top,
             grid(
               columns: (1fr, 1fr),
               gutter: 0pt,
