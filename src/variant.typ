@@ -821,15 +821,15 @@
         show figure.caption: set text(size: 0.6em)
         show figure.where(kind: table): set figure.caption(position: top)
 
-        show footnote.entry: set text(size: 0.6em)
+        show footnote.entry: set text(size: 0.7em)
         set footnote.entry(gap: 0.2em)
 
-        show link: it => if type(it.dest) == str {
-          set text(fill: self.colors.primary)
-          it
-        } else {
-          it
-        }
+        // show link: it => if type(it.dest) == str {
+        //   set text(fill: self.colors.primary)
+        //   it
+        // } else {
+        //   it
+        // }
 
         show strong: self.methods.alert.with(self: self)
 
