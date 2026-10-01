@@ -20,7 +20,7 @@
   ),
   authors-short: [Doel et al.],
   date: datetime(day: 1, month: 3, year: 2024),
-  bib: bibliography(title: none, "sources.bib"),
+  bib-as-footnote: false,
   handout: false,
   notes: none,
 )
@@ -71,7 +71,7 @@ green)[highlighted in green]. This is #highlight(fill: red)[highlighted in red].
 
 == Summary
 
-- Next Steps
+- Next Steps @netwok2020
 
 #speaker-note[
   + This is a speaker note.
@@ -80,7 +80,7 @@ green)[highlighted in green]. This is #highlight(fill: red)[highlighted in red].
 
 == References
 
-#magic.bibliography(title: none)
+#bibliography(title: none, "sources.bib")
 
 #show: appendix
 

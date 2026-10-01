@@ -24,7 +24,7 @@
   ),
   authors-short: [Doel, Doele, Doeles, et al.],
   date: datetime(day: 31, month: 12, year: 2024),
-  bib: bibliography(title: none, "sources.bib"),
+  bib-as-footnote: true,
   handout: false,
   notes: none,
   logo: (
@@ -177,7 +177,7 @@ In this template, a citation will create a footnote@netwok2020.
 
 == Bibliography
 
-#magic.bibliography(title: none)
+#bibliography(title: none, "sources.bib")
 
 = Animations
 

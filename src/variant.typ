@@ -981,7 +981,7 @@
   authors: none, // [Author] or ([List], [of], [authors])
   authors-short: none, // none or [short author]
   date: none, // datetime
-  bib: none, // none or "path/to/bibfile"
+  bib-as-footnote: true, // true or false
   aspect-ratio: "16-9", // "16-10" or "16-9" or "4-3"
   font: "Source Sans 3",
   align: horizon,
@@ -1042,7 +1042,7 @@
       } else {
         new-section-slide
       },
-      show-bibliography-as-footnote: bib,
+      show-bibliography-as-footnote: bib-as-footnote,
       handout: handout,
       show-notes-on-second-screen: notes,
     ),
