@@ -1,6 +1,5 @@
 #import "./preamble.typ": *
 
-// main class
 #show: bmim.article(
   title: [Control of controllable Continua],
   subtitle: [A very demanding task],
@@ -8,12 +7,11 @@
   lang: "en",
 )
 
-#set math.equation(supplement: none, numbering: (..nums) => numbering("(1a)", ..nums))
+#show: show-important
+#show: show-example
+#show: show-hint
 
-// various environments
-#import "@preview/theorion:0.6.0": *
-#import cosmos.clouds: *
-#show: show-theorion
+#set math.equation(supplement: none, numbering: (..nums) => numbering("(1a)", ..nums))
 
 #abstract[
   #lorem(60)
@@ -68,7 +66,7 @@ Enumerations:
 
 == Figures & Tables
 
-At first, have a look at the very nice image in @fig:test. 
+At first, have a look at the very nice image in @fig:test.
 #lorem(40)
 
 #figure(

@@ -1,5 +1,10 @@
 #import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, mainmatter, backmatter, abstract, poster-box, translatedMonth
 
+// various environments
+#import "@preview/touying:0.8.0": *
+#import "@preview/theorion:0.6.0": *
+#import cosmos.clouds: *
+
 // own titleblock
 #let tb(args) = context {
   let course = if type(args.course) == array { args.course.at(0) } else { args.course }
@@ -52,11 +57,6 @@
     ],
   )
 }
-
-// various environments
-#import "@preview/touying:0.8.0": *
-#import "@preview/theorion:0.6.0": *
-#import cosmos.clouds: *
 
 // own admonition block
 #let adm-render(

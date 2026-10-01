@@ -8,10 +8,10 @@
   oneside: false,
 )
 
-// various environments
-#import "@preview/theorion:0.6.0": *
-#import cosmos.clouds: *
-#show: show-theorion
+#show: show-important
+#show: show-tip
+#show: show-example
+#show: show-hint
 
 #set math.equation(supplement: none, numbering: (..nums) => numbering("(1a)", ..nums))
 
@@ -157,6 +157,16 @@ Für alle Umgebungen wird das `theorion` Paket (https://typst.app/universe/packa
 #lorem(250)
 
 #lorem(250)
+
+== Admonitions
+
+#warning-block[#lorem(20)]
+
+#caution-block[#lorem(20)]
+
+#note-block[#lorem(40)]
+
+Find even more environments in the `theorion` package: https://typst.app/universe/package/theorion/.
 
 == Ein Abschnitt
 
