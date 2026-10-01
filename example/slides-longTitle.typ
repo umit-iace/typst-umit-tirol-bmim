@@ -16,14 +16,14 @@
   authors: (
     [#text(weight: "bold", size: 1.05em)[Jane Doe$zwj^(1)$]],
     [John Doel$zwj^(2)$],
-    [John Doel$zwj^(2)$],
-    [John Doel$zwj^(2)$],
+    [John Doele$zwj^(2)$],
+    [John Doeles$zwj^(2)$],
     [John Doel$zwj^(2)$],
     [John Doel$zwj^(2)$],
     [Max Mustermann$zwj^(1)$]
   ),
-  authors-short: [Doel et al.],
-  date: datetime(day: 1, month: 3, year: 2024),
+  authors-short: [Doel, Doele, Doeles, et al.],
+  date: datetime(day: 31, month: 12, year: 2024),
   bib: bibliography(title: none, "sources.bib"),
   handout: false,
   notes: none,

@@ -411,9 +411,14 @@
             top: opts.theme.secondary + 0pt,
           ),
           fill: if showAni {none} else {opts.theme.primary},
-          inset: (left: page.margin.left, right: page.margin.right, top: -page.height * 0.525%, bottom: page.height * 0.9%),
+          inset: (
+            left: page.margin.left,
+            right: page.margin.right,
+            top: -page.height * 0.525%,
+            bottom: page.height * 0.9%
+          ),
           grid(
-            columns: (auto, 70%, 1fr, 5%),
+            columns: (15%, 1fr, 10%, 5%),
             gutter: 2%,
             align: (left, left, center, right),
             rows: page.height * 2.8%,
