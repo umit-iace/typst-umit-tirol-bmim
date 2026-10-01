@@ -7,7 +7,7 @@
   show-solution: "inline",
 )
 
-#set math.equation(numbering: "(1.1)")
+#set math.equation(supplement: none, numbering: (..nums) => numbering("(1a)", ..nums))
 
 #show: mainmatter
 

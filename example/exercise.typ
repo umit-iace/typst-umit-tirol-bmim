@@ -9,7 +9,7 @@
   date: none,
 )
 
-#set math.equation(numbering: "(1.1)")
+#set math.equation(supplement: none, numbering: (..nums) => numbering("(1a)", ..nums))
 
 #task(
   label: <task:main>,
@@ -100,7 +100,8 @@
     This is how to also reference from solution @task:sub2 and an additional equation
     $
       1 + 1 & = 2 thin s
-    $
+    $<eq:test>
+    with a reference @eq:test.
   ],
 )
 

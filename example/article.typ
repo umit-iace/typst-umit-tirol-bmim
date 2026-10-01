@@ -6,14 +6,14 @@
   subtitle: [A very demanding task],
   authors: ("John William Frederick Antony McGainson", "Jane Susan Margaret Feed-Back"),
   lang: "en",
-
 )
+
+#set math.equation(supplement: none, numbering: (..nums) => numbering("(1a)", ..nums))
 
 // various environments
 #import "@preview/theorion:0.6.0": *
 #import cosmos.clouds: *
 #show: show-theorion
-
 
 #abstract[
   #lorem(60)
@@ -51,9 +51,11 @@ This sentence is important @netwok2020.
 Some inline math like $2x + 3r = 10$ should suffice
 but sometimes you need a block display:
 $
-x + y = z.
-$
+  x + y = z.
+$<eq:test>
 #lorem(40)
+
+Here is a reference to @eq:test.
 
 == Listings
 
