@@ -132,13 +132,13 @@
     let tasknum = t-points.get().len()
 
     let points = t-points.final().at(tasknum, default:())
-    let enumCnt = t-count.step(level:wrap.lvl+2)
+    let enum-cnt = t-count.step(level:wrap.lvl+2)
     let description = if is-super {
       args.pos().first()
-      enumCnt
+      enum-cnt
       args.pos().slice(1).map(it => {
         let lbl = if "label" in it [ #t-mark#it.label ]
-        [+ #lbl #it.description #enumCnt]
+        [+ #lbl #it.description #enum-cnt]
       }).join()
     } else { args.named().description }
 

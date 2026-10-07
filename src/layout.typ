@@ -24,23 +24,23 @@
   let all-sections = query(outline.entry.where(level: 1))
   let current-section = utils.current-heading(level: 1)
   show text: set text(size: size, fill: opts.theme.background)
-  let showAni = args.named().at("progressAnimation", default: false)
+  let show-ani = args.named().at("progressAnimation", default: false)
 
   grid(
-    columns: if args.named().at("slide", default: false) and showAni {(auto, 1fr)} else {(auto)},
+    columns: if args.named().at("slide", default: false) and show-ani {(auto, 1fr)} else {(auto)},
     gutter: 1pt,
     grid.cell(
       box(
-        width: if args.named().at("slide", default: false) and showAni {80%} else {100%},
+        width: if args.named().at("slide", default: false) and show-ani {80%} else {100%},
         height: height,
         if args.pos().len() != 0 {
-          set align(if showAni { horizon+left } else { horizon+center })
+          set align(if show-ani { horizon+left } else { horizon+center })
           show text: set text(size: size, fill: opts.theme.background)
           pad(x: 15pt, {pad(..args.pos())})
         }
       )
     ),
-    if args.named().at("slide", default: false) and showAni {
+    if args.named().at("slide", default: false) and show-ani {
       grid.cell(
         box(
           width: 100%,
@@ -186,7 +186,7 @@
   report: header-colored(),
   slides: (heading: none, progressAnimation: none) => context {
     let opts = options.final()
-    let showAni = type(progressAnimation) == dictionary and progressAnimation.at("section", default: false)
+    let show-ani = type(progressAnimation) == dictionary and progressAnimation.at("section", default: false)
     let logo-left = pick-logo(opts.logo, "left")
     let logo-right = pick-logo(opts.logo, "right")
     set text(weight: "bold")
@@ -209,7 +209,7 @@
           logo-left
         },
         pad( x: -1pt,
-          banner(slide: true, size: 17.6pt, progressAnimation: showAni, move(dy: 0.5pt, heading))
+          banner(slide: true, size: 17.6pt, progressAnimation: show-ani, move(dy: 0.5pt, heading))
         ),
         if logo-right == auto {
           pad(
@@ -331,10 +331,10 @@
   report: footer-course-title,
   slides: (author:none, title:none, date:none, pagenum:none, progressAnimation:none) => context {
     let opts = options.final()
-    let showAni = type(progressAnimation) == dictionary and progressAnimation.at("slides", default: false)
+    let show-ani = type(progressAnimation) == dictionary and progressAnimation.at("slides", default: false)
     block(
       [
-        #if showAni {
+        #if show-ani {
           block(
             inset: (bottom: -page.height * 5.7%),
             components.progress-bar(height: page.height * 3.3%, opts.theme.highlight, opts.theme.primary)
@@ -344,7 +344,7 @@
           stroke: (
             top: opts.theme.secondary + 0pt,
           ),
-          fill: if showAni {none} else {opts.theme.primary},
+          fill: if show-ani {none} else {opts.theme.primary},
           inset: (
             left: page.margin.left,
             right: page.margin.right,
@@ -502,7 +502,7 @@
     )
     v(1.25em)
 
-    let tableData = (
+    let table-data = (
       {
         strong(opts.spell.eval)
         task.points-table
@@ -534,7 +534,7 @@
       gutter: 0.5em,
       stroke: 0.1em,
       align:left,
-      ..tableData.filter(x => x != none)
+      ..table-data.filter(x => x != none)
     )
   },
   exercise: (args) => bmim-title(args),
@@ -642,7 +642,7 @@
     date,
     subject
   ) => context {
-    let headText(body) = {
+    let head-text(body) = {
       set text(gray, size: 8pt)
       if body != none {
         lower(body)
@@ -652,9 +652,9 @@
     // left block
     place(top + left, [
       #if sender.department != none {
-        headText(sender.department)
+        head-text(sender.department)
       }
-      #headText(sender.institute)
+      #head-text(sender.institute)
       #text(size: 10pt)[
         #if recipient.institution != none [
           #recipient.institution \
@@ -672,9 +672,9 @@
     place(top + right, [
       #align(left)[
         #if sender.department != none {
-          headText(sym.zwj)
+          head-text(sym.zwj)
         }
-        #headText(sender.pos)
+        #head-text(sender.pos)
         #text(size: 8pt)[
           #sender.name \
           T #sender.tel \

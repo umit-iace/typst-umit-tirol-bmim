@@ -42,14 +42,14 @@
     set text(fill: self.colors.background, spacing: 100%)
 
     // settings
-    let leftMargin = 28pt
+    let left-margin = 28pt
 
     // body
     context place(
       bottom+left,
       dy: page.margin.bottom,
     block(
-      inset: leftMargin,
+      inset: left-margin,
       fill: gradient.linear(
         self.colors.primary.transparentize(30%),
         self.colors.primary.transparentize(0%).darken(100%),
@@ -95,9 +95,9 @@
         gutter: 1pt,
         grid.cell(
           align(left+bottom,{
-            let locStr = ""
+            let loc-str = ""
             if location != none {
-              locStr = [, #location]
+              loc-str = [, #location]
             }
             [
             // conference
@@ -111,7 +111,7 @@
               if conference == none {
                 parbreak()
               }
-              text(size: 14pt)[#print-date(date)#locStr]
+              text(size: 14pt)[#print-date(date)#loc-str]
             }
             ]
           })
@@ -156,7 +156,7 @@
 })
 
 #let outline-slide(
-  coverLvl: 1,
+  cover-lvl: 1,
   ..args,
 ) = touying-slide-wrapper(self => {
   let opts = options.final()
@@ -166,17 +166,17 @@
 
   self = utils.merge-dicts(self, new-config)
 
-  let cntOutline = counter("outline")
-  cntOutline.update(1)
+  let cnt-outline = counter("outline")
+  cnt-outline.update(1)
 
   let body = {
     show: align.with(horizon)
     show heading: none
     show outline.entry.where(level: 1): it => {
-      cntOutline.step()
+      cnt-outline.step()
       let style(entry) = block(
           fill: gradient.linear(
-            if cntOutline.get().at(0) == coverLvl {
+            if cnt-outline.get().at(0) == cover-lvl {
               self.colors.primary.lighten(50%)
             } else {
               self.colors.primary.lighten(5%)
@@ -186,7 +186,7 @@
           ),
           width: 100%,
           inset: 6pt,
-          strong(text( fill: white, cntOutline.display() + h(1em) + entry ))
+          strong(text( fill: white, cnt-outline.display() + h(1em) + entry ))
         )
       link(it.element.location(), style( it.body() ))
       []
