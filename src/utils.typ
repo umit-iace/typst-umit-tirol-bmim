@@ -78,13 +78,11 @@
   let opts = options.final()
   if type(date) != datetime {
     none
+  } else if date.month() > 3 and date.month() < 10 {
+    [Sommersemester #date.year()]
   } else {
-    if date.month() > 3 and date.month() < 10 {
-      [Sommersemester #date.year()]
-    } else {
-      let followYear = date + duration(days: 365)
-      [Wintersemester #date.year()/#followYear.year()]
-    }
+    let start = if date.month() <= 3 { date.year() - 1 } else { date.year() }
+    [Wintersemester #start/#(start + 1)]
   }
 }
 
