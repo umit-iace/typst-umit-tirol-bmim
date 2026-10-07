@@ -20,7 +20,7 @@
 ## Example
 
 See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of last run for example variants:
-- [example/article.typ](example/report.typ) for the corresponding article Typst file.
+- [example/article.typ](example/article.typ) for the corresponding article Typst file.
 - [example/exam.typ](example/exam.typ) for the corresponding exam Typst file,
 - [example/exercise.typ](example/exercise.typ) for the corresponding exercise Typst file.
 - [example/lab.typ](example/lab.typ) for the corresponding report Typst file with self defined title block.
@@ -28,7 +28,7 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 - [example/letter.typ](example/letter.typ) for the corresponding letter Typst file.
 - [example/poster.typ](example/poster.typ) for the corresponding poster Typst file.
 - [example/report.typ](example/report.typ) for the corresponding report Typst file.
-- [example/slides-longTitle.typ](example/slides-longTitle.typ) for the corresponding slide Typst file using differnt logos, activate progress animation with a huge number of authors and a long title, see [Github Pages](https://umit-iace.github.io/typst-umit-tirol-bmim) for an example output.
+- [example/slides-longTitle.typ](example/slides-longTitle.typ) for the corresponding slide Typst file using different logos, activate progress animation with a huge number of authors and a long title, see [Github Pages](https://umit-iace.github.io/typst-umit-tirol-bmim) for an example output.
 - [example/slides-shortTitle.typ](example/slides-shortTitle.typ) for the corresponding slide Typst file.
 - [example/thesis.typ](example/thesis.typ) for the corresponding thesis Typst file.
 - [example/workbook.typ](example/workbook.typ) for the corresponding workbook Typst file.
