@@ -1,6 +1,6 @@
-#import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, backmatter, important, tip, example, hint
+#import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, backmatter
 
-#show: bmim.lab(
+#show: bmim.report(
   title: ("Title"),
   lang: "de",
   course: ("Vorlesung", "VL"),
@@ -15,7 +15,7 @@
 
 = First Section
 
-#lorem(10) @netwok2020
+#lorem(10)
 
 == First Subsection with number
 
@@ -26,9 +26,8 @@
   [
     Test Problem with a equation
     $
-      p & = s + 4
+      p & = s + 4.
     $<eq:main1>
-    and @netwok2020.
   ],
   (
     points: 10,
@@ -96,7 +95,7 @@ It is important to remember Newton's third law @newton-third, and Hook's law
 
 = Section
 
-#lorem(20) @netwok2020
+#lorem(20)
 
 #task(
   points: 10,
@@ -104,9 +103,8 @@ It is important to remember Newton's third law @newton-third, and Hook's law
   description: [
     Test Problem with a equation
     $
-      p & = s + 4
+      p & = s + 4.
     $<eq:main2>
-    and @netwok2020.
 
     Take a look in the solution
   ],
@@ -125,12 +123,4 @@ It is important to remember Newton's third law @newton-third, and Hook's law
 
 #lorem(80)
 
-#important[Test]
-
-#tip[Test]
-
-#example[#lorem(20)]
-
-#hint[Test]
-
-#bibliography("sources.bib", title: "Bibliography")
+#bibliography("sources.bib", title: "Literatur")

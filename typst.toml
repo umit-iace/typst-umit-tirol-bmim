@@ -10,3 +10,8 @@ keywords = ["UMIT TIROL", "IACE", "Article", "Exam", "Exercise", "Lecture", "Pos
 categories = ["office"]
 disciplines = ["education"]
 exclude = [".github/", "example/", "*.pdf"]
+
+[template]
+path = "template"
+entrypoint = "main.typ"
+thumbnail = "thumbnail.png"
