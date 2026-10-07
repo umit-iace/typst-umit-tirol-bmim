@@ -772,12 +772,12 @@
       v(8pt)
       large[
         #if university == "LFUI" [
-          Innsbruck
+          Innsbruck,
         ] else if university == "UMIT" [
-          Hall in Tirol
+          Hall in Tirol,
         ] else {
           panic("The used university is not implemented yet!")
-        }, #if type(date) == datetime [
+        } #if type(date) == datetime [
           #translatedMonth(date, opts.lang) #date.year()
         ] else [
           #date

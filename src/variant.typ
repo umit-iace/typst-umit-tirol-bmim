@@ -535,7 +535,7 @@
 }}
 
 #let thesis(
-  program: "PhD", // PhD, Master, Bachelor
+  program: "Master", // Master, Bachelor
   university: "LFUI", // UMIT, LFUI
   study: "Mech", // BauUmwelt, Elek, Mech, Bau, Umwelt, Doktorat
   title: [Thesis],
