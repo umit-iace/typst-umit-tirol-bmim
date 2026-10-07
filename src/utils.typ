@@ -9,10 +9,6 @@
   text(style: "normal")[#body]
 }
 
-#let page-is-chap-start() = query(heading.where(level: 1))
-  .map(it => it.location().page())
-  .contains(here().page())
-
 #let headings-on-odd-page(it) = {
   show heading.where(level: 1): it => {
     pagebreak(to: "odd")
