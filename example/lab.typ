@@ -197,4 +197,4 @@ It is important to remember Newton's third law @newton-third, and Hook's law
 
 #example[#lorem(20)]
 
-#bibliography("sources.bib", title: "Bibliography")
+#bibliography("sources.bib", title: "Referenzen")
