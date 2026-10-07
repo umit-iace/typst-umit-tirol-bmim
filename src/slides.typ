@@ -1,7 +1,7 @@
 #import "@preview/touying:0.8.0": *
 #import "colors.typ": *
 #import "data.typ": *
-#import "utils.typ": translatedMonth
+#import "utils.typ": print-date, pick-logo
 #import "options.typ": options
 
 #let title-slide(
@@ -21,16 +21,8 @@
     config-common(freeze-slide-counter:true),
   )
 
-  let logo-left = if type(opts.logo) == dictionary {
-    opts.logo.at("title-left", default: auto)
-  } else {
-    opts.logo
-  }
-  let logo-right = if type(opts.logo) == dictionary {
-    opts.logo.at("title-right", default: auto)
-  } else {
-    opts.logo
-  }
+  let logo-left = pick-logo(opts.logo, "title-left")
+  let logo-right = pick-logo(opts.logo, "title-right")
 
   self = utils.merge-dicts(self, new-config)
 
@@ -119,12 +111,7 @@
               if conference == none {
                 parbreak()
               }
-              text(size: 14pt,
-              if opts.lang == "de" {
-                [#date.day(). #translatedMonth(date, opts.lang) #date.year()#locStr]
-              } else {
-                [#translatedMonth(date, opts.lang) #date.day(), #date.year()#locStr]
-              })
+              text(size: 14pt)[#print-date(date)#locStr]
             }
             ]
           })
