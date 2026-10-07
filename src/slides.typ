@@ -50,16 +50,14 @@
     set text(fill: self.colors.background, spacing: 100%)
 
     // settings
-    let left_margin = 28pt
-    let logo_pad = 20pt
-    let logo_height = 40pt
+    let leftMargin = 28pt
 
     // body
     context place(
       bottom+left,
       dy: page.margin.bottom,
     block(
-      inset: left_margin,
+      inset: leftMargin,
       fill: gradient.linear(
         self.colors.primary.transparentize(30%),
         self.colors.primary.transparentize(0%).darken(100%),
