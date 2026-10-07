@@ -424,11 +424,7 @@
             rows: page.height * 2.8%,
             text(white)[#author],
             text(white)[#title],
-            if opts.lang == "de" {
-              text(white)[#date.day(). #translatedMonth(date, opts.lang) #date.year()]
-            } else {
-              text(white)[#translatedMonth(date, opts.lang) #date.day(), #date.year()]
-            },
+            text(white)[#print-date(date)],
             text(white)[#pagenum],
           ),
         )
