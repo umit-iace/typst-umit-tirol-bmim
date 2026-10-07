@@ -537,7 +537,7 @@
 #let thesis(
   program: "Master", // Master, Bachelor
   university: "LFUI", // UMIT, LFUI
-  study: "Mech", // BauUmwelt, Elek, Mech, Bau, Umwelt, Doktorat
+  study: "Mech", // BauUmwelt, Elek, Mech, Bau, Umwelt
   title: [Thesis],
   subtitle: [],
   author: [Jane Doe],
@@ -556,6 +556,19 @@
   oneside: false, // false, true
   ..chosen,
 ) = { body => {
+  let programs = ("Bachelor", "Master")
+  assert(program in programs, message:
+    "Option 'program' must be one of [" +
+    programs.map(repr).join(", ") +
+    "], but was set to " + repr(program)
+  )
+  let universities = ("LFUI", "UMIT")
+  assert(university in universities, message:
+    "Option 'university' must be one of [" +
+    universities.map(repr).join(", ") +
+    "], but was set to " + repr(university)
+  )
+
   option-set(
     (oneside: oneside)
     + chosen.named()
