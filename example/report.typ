@@ -212,4 +212,4 @@ It is important to remember Newton's third law @newton-third, and Hook's law
 
 #lorem(80)
 
-#bibliography("sources.bib", title: "Bibliography")
+#bibliography("sources.bib")

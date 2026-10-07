@@ -199,4 +199,4 @@ Wir haben den Beweis:
 = Das ließt niemand mehr
 
 
-#bibliography("sources.bib", title: "Literatur")
+#bibliography("sources.bib")

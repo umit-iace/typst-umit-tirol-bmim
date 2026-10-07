@@ -103,6 +103,6 @@ Find even more environments in the `theorion` package: https://typst.app/univers
 
 #lorem(20)
 
-#bibliography("sources.bib", title: "Bibliography")
+#bibliography("sources.bib")
 
 

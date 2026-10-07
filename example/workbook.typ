@@ -103,4 +103,4 @@ Neben einem Bild in @fig:test gibt es Nummern in @tab:try.
 
 #lorem(30)
 
-#bibliography("sources.bib", title: "Referenzen")
+#bibliography("sources.bib")
