@@ -1,12 +1,34 @@
 #import "data.typ": *
 #import "options.typ": *
 
-#let abstract(body) = {
+#let abstract(body) = context {
   // abstract environment for the article class
+  let opts = options.final()
   set par(leading: .5em)
   set text(font: "Source Sans 3", spacing: 80%, size: 1.1em)
-  text(weight: "semibold", fill: color-cd2026.blue)[Abstract.]
+  text(weight: "semibold", fill: opts.theme.primary)[#opts.spell.abstract.]
   text(style: "normal")[#body]
+}
+
+#let page-is-chap-start() = {
+  return query(heading.where(level: 1))
+    .map(it => it.location().page())
+    .contains(here().page())
+}
+
+#let long(x) = if type(x) == array { x.at(0) } else { x }
+#let short(x) = if type(x) == array { x.at(1) } else { x }
+
+#let chapter-break(oneside) = if oneside {
+  pagebreak(weak: true)
+} else {
+  pagebreak(to: "odd", weak: true)
+}
+
+#let pick-logo(logo, key) = if type(logo) == dictionary {
+  logo.at(key, default: auto)
+} else {
+  logo
 }
 
 #let headings-on-odd-page(it) = {
@@ -38,7 +60,7 @@
 
 #let backmatter(content, to: "odd") = context {
   let opts = options.final()
-  set heading(numbering: "A.1", supplement: "Anhang")
+  set heading(numbering: "A.1", supplement: opts.spell.appendix)
   counter(heading).update(0)
   state("backmatter").update(true)
   {
@@ -49,7 +71,7 @@
       ] else [
         #pagebreak(to: to, weak: true)
       ]
-      #heading(numbering: none)[Anhang] <appendix>
+      #heading(numbering: none)[#opts.spell.appendix] <appendix>
     ]
   }
   content
@@ -67,7 +89,11 @@
   let opts = options.final()
   if type(date) != datetime {
     date
-  } else [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
+  } else if opts.lang == "de" {
+    [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
+  } else {
+    [#translatedMonth(date, opts.lang) #date.day(), #date.year()]
+  }
 }
 
 #let print-semester(date) = {
@@ -75,10 +101,10 @@
   if type(date) != datetime {
     none
   } else if date.month() > 3 and date.month() < 10 {
-    [Sommersemester #date.year()]
+    [#opts.spell.summer-term #date.year()]
   } else {
     let start = if date.month() <= 3 { date.year() - 1 } else { date.year() }
-    [Wintersemester #start/#(start + 1)]
+    [#opts.spell.winter-term #start/#(start + 1)]
   }
 }
 
@@ -88,12 +114,6 @@
   )
   let chain = hdr + args.pos()
   return chain.map(str).join(".")
-}
-
-#let page-is-chap-start() = {
-  return query(heading.where(level: 1))
-    .map(it => it.location().page())
-    .contains(here().page())
 }
 
 #let current-title(lvl: 1) = context {
