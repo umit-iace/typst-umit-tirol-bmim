@@ -114,18 +114,29 @@
   body
 }
 
+#let render-titleblock(kind, args) = context {
+  let opts = options.final()
+  let args = args + (
+    lang: opts.lang,
+    spell: opts.spell,
+    show-solution: opts.show-solution,
+  )
+  if type(opts.titleblock) == function {
+    (opts.titleblock)(args)
+  } else if opts.titleblock == auto {
+    (titleblock.at(kind))(args)
+  }
+}
+
 #let article(
   title: none, // str or content
   subtitle: none,
   course: none, // either [Course Name] , or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
-  ..chosen, // other options: theme, logo-with-text, size, lang, etc
+  ..chosen, // other options: theme, size, lang, etc
 ) = { body => context {
-  option-set(
-    chosen.named()
-    + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
-  )
+  option-set(chosen.named())
   show: bmim-common
   // overwrite defaults
   set page(
@@ -174,23 +185,12 @@
 
   set enum(full: true, numbering: "a)")
 
-  context {
-    let opts = options.final()
-    let tbArgs = (
-      title: title,
-      subtitle: subtitle,
-      authors: authors,
-      date: date,
-      lang: opts.lang,
-      spell: opts.spell,
-    )
-    let tb = if type(options.final().titleblock) == function {
-      (options.final().titleblock)(tbArgs)
-    } else if options.final().titleblock == auto {
-      (titleblock.article)(tbArgs)
-    }
-    tb
-  }
+  render-titleblock("article", (
+    title: title,
+    subtitle: subtitle,
+    authors: authors,
+    date: date,
+  ))
 
   body
 }}
@@ -205,7 +205,7 @@
   empty-sheets: auto, // none, auto (= 1 per task), int
   show-hints: true, // false, true
   oneside: false, // false, true
-  ..chosen // other options: theme, logo-with-text, size, etc
+  ..chosen // other options: theme, size, etc
 ) = { body => {
   if total-time == none {
     panic("Exam needs total-time option set")
@@ -226,26 +226,14 @@
 
   show heading.where(level: 1): heading-colored
 
-  context {
-    let opts = options.final()
-    let tbArgs = (
-      course: course,
-      title: title,
-      authors: authors,
-      date: date,
-      total-time: total-time,
-      show-hints: show-hints,
-      lang: opts.lang,
-      spell: opts.spell,
-      show-solution: opts.show-solution,
-    )
-    let tb = if type(options.final().titleblock) == function {
-      (options.final().titleblock)(tbArgs)
-    } else if options.final().titleblock == auto {
-      (titleblock.exam)(tbArgs)
-    }
-    tb
-  }
+  render-titleblock("exam", (
+    course: course,
+    title: title,
+    authors: authors,
+    date: date,
+    total-time: total-time,
+    show-hints: show-hints,
+  ))
 
   body
 
@@ -296,24 +284,12 @@
 
   show heading.where(level: 1): heading-colored
 
-  context {
-    let opts = options.final()
-    let tbArgs = (
-      course: course,
-      title: title,
-      authors: authors,
-      date: date,
-      lang: opts.lang,
-      spell: opts.spell,
-      show-solution: opts.show-solution,
-    )
-    let tb = if type(options.final().titleblock) == function {
-      (options.final().titleblock)(tbArgs)
-    } else if options.final().titleblock == auto {
-      (titleblock.exercise)(tbArgs)
-    }
-    tb
-  }
+  render-titleblock("exercise", (
+    course: course,
+    title: title,
+    authors: authors,
+    date: date,
+  ))
 
   body
 
@@ -336,23 +312,11 @@
   )
   show: bmim-common
 
-  context {
-    let opts = options.final()
-    let tbArgs = (
-      course: course,
-      title: title,
-      authors: authors,
-      date: date,
-      lang: opts.lang,
-      spell: opts.spell,
-    )
-    let tb = if type(options.final().titleblock) == function {
-      (options.final().titleblock)(tbArgs)
-    } else if options.final().titleblock == auto {
-      (titleblock.lecture)(tbArgs)
-    }
-    tb
-  }
+  render-titleblock("lecture", (
+    course: course,
+    authors: authors,
+    date: date,
+  ))
 
   set outline(depth: 3)
   set heading(numbering: "1.1")
@@ -370,7 +334,6 @@
         // amount to reduce spacing, could make this dependent on it.level
         v(-0.3em)
       }
-      else {}
     }
     [#it #v(0.2em)]
   }
@@ -387,10 +350,11 @@
     let n(..c) = numbering(it.numbering, ..c)
     [
       #set text(1.3em)
+      #let opts = options.final()
       #if state("backmatter").get() != none [
-        Anhang #n(..counter(heading).get())
+        #opts.spell.appendix #n(..counter(heading).get())
       ] else [
-        Kapitel #n(..counter(heading).get())
+        #opts.spell.chap #n(..counter(heading).get())
       ]
       #v(1em)
       #set text(1.5em)
@@ -415,13 +379,9 @@
   ): set page(header: none, footer: none)
 
   set page(numbering: "i")
-  heading(numbering: none, outlined: false)[Inhaltsverzeichnis]
+  context heading(numbering: none, outlined: false, options.final().spell.toc)
   outline(title: none)
-  if oneside {
-    pagebreak(weak: true)
-  } else {
-    pagebreak(to: "odd", weak: true)
-  }
+  chapter-break(oneside)
 
   body
 }}
@@ -514,7 +474,6 @@
   option-set(
     chosen.named()
     + if "size" not in chosen.named() { (size: 20pt) }
-    + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
   )
   show: bmim-common
 
@@ -546,7 +505,6 @@
   option-set(
     (task-show: task.style-enum)
     + (task-wrap-counter: (counter(heading), 1))
-    + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
     + (show-solution: show-solution)
     + chosen.named()
   )
@@ -561,24 +519,12 @@
   set heading(numbering: "1.")
   show heading.where(level: 1): heading-colored
 
-  context {
-    let opts = options.final()
-    let tbArgs = (
-      course: course,
-      title: title,
-      authors: authors,
-      date: date,
-      lang: opts.lang,
-      spell: opts.spell,
-      show-solution: opts.show-solution,
-    )
-    let tb = if type(options.final().titleblock) == function {
-      (options.final().titleblock)(tbArgs)
-    } else if options.final().titleblock == auto {
-      (titleblock.report)(tbArgs)
-    }
-    tb
-  }
+  render-titleblock("report", (
+    course: course,
+    title: title,
+    authors: authors,
+    date: date,
+  ))
 
   body
 
@@ -595,7 +541,7 @@
   title: [Thesis],
   subtitle: [],
   author: [Jane Doe],
-  date: datetime.today().display("[month repr:long] [year]"),
+  date: datetime.today(), // datetime (shown as month and year) or content
   advisor: ((
     name: [Prof. John],
     university: [Uni name],
@@ -644,7 +590,6 @@
         // amount to reduce spacing, could make this dependent on it.level
         v(-0.3em)
       }
-      else {}
     }
     [#it #v(0.3em)]
   }
@@ -661,11 +606,7 @@
     let n(..c) = numbering(it.numbering, ..c)
     move(dx: -24pt, [
       #set text(1.5em)
-      #if state("backmatter").get() != none [
-        #n(..counter(heading).get())
-      ] else [
-        #n(..counter(heading).get())
-      ]
+      #n(..counter(heading).get())
       #h(0.3em) #box(width: 1pt, height: 15.5pt, fill: color.gray, outset: (y: 3pt)) #h(0.3em) #it.body
     ])
   }
@@ -689,38 +630,22 @@
   set page(numbering: "i")
 
   if thanks != none {
-    heading(numbering: none, outlined: false)[Danksagung]
+    context heading(numbering: none, outlined: false, options.final().spell.thanks)
     thanks
-    if oneside {
-      pagebreak(weak: true)
-    } else {
-      pagebreak(to: "odd", weak: true)
-    }
+    chapter-break(oneside)
   }
 
   heading(numbering: none, outlined: false)[Kurzfassung]
   abstract.german
-  if oneside {
-    pagebreak(weak: true)
-  } else {
-    pagebreak(to: "odd", weak: true)
-  }
+  chapter-break(oneside)
 
   heading(numbering: none, outlined: false)[Abstract]
   abstract.english
-  if oneside {
-    pagebreak(weak: true)
-  } else {
-    pagebreak(to: "odd", weak: true)
-  }
+  chapter-break(oneside)
 
-  heading(numbering: none, outlined: false)[Inhaltsverzeichnis]
+  context heading(numbering: none, outlined: false, options.final().spell.toc)
   outline(title: none)
-  if oneside {
-    pagebreak(weak: true)
-  } else {
-    pagebreak(to: "odd", weak: true)
-  }
+  chapter-break(oneside)
 
   body
 
@@ -743,28 +668,15 @@
     + (task-show-points: task-show-points)
     + (oneside: oneside)
     + chosen.named()
-    + if "logo-with-text" not in chosen.named() { (logo-with-text: true) }
   )
   show: bmim-common
   show ref: task.show-ref
 
-  context {
-    let opts = options.final()
-    let tbArgs = (
-      course: course,
-      authors: authors,
-      date: date,
-      lang: opts.lang,
-      spell: opts.spell,
-      show-solution: opts.show-solution,
-    )
-    let tb = if type(options.final().titleblock) == function {
-      (options.final().titleblock)(tbArgs)
-    } else if options.final().titleblock == auto {
-      (titleblock.workbook)(tbArgs)
-    }
-    tb
-  }
+  render-titleblock("workbook", (
+    course: course,
+    authors: authors,
+    date: date,
+  ))
 
   set outline(depth: 1)
   set heading(numbering: "1.1")
@@ -782,7 +694,7 @@
       align(right, box(
         fill: opts.theme.primary,
         inset: (x: 0.8em, y: 0.5em),
-        text(fill: white, weight: "bold", size: 16pt, tracking: 1pt)[Kapitel]
+        text(fill: white, weight: "bold", size: 16pt, tracking: 1pt, opts.spell.chap)
       ))
     )
     v(-2.75em)
@@ -816,22 +728,14 @@
   ): set page(header: none, footer: none)
 
   set page(numbering: "i")
-  heading(numbering: none, outlined: false)[Inhaltsverzeichnis]
+  context heading(numbering: none, outlined: false, options.final().spell.toc)
   outline(title: none)
-  if oneside {
-    pagebreak(weak: true)
-  } else {
-    pagebreak(to: "odd", weak: true)
-  }
+  chapter-break(oneside)
 
   body
 
   if show-solution == "bottom" {
-    if oneside {
-      pagebreak(weak: true)
-    } else {
-      pagebreak(to: "odd", weak: true)
-    }
+    chapter-break(oneside)
 
     set page(numbering: "1")
     task.solution-bottom
