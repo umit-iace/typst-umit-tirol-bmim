@@ -39,7 +39,7 @@
       sym.space.nobreak.narrow
       str(counter(page).at(loc).first())
     }
-    [_Lösung auf #link(loc, msg)._]
+    [_#spell.solution-on #link(loc, msg)._]
   }
 ]
 
@@ -56,16 +56,17 @@
   lbl + enum(task)
 }
 
-#let solution-inline(solution) = {
+#let solution-inline(solution) = context {
+  let opts = options.final()
   block(
     width: 100%,
-    stroke: 2pt + color.red.lighten(0%),
+    stroke: 2pt + color.red,
     inset: .5em,
     breakable: true,
     block(
       breakable: true,
     )[
-      *Lösung:*
+      *#opts.spell.solution:*
 
       #solution
     ]
@@ -73,15 +74,16 @@
 }
 
 #let solution-bottom = context [
+  #let spell = options.final().spell
   // Fixing the enum formatting for the subtasks and their solution
   #set enum(numbering: "a)")
 
-  = Lösungen <bmim:nonumber>
+  = #spell.solutions <bmim:nonumber>
   #for (num, solution) in t-solutions.final().enumerate(start:0) [
 
     #show heading: set block(above: 0pt)
     #block(above:1.2em, below:0pt, sticky:true, [#t-mark#t-label-sol(num)])
-    == Lösung zu #ref(t-label(num)) <bmim:nonumber>
+    == #spell.solution-to #ref(t-label(num)) <bmim:nonumber>
 
     #solution
   ]
@@ -207,6 +209,7 @@
 
 
 #let points-table = context {
+  let spell = options.final().spell
   let n = total-count()
   let points = task-points()
   show table.cell.where(y: 0): strong
@@ -215,7 +218,7 @@
     columns: (1fr,)*(n + 2),
     rows: (auto, auto, 2em),
     align: center,
-    ..range(1,n+1).map(str), $Sigma$, [Note],
+    ..range(1,n+1).map(str), $Sigma$, spell.mark,
     ..points.map(str), str(points.sum(default:0)), [],
     ..range(n+2).map(it => [])
   )
