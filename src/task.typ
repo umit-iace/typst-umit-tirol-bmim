@@ -1,14 +1,14 @@
 #import "helpers.typ"
 #import "options.typ": options, color
-#let t-count = counter("task")
-#let t-points = state("task-points", ())
-#let t-solutions = state("task-solutions", ())
+#let t-count = counter("bmim-task")
+#let t-points = state("bmim-task-points", ())
+#let t-solutions = state("bmim-task-solutions", ())
 
 #let total-count() = t-points.final().len()
 #let task-points() = t-points.final().map(array.sum.with(default: 0))
 #let total-points() = task-points().sum(default:0)
 
-#let t-mark = metadata("task-locator")
+#let t-mark = metadata("bmim-task-locator")
 #let t-label(lbl) = label("bmim-"+str(lbl)+"-tsk")
 #let t-label-sol(lbl) = label("bmim-"+str(lbl)+"-sol")
 
@@ -99,7 +99,7 @@
 
   let opts = options.final()
   let wrap = if opts.task-wrap-counter == none {
-    (c: counter("task-counter-ignore"), lvl: 0)
+    (c: counter("bmim-task-counter-ignore"), lvl: 0)
   } else {
     ("c", "lvl").zip(opts.task-wrap-counter).fold((:), (acc, it) => {
       acc += (it.first(): it.last())

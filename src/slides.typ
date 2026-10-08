@@ -166,7 +166,7 @@
 
   self = utils.merge-dicts(self, new-config)
 
-  let cnt-outline = counter("outline")
+  let cnt-outline = counter("bmim-outline")
   cnt-outline.update(1)
 
   let body = {

@@ -5,7 +5,7 @@
 #import "task.typ"
 #import "slides.typ": *
 
-#let item-cnt = counter("item-counter")
+#let item-cnt = counter("bmim-item")
 
 #let bmim-common(body) = context {
   let opts = options.final()
@@ -330,7 +330,7 @@
   show heading.where(level:1): chapter-heading(weight: "regular", (it, n) => [
     #set text(1.3em)
     #let opts = options.final()
-    #if state("backmatter").get() != none [
+    #if backmatter-state.get() != none [
       #opts.spell.appendix #n
     ] else [
       #opts.spell.chap #n

@@ -97,11 +97,14 @@
   content
 }
 
+// Set to true from the start of the backmatter (appendix) on
+#let backmatter-state = state("bmim-backmatter", none)
+
 #let backmatter(content, to: "odd") = context {
   let opts = options.final()
   set heading(numbering: "A.1", supplement: opts.spell.appendix)
   counter(heading).update(0)
-  state("backmatter").update(true)
+  backmatter-state.update(true)
   {
     show heading: none
     chapter-break(opts.oneside, to: to)

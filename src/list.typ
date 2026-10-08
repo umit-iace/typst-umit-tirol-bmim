@@ -1,7 +1,7 @@
 #import "helpers.typ"
-#let enum-label-mark = metadata("enumeration_label")
-#let enum-counter = counter("enum-counter")
-#let enum-numbering-state = state("enum-numbering", none)
+#let enum-label-mark = metadata("bmim-enum-label")
+#let enum-counter = counter("bmim-enum")
+#let enum-numbering-state = state("bmim-enum-numbering", none)
 
 #let enum-label(label) = {
   if type(label) == content {
