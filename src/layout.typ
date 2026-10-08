@@ -602,16 +602,9 @@
       #par[]
       #print-semester(args.date)
     ]
-    pagebreak(to: "odd", weak: true)
-    counter(page).update(1)
   },
-  letter: (
-    recipient,
-    sender,
-    location,
-    date,
-    subject
-  ) => context {
+  letter: (args) => context {
+    let (recipient, sender, location, date, subject, ..) = args
     let head-text(body) = {
       set text(gray, size: 8pt)
       if body != none {
@@ -668,7 +661,8 @@
       v(2em)
     }
   },
-  poster:   (title, authors) => context {
+  poster: (args) => context {
+    let (title, authors, ..) = args
     place(top+center, float: true, scope: "parent",[
       #text(1.4em, strong(title))\
       #authors.join([\ ])
@@ -695,7 +689,8 @@
     )
   },
   slides: () => context {},
-  thesis: (program, university, study, title, subtitle, author, date, advisor) => context {
+  thesis: (args) => context {
+    let (program, university, title, subtitle, author, date, advisor, ..) = args
     let opts = options.final()
     let degree = if program == "Bachelor" [Bachelor of Science] else if program == "Master" [Diplom-Ingenieur]
     let work = if program == "Bachelor" { opts.spell.bachelor-thesis } else { opts.spell.master-thesis }
@@ -776,8 +771,6 @@
         }
       )
     }
-    pagebreak(to: "odd", weak: true)
-    counter(page).update(1)
   },
   workbook: (args) => context {
     let opts = options.final()
@@ -829,8 +822,6 @@
       ]
       #print-date(args.date)
     ]
-    pagebreak(to: "odd")
-    counter(page).update(1)
   },
 )
 

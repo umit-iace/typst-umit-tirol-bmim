@@ -317,6 +317,9 @@
     authors: authors,
     date: date,
   ))
+  // also applies to a user-defined title block
+  pagebreak(to: "odd", weak: true)
+  counter(page).update(1)
 
   set outline(depth: 3)
   set heading(numbering: "1.1")
@@ -444,13 +447,13 @@
       show-marks(hole-punch-marks, (148.5mm,))
     },
   )
-  (titleblock.letter)(
-      recipient,
-      sender,
-      location,
-      date,
-      subject,
-  )
+  render-titleblock("letter", (
+    recipient: recipient,
+    sender: sender,
+    location: location,
+    date: date,
+    subject: subject,
+  ))
 
   body
 
@@ -489,7 +492,10 @@
 
   set heading(numbering: "1.")
 
-  (titleblock.poster)(title, authors)
+  render-titleblock("poster", (
+    title: title,
+    authors: authors,
+  ))
 
   body
 }}
@@ -585,7 +591,19 @@
     ),
   )
 
-  (titleblock.thesis)(program, university, study, title, subtitle, author, date, advisor)
+  render-titleblock("thesis", (
+    program: program,
+    university: university,
+    study: study,
+    title: title,
+    subtitle: subtitle,
+    author: author,
+    date: date,
+    advisor: advisor,
+  ))
+  // also applies to a user-defined title block
+  pagebreak(to: "odd", weak: true)
+  counter(page).update(1)
 
   set outline(depth: 3)
   set heading(numbering: "1.1")
@@ -690,6 +708,9 @@
     authors: authors,
     date: date,
   ))
+  // also applies to a user-defined title block
+  pagebreak(to: "odd", weak: true)
+  counter(page).update(1)
 
   set outline(depth: 1)
   set heading(numbering: "1.1")
