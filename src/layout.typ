@@ -726,7 +726,7 @@
       v(8pt)
       large[
 +        #university-city(university), #if type(date) == datetime [
-          #translatedMonth(date, opts.lang) #date.year()
+          #translated-month(date, opts.lang) #date.year()
         ] else [
           #date
         ]

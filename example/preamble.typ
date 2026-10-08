@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, mainmatter, backmatter, abstract, poster-box, translatedMonth
+#import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, mainmatter, backmatter, abstract, poster-box, translated-month
 
 // various environments
 #import "@preview/touying:0.8.0": *
@@ -53,7 +53,7 @@
       #args.spell.lc:
     ],
     [
-      #args.date.day(). #translatedMonth(args.date, args.lang) #args.date.year()
+      #args.date.day(). #translated-month(args.date, args.lang) #args.date.year()
     ],
   )
 }

@@ -113,7 +113,7 @@
   content
 }
 
-#let translatedMonth(dt, lang) = {
+#let translated-month(dt, lang) = {
   if lang == "de" {
     months.at(dt.month() - 1)
   } else {
@@ -121,14 +121,17 @@
   }
 }
 
+// Deprecated alias, use translated-month instead
+#let translatedMonth = translated-month
+
 #let print-date(date) = {
   let opts = options.final()
   if type(date) != datetime {
     date
   } else if opts.lang == "de" {
-    [#date.day(). #translatedMonth(date, opts.lang) #date.year()]
+    [#date.day(). #translated-month(date, opts.lang) #date.year()]
   } else {
-    [#translatedMonth(date, opts.lang) #date.day(), #date.year()]
+    [#translated-month(date, opts.lang) #date.day(), #date.year()]
   }
 }
 
