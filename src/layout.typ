@@ -21,9 +21,7 @@
 // Colored bar with optional centered content. On slides, `progress` adds one
 // dot per section on the right, the current section filled.
 #let banner(slide: false, size: 1em, progress: false, ..body) = {
-  assert(body.named().len() == 0, message:
-    "Unknown argument(s) of banner: " + body.named().keys().join(", ")
-  )
+  assert-no-extra(body, "banner")
   let opts = options.final()
   let height = if slide { 0.5em } else { 1.5em }
   let show-progress = slide and progress

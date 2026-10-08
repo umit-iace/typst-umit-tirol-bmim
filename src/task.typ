@@ -1,5 +1,6 @@
 #import "helpers.typ"
 #import "options.typ": options, color
+#import "check.typ": assert-set, assert-no-extra
 #let t-count = counter("bmim-task")
 #let t-points = state("bmim-task-points", ())
 #let t-solutions = state("bmim-task-solutions", ())
@@ -89,12 +90,60 @@
   ]
 ]
 
-#let task(..args) = context {
-  let is-super = "points" not in args.named()
-  let lbl = args.named().at("label", default: none)
+#let subtask-keys = ("points", "description", "solution", "label")
+
+// A task is either a single task with `points`, `description` and `solution`,
+// or a task with subtasks: a problem description followed by one dictionary
+// per subtask, each with the keys `points`, `description`, `solution` and an
+// optional `label`.
+#let task(
+  points: none, // number or array of numbers, none for a task with subtasks
+  description: none,
+  solution: none,
+  label: none,
+  name: none,
+  ..args, // task with subtasks: problem description, subtask dictionaries
+) = context {
+  assert-no-extra(args, "task")
+  let is-super = points == none
+  let subtasks = args.pos().slice(calc.min(1, args.pos().len()))
+  if is-super {
+    assert(args.pos().len() > 0, message:
+      "task needs either 'points', 'description' and 'solution', " +
+      "or a problem description followed by subtasks"
+    )
+    assert(description == none and solution == none, message:
+      "Arguments 'description' and 'solution' of task are not allowed " +
+      "for a task with subtasks, set them per subtask"
+    )
+    for (i, sub) in subtasks.enumerate() {
+      let of = "subtask " + str(i + 1)
+      assert(type(sub) == dictionary, message:
+        "Subtask " + str(i + 1) + " of task must be a dictionary with " +
+        "points, description and solution, but was " + repr(sub)
+      )
+      for key in sub.keys() {
+        assert(key in subtask-keys, message:
+          "Unknown key '" + key + "' of " + of + ", known keys are [" +
+          subtask-keys.map(repr).join(", ") + "]"
+        )
+      }
+      for key in ("points", "description", "solution") {
+        assert-set(key, sub.at(key, default: none), of: of)
+      }
+    }
+  } else {
+    assert(args.pos().len() == 0, message:
+      "task with 'points' takes no positional arguments, " +
+      "use 'description' instead"
+    )
+    assert-set("description", description, of: "task")
+    assert-set("solution", solution, of: "task")
+  }
+  let lbl = label
 
   let points-or-empty = {
-    if is-super { () } else { (args.named().points,).flatten() }
+    if is-super { () } else { (points,).flatten() }
   }
 
   let opts = options.final()
@@ -121,8 +170,8 @@
   t-points.update(p => { p.push(points-or-empty); return p });
   if is-super {
     // store points
-    for (sub, arg) in args.pos().slice(1).enumerate() {
-      t-points.update(p => {p.last().push(arg.points); return p})
+    for sub in subtasks {
+      t-points.update(p => {p.last().push(sub.points); return p})
     }
   }
 
@@ -136,17 +185,17 @@
     let description = if is-super {
       args.pos().first()
       enum-cnt
-      args.pos().slice(1).map(it => {
+      subtasks.map(it => {
         let lbl = if "label" in it [ #t-mark#it.label ]
         [+ #lbl #it.description #enum-cnt]
       }).join()
-    } else { args.named().description }
+    } else { description }
 
     // show descriptions
     (opts.task-show)(
       [#t-mark#t-label(tasknum)] + if lbl != none [#t-mark#lbl],
       tasknum,
-      args.named().at("name", default: none),
+      name,
       points.sum(default:0),
       description
     )
@@ -167,9 +216,9 @@
     }
     let solution = (
       if is-super {
-        args.pos().slice(1).map(sub => sub.solution).zip(points)
+        subtasks.map(sub => sub.solution).zip(points)
       } else {(
-        (args.named().solution, points.first(default:0)),
+        (solution, points.first(default:0)),
       )}
     ).map(tmp => sol-style(..tmp)).join()
 
