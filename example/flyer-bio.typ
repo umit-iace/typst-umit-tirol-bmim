@@ -1,0 +1,76 @@
+#import "./preamble.typ": *
+
+// date and time of the event, used for the badge and the QR code
+#let start = datetime(year: 2026, month: 11, day: 5, hour: 17, minute: 0, second: 0)
+#let end = datetime(year: 2026, month: 11, day: 5, hour: 18, minute: 30, second: 0)
+
+#show: bmim.flyer(
+  lang: "en",
+  title: [Bringing quantum systems under control: From algorithms to hardware],
+  series: [Mechatronisches Kolloquium],
+  details: (
+    ([Presenter], [
+      Dr.-Ing. Jane Doe \
+      University of Somewhere, Institute for Systems Theory and Automatic Control
+    ]),
+    ([Date], [
+      5#super[th] of November from 17.00 to 18.30 \
+      PR204 \
+      #text(size: 0.85em)[UMIT TIROL, Eduard-Wallnöfer-Zentrum 1, 6060 Hall in Tirol]
+    ]),
+  ),
+  // free choice of the images, they cover the area
+  background: image("./../assets/background_umit.jpg"),
+  back-image: image("./../assets/background_bettelwurf.jpg"),
+  qr-code: qr-code(
+    quiet-zone: false,
+    dark-color: white,
+    light-color: bmim.color.blue,
+    bmim.build-vcalendar(
+      (
+        name: "Bringing quantum systems under control",
+        location: "UMIT TIROL, PR204, Eduard-Wallnöfer-Zentrum 1, 6060 Hall in Tirol",
+        // a datetime without time gives an all-day event
+        start: start,
+        end: end,
+        description: "Mechatronisches Kolloquium"
+      )
+    ),
+    width: 70pt,
+  ),
+  // second logo next to the UMIT logo, comparable to the title slide
+  logo: (
+    flyer-left: image("./../assets/logo_iace_white.svg", height: 40pt),
+  ),
+  // a datetime is shown with date and time, like the QR code
+  badge: start,
+  // lower area of the back page
+  back-bottom-title: [Short bio],
+  // line below the title as wide as the portrait
+  back-bottom-rule: 25%,
+  back-bottom: grid(
+    columns: (25%, 1fr),
+    column-gutter: 1.5em,
+    // e.g. image("portrait.jpg", width: 100%)
+    rect(width: 100%, height: 9em, fill: white.transparentize(80%), stroke: none)[
+      #set align(center + horizon)
+      Portrait
+    ],
+    [
+      *Dr.-Ing. Jane Doe,* University of Somewhere, Institute for Systems Theory
+      and Automatic Control
+
+      #lorem(80)
+    ],
+  ),
+)
+
+// upper area of the back page
+Imagine a system whose state dimension doubles with every component you add,
+whose state is irreversibly disturbed the moment you measure it, and which
+constantly leaks information into its environment. A control engineer's
+nightmare? Welcome to quantum computing.
+
+#lorem(60)
+
+#lorem(50)

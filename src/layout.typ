@@ -457,6 +457,14 @@
     )
 }
 
+// Color gradient of the flyer: the box on the front page and the background
+// of the back page
+#let flyer-gradient(opts) = gradient.linear(
+  opts.theme.primary.lighten(10%),
+  opts.theme.primary.darken(80%),
+  angle: 90deg,
+)
+
 #let titleblock = (
   exam:     (args) => context {
     let opts = options.final()
@@ -657,6 +665,69 @@
       text(weight: "bold")[#subject]
       v(2em)
     }
+  },
+  flyer: (args) => context {
+    let opts = options.final()
+    let fg = opts.theme.background
+    let logo-left = pick-logo(opts.logo, "flyer-left")
+    let logo-right = pick-logo(opts.logo, "flyer-right")
+    set text(fill: fg)
+    set par(justify: false)
+
+    // background image, covers the whole page
+    if args.background != none {
+      place(top + left, box(
+        width: page.width, height: page.height, clip: true, {
+          set image(width: 100%, height: 100%, fit: "cover")
+          args.background
+        }
+      ))
+    }
+
+    // information box at the bottom half
+    place(bottom + left, dx: 4%, box(
+      width: 92%,
+      height: 50%,
+      fill: flyer-gradient(opts),
+      inset: (x: 6%, top: 2.2em, bottom: 1.8em),
+      // the alignment of place would apply to the content as well
+      align(top + left, {
+        // series above the title, separated by a line
+        if args.series != none {
+          block(
+            width: 100%,
+            below: 0.8em,
+            stroke: (bottom: 0.6pt + fg),
+            inset: (bottom: 0.5em),
+            text(size: 11pt, weight: "semibold", upper(args.series)),
+          )
+        }
+        block(below: 1.8em, text(size: 25pt, weight: "semibold", hyphenate: false, long(args.title)))
+        // freely labelled rows, e.g. presenter, organisation, date
+        set text(size: 16pt)
+        grid(
+          columns: (8em, 1fr),
+          row-gutter: 0.9em,
+          ..args.details.map(((label, body)) => ([#label:], body)).flatten(),
+        )
+        // QR code bottom left, logos bottom right; the QR code is shown as
+        // given, so its colors have to contrast with the box
+        if args.qr-code != none {
+          place(bottom + left, args.qr-code)
+        }
+        place(bottom + right, stack(
+          dir: ltr,
+          spacing: 1.5em,
+          if logo-left != auto { align(bottom, logo-left) },
+          align(bottom, if logo-right == auto {
+            let logo = if opts.lang == "de" { "logo_umit_white_gr.svg" } else { "logo_umit_white_en.svg" }
+            image("./../assets/" + logo, height: 50pt)
+          } else {
+            logo-right
+          }),
+        ))
+      }),
+    ))
   },
   poster: (args) => context {
     let (title, authors, ..) = args

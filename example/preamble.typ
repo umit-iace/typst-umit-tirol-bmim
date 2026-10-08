@@ -1,6 +1,7 @@
 #import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, mainmatter, backmatter, abstract, poster-box, translated-month
 
 // various environments
+#import "@preview/rustycure:0.2.0": qr-code
 #import "@preview/touying:0.8.0": *
 #import "@preview/theorion:0.6.0": *
 #import cosmos.clouds: *
