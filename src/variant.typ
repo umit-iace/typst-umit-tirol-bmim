@@ -137,6 +137,7 @@
   date: datetime.today(), // datetime or content
   ..chosen, // other options: theme, size, lang, etc
 ) = { body => context {
+  assert-set("authors", authors)
   option-set(chosen.named())
   show: bmim-common
   // overwrite defaults
@@ -209,6 +210,7 @@
   ..chosen // other options: theme, size, etc
 ) = { body => {
   assert-set("total-time", total-time)
+  assert-set("authors", authors)
   option-set(
     (task-show: task.style-heading)
     + (show-solution: show-solution)
@@ -267,6 +269,7 @@
   task-show-points: false,
   ..chosen
 ) = { body => {
+  assert-set("authors", authors)
   option-set(
     (task-show: task.style-heading)
     + (task-show-points: task-show-points)
@@ -305,6 +308,7 @@
   oneside: false, // false, true
   ..chosen
 ) = { body => {
+  assert-set("authors", authors)
   option-set(
     (oneside: oneside)
     + chosen.named()
@@ -322,53 +326,19 @@
 
   set outline(depth: 3)
   set heading(numbering: "1.1")
-  show heading: it => {
-    // Clever trick to reduce spacing between consecutive headings
-    // See https://github.com/typst/typst/issues/2953
-    let previous_headings = query(selector(heading).before(here(),
-      inclusive: false))
-    if previous_headings.len() > 0 {
-      let prev_loc = previous_headings.last().location().position()
-      let it_loc = it.location().position()
-      if (it_loc.page == prev_loc.page
-        and it_loc.x == prev_loc.x
-        and it_loc.y - prev_loc.y < 60pt) { // threshold
-        // amount to reduce spacing, could make this dependent on it.level
-        v(-0.3em)
-      }
-    }
-    [#it #v(0.2em)]
-  }
-  show heading.where(level:1): it => context {
-    let apx = query(<appendix>).any(e => e == it)
-    if apx {
-      return
-    }
-    set text(weight: "regular")
-    set block(inset: (y: 2em))
-    show: strong
-    show: block
-    if it.numbering == none { it.body; return }
-    let n(..c) = numbering(it.numbering, ..c)
-    [
-      #set text(1.3em)
-      #let opts = options.final()
-      #if state("backmatter").get() != none [
-        #opts.spell.appendix #n(..counter(heading).get())
-      ] else [
-        #opts.spell.chap #n(..counter(heading).get())
-      ]
-      #v(1em)
-      #set text(1.5em)
-      #it.body
+  show: book-headings.with(spacing-after: 0.2em)
+  show heading.where(level:1): chapter-heading(weight: "regular", (it, n) => [
+    #set text(1.3em)
+    #let opts = options.final()
+    #if state("backmatter").get() != none [
+      #opts.spell.appendix #n
+    ] else [
+      #opts.spell.chap #n
     ]
-  }
-  show heading.where(level:2): set text(size: 1.4em)
-  show heading.where(level:3): set text(size: 1.2em)
-  show heading.where(level:4): set text(size: 1.1em)
-  show heading.where(level:5): it => text(
-    weight: 700,
-    it.body) + [.]
+    #v(1em)
+    #set text(1.5em)
+    #it.body
+  ])
 
   set std.page(
     header: header.lecture,
@@ -474,6 +444,7 @@
   ..chosen // other options: theme, size, etc
 ) = { body => {
   assert-one-of("orientation", orientation, ("landscape", "portrait"))
+  assert-set("authors", authors)
   option-set(
     chosen.named()
     + if "size" not in chosen.named() { (size: 20pt) }
@@ -508,6 +479,7 @@
   show-solution: none, // none, "inline", "bottom"
   ..chosen,
 ) = { body => {
+  assert-set("authors", authors)
   option-set(
     (task-show: task.style-enum)
     + (task-wrap-counter: (counter(heading), 1))
@@ -546,7 +518,7 @@
   study: "Mech", // BauUmwelt, Elek, Mech, Bau, Umwelt
   title: [Thesis],
   subtitle: [],
-  author: [Jane Doe],
+  author: none, // str or content
   date: datetime.today(), // datetime (shown as month and year) or content
   advisor: ((
     name: [Prof. John],
@@ -562,6 +534,7 @@
   oneside: false, // false, true
   ..chosen,
 ) = { body => {
+  assert-set("author", author)
   assert-one-of("program", program, thesis-programs)
   assert-one-of("university", university, universities)
 
@@ -597,46 +570,12 @@
 
   set outline(depth: 3)
   set heading(numbering: "1.1")
-  show heading: it => {
-    // Clever trick to reduce spacing between consecutive headings
-    // See https://github.com/typst/typst/issues/2953
-    let previous_headings = query(selector(heading).before(here(),
-      inclusive: false))
-    if previous_headings.len() > 0 {
-      let prev_loc = previous_headings.last().location().position()
-      let it_loc = it.location().position()
-      if (it_loc.page == prev_loc.page
-        and it_loc.x == prev_loc.x
-        and it_loc.y - prev_loc.y < 60pt) { // threshold
-        // amount to reduce spacing, could make this dependent on it.level
-        v(-0.3em)
-      }
-    }
-    [#it #v(0.3em)]
-  }
-  show heading.where(level:1): it => context {
-    let apx = query(<appendix>).any(e => e == it)
-    if apx {
-      return
-    }
-    set text(weight: "regular")
-    set block(inset: (y: 1em))
-    show: strong
-    show: block
-    if it.numbering == none { it.body; return }
-    let n(..c) = numbering(it.numbering, ..c)
-    move(dx: -24pt, [
-      #set text(1.5em)
-      #n(..counter(heading).get())
-      #h(0.3em) #box(width: 1pt, height: 15.5pt, fill: color.gray, outset: (y: 3pt)) #h(0.3em) #it.body
-    ])
-  }
-  show heading.where(level:2): set text(size: 1.4em)
-  show heading.where(level:3): set text(size: 1.2em)
-  show heading.where(level:4): set text(size: 1.1em)
-  show heading.where(level:5): it => text(
-    weight: 700,
-    it.body) + [.]
+  show: book-headings.with(spacing-after: 0.3em)
+  show heading.where(level:1): chapter-heading(inset: 1em, weight: "regular", (it, n) => move(dx: -24pt, [
+    #set text(1.5em)
+    #n
+    #h(0.3em) #box(width: 1pt, height: 15.5pt, fill: color.gray, outset: (y: 3pt)) #h(0.3em) #it.body
+  ]))
 
   set std.page(
     header: header.thesis,
@@ -682,6 +621,7 @@
   oneside: false, // false, true
   ..chosen,
 ) = { body => {
+  assert-set("authors", authors)
   option-set(
     (task-show: task.style-heading.with(lvl:2))
     + (show-solution: show-solution)
@@ -705,13 +645,8 @@
   set outline(depth: 1)
   set heading(numbering: "1.1")
   show heading.where(level:2): heading-colored
-  show heading.where(level:1): it => context {
+  show heading.where(level:1): chapter-heading((it, n) => {
     let opts = options.final()
-    set block(inset: (y: 2em))
-    show: strong
-    show: block
-    if it.numbering == none { it.body; return }
-    let n(..c) = numbering(it.numbering, ..c)
     box(
       width: 100%,
       stroke: (bottom: 1.25pt + opts.theme.primary),
@@ -735,11 +670,11 @@
       grid.cell(
         text(
           size: 27pt, weight: "regular", fill: opts.theme.primary.lighten(20%),
-          n(..counter(heading).get())
+          n
         )
       )
     )
-  }
+  })
 
   set page(
     header: header.workbook,

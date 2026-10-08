@@ -19,10 +19,49 @@
 #let long(x) = if type(x) == array { x.at(0) } else { x }
 #let short(x) = if type(x) == array { x.at(1) } else { x }
 
-#let chapter-break(oneside) = if oneside {
+#let chapter-break(oneside, to: "odd") = if oneside {
   pagebreak(weak: true)
 } else {
-  pagebreak(to: "odd", weak: true)
+  pagebreak(to: to, weak: true)
+}
+
+// Heading rules shared by book-like variants (lecture, thesis): reduce the
+// spacing between consecutive headings and scale the levels 2 to 5.
+#let book-headings(spacing-after: 0.2em, body) = {
+  show heading: it => {
+    // Clever trick to reduce spacing between consecutive headings
+    // See https://github.com/typst/typst/issues/2953
+    let previous_headings = query(selector(heading).before(here(),
+      inclusive: false))
+    if previous_headings.len() > 0 {
+      let prev_loc = previous_headings.last().location().position()
+      let it_loc = it.location().position()
+      if (it_loc.page == prev_loc.page
+        and it_loc.x == prev_loc.x
+        and it_loc.y - prev_loc.y < 60pt) { // threshold
+        // amount to reduce spacing, could make this dependent on it.level
+        v(-0.3em)
+      }
+    }
+    [#it #v(spacing-after)]
+  }
+  show heading.where(level:2): set text(size: 1.4em)
+  show heading.where(level:3): set text(size: 1.2em)
+  show heading.where(level:4): set text(size: 1.1em)
+  show heading.where(level:5): it => text(
+    weight: 700,
+    it.body) + [.]
+  body
+}
+
+#let chapter-heading(inset: 2em, weight: auto, style) = it => context {
+  if query(<appendix>).any(e => e == it) { return }
+  set text(weight: weight) if weight != auto
+  set block(inset: (y: inset))
+  show: strong
+  show: block
+  if it.numbering == none { it.body; return }
+  style(it, numbering(it.numbering, ..counter(heading).get()))
 }
 
 #let pick-logo(logo, key) = if type(logo) == dictionary {
@@ -65,14 +104,8 @@
   state("backmatter").update(true)
   {
     show heading: none
-    [
-      #if opts.oneside [
-        #pagebreak(weak: true)
-      ] else [
-        #pagebreak(to: to, weak: true)
-      ]
-      #heading(numbering: none)[#opts.spell.appendix] <appendix>
-    ]
+    chapter-break(opts.oneside, to: to)
+    [#heading(numbering: none)[#opts.spell.appendix] <appendix>]
   }
   content
 }
