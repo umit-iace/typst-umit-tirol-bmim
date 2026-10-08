@@ -1,6 +1,7 @@
 #import "task.typ"
 #import "helpers.typ": *
 #import "options.typ": *
+#import "check.typ": *
 #import "slides.typ": *
 
 #let heading-colored(it) = context {
@@ -370,12 +371,9 @@
   },
 )
 
-#let university-city(university) = if university == "LFUI" {
-  [Innsbruck]
-} else if university == "UMIT" {
-  [Hall in Tirol]
-} else {
-  panic("The used university is not implemented yet!")
+#let university-city(university) = {
+  assert-one-of("university", university, universities)
+  if university == "LFUI" [Innsbruck] else [Hall in Tirol]
 }
 
 #let finalblock = (

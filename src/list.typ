@@ -6,7 +6,10 @@
 #let enum-label(label) = {
   if type(label) == content {
     // informative error message
-    assert(label.has("text"), message: "enum-label requires text content")
+    assert(label.has("text"), message:
+      "Argument 'label' of enum-label must be a string or plain text, " +
+      "but was " + repr(label)
+    )
     label = label.text
   }
   [#enum-label-mark#std.label(label)]

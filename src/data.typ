@@ -177,6 +177,10 @@
   )
 )
 
+// Supported values of the thesis options 'program' and 'university'
+#let thesis-programs = ("Bachelor", "Master")
+#let universities = ("LFUI", "UMIT")
+
 #let months = (
   "Januar",
   "Februar",

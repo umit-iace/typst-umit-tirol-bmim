@@ -1,4 +1,5 @@
 #import "helpers.typ": *
+#import "check.typ": *
 #import "layout.typ": *
 #import "list.typ": *
 #import "task.typ"
@@ -207,9 +208,7 @@
   oneside: false, // false, true
   ..chosen // other options: theme, size, etc
 ) = { body => {
-  if total-time == none {
-    panic("Exam needs total-time option set")
-  }
+  assert-set("total-time", total-time)
   option-set(
     (task-show: task.style-heading)
     + (show-solution: show-solution)
@@ -474,6 +473,7 @@
   contact: none, // str or content
   ..chosen // other options: theme, size, etc
 ) = { body => {
+  assert-one-of("orientation", orientation, ("landscape", "portrait"))
   option-set(
     chosen.named()
     + if "size" not in chosen.named() { (size: 20pt) }
@@ -562,18 +562,8 @@
   oneside: false, // false, true
   ..chosen,
 ) = { body => {
-  let programs = ("Bachelor", "Master")
-  assert(program in programs, message:
-    "Option 'program' must be one of [" +
-    programs.map(repr).join(", ") +
-    "], but was set to " + repr(program)
-  )
-  let universities = ("LFUI", "UMIT")
-  assert(university in universities, message:
-    "Option 'university' must be one of [" +
-    universities.map(repr).join(", ") +
-    "], but was set to " + repr(university)
-  )
+  assert-one-of("program", program, thesis-programs)
+  assert-one-of("university", university, universities)
 
   option-set(
     (oneside: oneside)

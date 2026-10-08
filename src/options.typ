@@ -1,5 +1,6 @@
 #import "colors.typ": *
 #import "data.typ": *
+#import "check.typ": *
 
 #let options = state("bmim-options", (
   theme: color-theme.cd26,
@@ -19,26 +20,20 @@
 #let option-set(dict) = {
   options.update(o => {
     for (key, val) in dict {
-      if key not in o {
-        let known = o.keys().filter(k => k != "spell")
-        panic(
-          "Unknown option: " + key +
-          ". Known options: " + known.join(", ")
-        )
-      }
+      let known = o.keys().filter(k => k != "spell")
+      assert(key in known, message:
+        "Unknown option '" + key + "', known options are [" +
+        known.map(repr).join(", ") + "]"
+      )
       if key == "lang" {
+        assert-one-of("lang", val, i18n.keys())
         o.lang = val
         o.spell = i18n.at(val)
       } else {
         o.at(key) = val
       }
       if key == "show-solution" {
-        let recognized = (none, "inline", "bottom")
-        assert( val in recognized, message:
-          "Option 'show-solution' must be one of ["+
-          recognized.map(repr).join(", ") +
-          "], but was set to " + repr(val)
-        )
+        assert-one-of("show-solution", val, (none, "inline", "bottom"))
       }
     }
     return o
