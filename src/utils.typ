@@ -136,3 +136,38 @@
   for _y in y { place(top + left, dx: m.xdist, dy: _y, l) }
 }
 
+#let mecard_template = "MECARD:N:__LASTNAME__,__FIRSTNAME__;TEL:__TEL__;EMAIL:__EMAIL__;;"
+
+#let build_mecard(contact) = {
+  return mecard_template
+    .replace("__FIRSTNAME__", contact.firstname)
+    .replace("__LASTNAME__", contact.lastname)
+    .replace("__TEL__", contact.telephone)
+    .replace("__EMAIL__", contact.email)
+}
+
+#let vcalender_template = "
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//TYPST//EN
+BEGIN:VEVENT
+SUMMARY:__EVENTNAME__
+LOCATION:__LOCATION__
+DTSTART:__START_DATE__T__START_TIME__
+DTEND:__END_DATE__T__END_TIME__
+DESCRIPTION:__DESCRIPTION__
+END:VEVENT
+END:VCALENDAR
+"
+
+#let build_vcalender(event) = {
+  return vcalender_template
+    .replace("__EVENTNAME__", event.name)
+    .replace("__LOCATION__", event.location)
+    .replace("__START_DATE__", event.start_date)
+    .replace("__START_TIME__", event.start_time)
+    .replace("__END_DATE__", event.end_date)
+    .replace("__END_TIME__", event.end_time)
+    .replace("__DESCRIPTION__", event.description)
+}
+
