@@ -18,53 +18,51 @@
 
 #let underline-space(fraction) = box(height: -1pt, line(length: fraction))
 
-#let banner(..args) = {
+// Colored bar with optional centered content. On slides, `progress` adds one
+// dot per section on the right, the current section filled.
+#let banner(slide: false, size: 1em, progress: false, ..body) = {
+  assert(body.named().len() == 0, message:
+    "Unknown argument(s) of banner: " + body.named().keys().join(", ")
+  )
   let opts = options.final()
-  let height = if args.named().at("slide", default: false) {0.5em} else {1.5em}
-  let size = args.named().at("size", default: 1em)
-  let all-sections = query(outline.entry.where(level: 1))
-  let current-section = utils.current-heading(level: 1)
+  let height = if slide { 0.5em } else { 1.5em }
+  let show-progress = slide and progress
   show text: set text(size: size, fill: opts.theme.background)
-  let show-ani = args.named().at("progressAnimation", default: false)
+
+  let content = box(
+    width: if show-progress { 80% } else { 100% },
+    height: height,
+    if body.pos().len() != 0 {
+      set align(if show-progress { horizon+left } else { horizon+center })
+      pad(x: 15pt, body.pos().first())
+    }
+  )
+
+  let progress-dots() = {
+    let current-section = utils.current-heading(level: 1)
+    let dot(filled) = circle(
+      radius: 3.5pt,
+      stroke: 1pt + gray.lighten(20%),
+      fill: if filled { gray.lighten(20%) },
+    )
+    box(
+      width: 100%,
+      height: height,
+      align(horizon+center, stack(
+        dir: ltr,
+        spacing: 10pt,
+        ..query(outline.entry.where(level: 1)).map(sec => dot(
+          current-section != none and sec.element.location() == current-section.location()
+        ))
+      ))
+    )
+  }
 
   grid(
-    columns: if args.named().at("slide", default: false) and show-ani {(auto, 1fr)} else {(auto)},
+    columns: if show-progress { (auto, 1fr) } else { (auto,) },
     gutter: 1pt,
-    grid.cell(
-      box(
-        width: if args.named().at("slide", default: false) and show-ani {80%} else {100%},
-        height: height,
-        if args.pos().len() != 0 {
-          set align(if show-ani { horizon+left } else { horizon+center })
-          show text: set text(size: size, fill: opts.theme.background)
-          pad(x: 15pt, {pad(..args.pos())})
-        }
-      )
-    ),
-    if args.named().at("slide", default: false) and show-ani {
-      grid.cell(
-        box(
-          width: 100%,
-          height: height,
-          align(horizon+center)[
-            #stack(
-              dir: ltr,
-              spacing: 10pt,
-              ..all-sections.enumerate().map(((idx, sec)) => {
-                let is-current = sec.element.location() == current-section.location()
-
-                let dot = if is-current {
-                  circle(radius: 3.5pt, stroke: 1pt + gray.lighten(20%), fill: gray.lighten(20%))
-                } else {
-                  circle(radius: 3.5pt, stroke: 1pt + gray.lighten(20%), fill: none)
-                }
-                dot
-              })
-            )
-          ]
-        )
-      )
-    }
+    content,
+    ..if show-progress { (progress-dots(),) },
   )
 }
 
@@ -190,7 +188,7 @@
           logo-left
         },
         pad( x: -1pt,
-          banner(slide: true, size: 17.6pt, progressAnimation: show-ani, move(dy: 0.5pt, heading))
+          banner(slide: true, size: 17.6pt, progress: show-ani, move(dy: 0.5pt, heading))
         ),
         if logo-right == auto {
           pad(
