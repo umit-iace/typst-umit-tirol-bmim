@@ -400,6 +400,7 @@
 
 #let finalblock = (
   thesis: (author, university) => context {
+    let spell = options.final().spell
     set page(numbering: none)
     set heading(numbering: none, outlined: false, bookmarked: false)
     [
@@ -509,9 +510,9 @@
             *#opts.spell.hints*
             #set text(size: 0.9em)
             #pad(left: 1.4em, (opts.spell.exam-hints)(
-              context task.total-count(),
+              task.total-count(),
               args.total-time,
-              context task.total-points(),
+              task.total-points(),
             ))
           ]
         }

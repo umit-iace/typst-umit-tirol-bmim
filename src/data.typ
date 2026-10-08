@@ -40,8 +40,8 @@
     points-short: "pts.",
     hints: "Notes",
     exam-hints: (count, time, points) => [
-      - The exam consists of *#count* tasks, the working time is *#time*.
-      - A total of *#points* points can be achieved.
+      - The exam consists of *#count* #if count == 1 [task] else [tasks], the working time is *#time*.
+      - A total of *#points* #if points == 1 [point] else [points] can be achieved.
       - Permitted aids:
         - *One handwritten* A4 sheet, which must be *handed in* at the end of the exam.
       - *Not permitted* aids:
@@ -124,8 +124,8 @@
     points-short: "P.",
     hints: "Hinweise",
     exam-hints: (count, time, points) => [
-      - Die Prüfung umfasst *#count* Aufgaben, die Bearbeitungszeit beträgt *#time*.
-      - Es können insgesamt *#points* Punkte erreicht werden.
+      - Die Prüfung umfasst *#count* #if count == 1 [Aufgabe] else [Aufgaben], die Bearbeitungszeit beträgt *#time*.
+      - Es #if points == 1 [kann] else [können] insgesamt *#points* #if points == 1 [Punkt] else [Punkte] erreicht werden.
       - Zugelassene Hilfsmittel:
         - *Ein handschriftlich* beschriebener A4 Zettel, am Ende der Klausur *abzugeben*.
       - *Nicht zugelassene* Hilfsmittel:
