@@ -22,14 +22,20 @@
   dark_gray: rgb(90, 79, 74),
 )
 
+// Additional colors for use in documents, independent of the theme
 #let color = (
-  // some other colors
+  // neutral gray, e.g. the bar next to the chapter number (thesis)
   gray: rgb(156, 156, 156),
+  // bluish gray, a different color than `gray`, currently unused
   grey: rgb("717788"),
+  // points of tasks
   green: rgb("006e43"),
-  blue: rgb(0, 53, 103),
-  red: rgb(128, 19, 50),
+  // same as color-cd2020.blue
+  blue: color-cd2020.blue,
+  // solutions, same as color-cd2020.red
+  red: color-cd2020.red,
   yellow: rgb("b98900"),
+  // dark red for links, currently unused
   link: rgb(118, 50, 55),
 )
 
