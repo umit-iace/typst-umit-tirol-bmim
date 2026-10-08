@@ -161,9 +161,9 @@
   },
   poster: header-colored(),
   report: header-colored(),
-  slides: (heading: none, progressAnimation: none) => context {
+  slides: (heading: none, progress-animation: none) => context {
     let opts = options.final()
-    let show-ani = type(progressAnimation) == dictionary and progressAnimation.at("section", default: false)
+    let show-ani = type(progress-animation) == dictionary and progress-animation.at("section", default: false)
     let logo-left = pick-logo(opts.logo, "left")
     let logo-right = pick-logo(opts.logo, "right")
     set text(weight: "bold")
@@ -306,9 +306,9 @@
     )
   },
   report: footer-course-title,
-  slides: (author:none, title:none, date:none, pagenum:none, progressAnimation:none) => context {
+  slides: (author:none, title:none, date:none, pagenum:none, progress-animation:none) => context {
     let opts = options.final()
-    let show-ani = type(progressAnimation) == dictionary and progressAnimation.at("slides", default: false)
+    let show-ani = type(progress-animation) == dictionary and progress-animation.at("slides", default: false)
     block(
       [
         #if show-ani {

@@ -714,7 +714,7 @@
   aspect-ratio: "16-9", // "16-10" or "16-9" or "4-3"
   font: auto, // auto (= fonts.sans) or font name(s)
   align: horizon,
-  progressAnimation: none, // shows the progress in footer: dict with slide/section
+  progress-animation: none, // progress in header/footer: (slides: bool, section: bool)
   size: 18pt,
   handout: false, // render as handout: false, true
   notes: none, // show speaker notes: none, right, bottom
@@ -824,7 +824,7 @@
       alpha: 20%,
       heading: self => utils.display-current-heading(depth: self.slide-level),
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
-      header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading), progressAnimation: progressAnimation),
+      header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading), progress-animation: progress-animation),
       footer: self => (footer.slides)(
         author: if authors-short == none {
           if type(authors) != array {authors} else {authors.at(0)}
@@ -834,7 +834,7 @@
         title: if type(title) != array { title } else { title.at(1) },
         date: date,
         pagenum: utils.call-or-display(self, self.store.footer-pagenum),
-        progressAnimation: progressAnimation,
+        progress-animation: progress-animation,
       ),
     ),
   )

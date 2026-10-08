@@ -38,7 +38,7 @@
       image("./../assets/logo_lfui_color_invert.png", height: 48pt)
     ),
   ),
-  progressAnimation: (
+  progress-animation: (
     slides: true,
     section: true,
   ),
