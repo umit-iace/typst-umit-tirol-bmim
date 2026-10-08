@@ -31,7 +31,7 @@ msg=`git tag $v -n99 --format='%(contents)'`
 dest=$1/$pkg/$v
 
 mkdir $dest
-files=$(git ls-files -- . ':!:.github/'  ':!:.typstignore'  ':!:.gitignore' ':!:scripts/')
+files=$(git ls-files -- . ':!:.github/'  ':!:.typstignore'  ':!:.gitignore' ':!:scripts/' ':!:tests/')
 cp --parents $files $dest
 
 find $dest/example/ -name "*.typ" -exec sed -i "s|/src/lib.typ|@preview/ratsch-bmim:$v|" {} +

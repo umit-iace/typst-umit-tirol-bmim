@@ -63,6 +63,65 @@ This will watch your file and recompile it to a pdf when the file is saved.
 - Store the package in `~/.local/share/typst/packages/local/ratsch-bmim/0.4.1`
 - Import from it with `#import "@local/ratsch-bmim:0.4.1": *`
 
+## Options
+
+### Global options
+
+These options can be passed to every variant:
+
+| Option | Default | Description |
+|---|---|---|
+| `lang` | `"de"` | Language of all generated texts: `"de"` or `"en"` |
+| `theme` | `"cd26"` | Color theme by name (`"cd26"`, `"cd20"`) or single colors, see [Themes](#themes) |
+| `font` | `auto` | Main text font; `auto` uses `fonts.serif` (slides: `fonts.sans`) |
+| `fonts` | see [Fonts](#fonts) | Fonts per role, single roles can be replaced |
+| `size` | `11pt` | Font size (poster: `20pt`, slides: `18pt`) |
+| `logo` | `auto` | `auto`, `none`, content, or a dictionary with `left`, `right`, `title-left`, `title-right` (slides) |
+| `titleblock` | `auto` | `auto` (title block of the variant), `none`, or a function `args => content` |
+| `show-solution` | `none` | `none`, `"inline"` or `"bottom"` (exam, exercise, report, workbook) |
+| `task-show-points` | `false` | Show the points of each task (exercise, workbook) |
+| `oneside` | depends | One-sided layout: chapters start on the next instead of the next odd page |
+
+A user-defined `titleblock` gets a dictionary with the arguments of the
+variant plus `lang`, `spell` (the translations) and `show-solution`, see
+[example/lab.typ](example/lab.typ).
+
+### Variants
+
+Values given as `([Long], [Short])` use the long form in the title and the
+short form in headers and footers. `authors` is required for all variants
+except `letter` and `slides`.
+
+| Variant | Parameters |
+|---|---|
+| `article` | `title`, `subtitle`, `course`, `authors`, `date` |
+| `exam` | `course`, `title`, `authors`, `date`, `total-time` (required), `show-solution`, `empty-sheets` (`auto` = one per task, `none`, int), `show-hints` (`true`), `oneside` (`false`) |
+| `exercise` | `course`, `title`, `authors`, `date`, `show-solution`, `task-show-points` |
+| `lecture` | `course`, `authors`, `date`, `oneside` (`false`) |
+| `letter` | `subject`, `date`, `location`, `recipient` (`name`, `address`, `pro`, `institution`), `sender` (`name`, `pos`, `institute`, `department`, `tel`, `fax`, `email`, `signature`) |
+| `poster` | `title`, `authors`, `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `event`, `location`, `contact` |
+| `report` | `title`, `course`, `authors`, `date`, `show-solution` |
+| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progressAnimation` (`(slides: bool, section: bool)`), `size`, `handout`, `notes`, `margins`, `section-slide` |
+| `thesis` | `program` (`"Master"`, `"Bachelor"`), `university` (`"LFUI"`, `"UMIT"`), `title`, `subtitle`, `author` (required), `date`, `advisor` (array of `(name, university, department, unit)`), `abstract` (`(english, german)`), `thanks`, `oneside` (`false`); `study` is currently unused |
+| `workbook` | `course`, `authors`, `date`, `show-solution`, `task-show-points`, `oneside` (`false`) |
+
+`date` is a `datetime` (default: today) or content.
+
+### Tasks
+
+`task` is available in exam, exercise, report and workbook:
+  ```typst
+  // single task
+  #task(points: 5, name: [Optional name], label: <task:a>,
+    description: [...], solution: [...])
+  // task with subtasks: problem description, then one dictionary per subtask
+  #task(label: <task:b>, [Problem description],
+    (points: 2, label: <task:b1>, description: [...], solution: [...]),
+    (points: 3, description: [...], solution: [...]),
+  )
+  ```
+Missing or misspelled arguments are reported with an error message.
+
 ## Themes
 
 The colors follow the corporate design of UMIT TIROL. Two themes are
@@ -104,6 +163,14 @@ Single fonts can be replaced, the others keep their defaults:
 
 The option `font` sets the main text font directly; by default (`auto`) it is
 `fonts.serif`, for slides `fonts.sans`.
+
+## Tests
+
+`scripts/run_tests.sh` runs the regression tests: every `tests/*.typ` is
+compiled and checked against its header lines `// expect-error: <text>`
+(must fail with this error) or `// expect-text: <text>` (must compile and
+contain this text). Files without `expect-error` must compile without
+warnings. pdftotext (poppler) is required.
 
 ## License
 

@@ -31,7 +31,7 @@ jobs:
       - name: Install fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y ttf-bitstream-vera fonts-urw-base35
+          sudo apt-get install -y ttf-bitstream-vera fonts-urw-base35 poppler-utils
           cd $(mktemp -d /tmp/script.XXXXXXX)
           TEMP_DIR=$(pwd)
           mkdir -p ~/.fonts
@@ -58,6 +58,9 @@ jobs:
       - name: Determine and check package metadata
         run: |
           . scripts/setup @local
+
+      - name: Run tests
+        run: scripts/run_tests.sh
 
       - name: Build Examples
         run: |
