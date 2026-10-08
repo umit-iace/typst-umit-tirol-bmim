@@ -484,6 +484,97 @@
   body
 }}
 
+#let flyer(
+  title: none, // [Title] or ([Long Title], [Short Title])
+  series: none, // e.g. [Mechatronisches Kolloquium], shown above the title
+  details: (), // rows below the title: (([Label], [Text]), ...), e.g. presenter, date
+  background: none, // content, e.g. image("…"), background of the front page
+  qr-code: none, // content, e.g. a QR code, bottom left of the front page
+  back-image: none, // content, e.g. image("…"), top of the back page
+  badge: none, // datetime (shown with date and time) or content, highlighted on the back page
+  back-title: auto, // auto (= title), title of the upper area of the back page
+  back-bottom-title: none, // title of the lower area of the back page
+  back-bottom: none, // content of the lower area of the back page
+  back-bottom-rule: 100%, // length of the line below back-bottom-title
+  ..chosen // other options: theme, lang, logo, etc
+) = { body => {
+  assert-set("title", title)
+  assert(type(details) == array and details.all(d => type(d) == array and d.len() == 2), message:
+    "Option 'details' must be an array of ([Label], [Text]) pairs, but was set to " + repr(details)
+  )
+  option-set(chosen.named())
+  show: bmim-common
+  context {
+    let opts = options.final()
+    set text(font: opts.fonts.sans, fill: opts.theme.background)
+    set par(justify: true)
+    let back-heading(body, size: 20pt, rule: 100%) = block(below: 1.2em, {
+      block(below: 8pt, {
+        set par(leading: 0.4em)
+        text(size: size, weight: "medium", hyphenate: false, body)
+      })
+      line(length: rule, stroke: 1.2pt + opts.theme.background)
+    })
+
+    // front page
+    page(margin: 0pt, header: none, footer: none, render-titleblock("flyer", (
+      title: title,
+      series: series,
+      details: details,
+      background: background,
+      qr-code: qr-code,
+    )))
+
+    // back page: image at the top, upper area with the body, lower area at
+    // the bottom of the page
+    let image-height = 22%
+    let side = 8% // left and right margin of the back page
+    page(
+      margin: (
+        x: side,
+        top: if back-image != none { image-height + 2em } else { 2.5em },
+        bottom: 2.5em,
+      ),
+      header: none,
+      footer: none,
+      // same gradient as the box on the front page, starting below the image
+      fill: opts.theme.primary.darken(80%),
+      background: {
+        let start = if back-image != none { image-height } else { 0% }
+        place(top, dy: start, box(
+          width: 100%,
+          height: 100% - start,
+          fill: flyer-gradient(opts),
+        ))
+        if back-image != none {
+          place(top, box(width: 100%, height: image-height, clip: true, {
+            set image(width: 100%, height: 100%, fit: "cover")
+            back-image
+          }))
+        }
+      },
+    )[
+      #back-heading(if back-title == auto { long(title) } else { back-title })
+      #set text(size: 9.5pt)
+      #body
+      #if badge != none {
+        // the badge reaches beyond the right page edge: right margin plus some
+        // extra, so that the rotated edge is outside of the page as well
+        let bleed = page.width * (side / 100%) + 2em
+        align(right, move(dx: bleed, rotate(-5deg, reflow: true, box(
+          fill: opts.theme.highlight,
+          inset: (left: 1em, right: 1em + bleed, y: 1.7em),
+          text(size: 11pt, weight: "bold", print-date-time(badge)),
+        ))))
+      }
+      #v(1fr)
+      // lower area, same style as the upper area
+      #if back-bottom-title != none { back-heading(back-bottom-title, size: 16pt, rule: back-bottom-rule) }
+      #back-bottom
+    ]
+  }
+}}
+
 #let report(
   title: none, // [Title] or ([Long Title], [Short Title])
   course: none, // [Course Name] or ([Course Name], [Short Course Name])

@@ -134,6 +134,34 @@
   }
 }
 
+// English ordinal suffix of a day: 1st, 2nd, 3rd, 4th, ..., 11th, 12th, 13th, 21st
+#let ordinal-suffix(day) = {
+  if calc.rem(day, 100) in (11, 12, 13) { "th" }
+  else if calc.rem(day, 10) == 1 { "st" }
+  else if calc.rem(day, 10) == 2 { "nd" }
+  else if calc.rem(day, 10) == 3 { "rd" }
+  else { "th" }
+}
+
+// Date with the time if the datetime has one, e.g. for the badge of the flyer:
+// "5. November 2026, 17.00 Uhr" or "5th November 2026, 17:00"
+#let print-date-time(date) = {
+  let opts = options.final()
+  if type(date) != datetime { return date }
+  let day = if opts.lang == "de" {
+    print-date(date)
+  } else {
+    [#date.day()#super(ordinal-suffix(date.day())) #translated-month(date, opts.lang) #date.year()]
+  }
+  if date.hour() == none {
+    day
+  } else if opts.lang == "de" {
+    [#day, #date.display("[hour].[minute]") Uhr]
+  } else {
+    [#day, #date.display("[hour]:[minute]")]
+  }
+}
+
 #let print-semester(date) = {
   let opts = options.final()
   if type(date) != datetime {
@@ -172,3 +200,144 @@
   for _y in y { place(top + left, dx: m.xdist, dy: _y, l) }
 }
 
+// --- vCard and iCalendar, e.g. as data of a QR code
+
+// Escape a text value (vCard 3.0, iCalendar): backslash, semicolon, comma and
+// line breaks
+#let escape-text(value) = {
+  assert(type(value) == str, message:
+    "vCard and iCalendar values must be strings, but got " + repr(value)
+  )
+  value
+    .replace("\\", "\\\\")
+    .replace(";", "\;")
+    .replace(",", "\\,")
+    .replace("\n", "\\n")
+}
+
+// Lines longer than 75 octets must be folded: CRLF followed by a space, which
+// counts towards the next line. `len` counts the octets of the UTF-8 string.
+#let fold-line(line) = {
+  if line.len() <= 75 { return line }
+  let parts = ()
+  let current = ""
+  let limit = 75
+  for c in line.clusters() {
+    if current.len() + c.len() > limit {
+      parts.push(current)
+      current = ""
+      limit = 74
+    }
+    current += c
+  }
+  parts.push(current)
+  parts.join("\r\n ")
+}
+
+// Lines separated by CRLF, the last one included
+#let join-lines(lines) = lines.map(fold-line).join("\r\n") + "\r\n"
+
+// Assert that `dict` is a dictionary with known keys and the required keys
+#let assert-keys(dict, of, known, required: ()) = {
+  assert(type(dict) == dictionary, message:
+    "Argument of " + of + " must be a dictionary, but was " + repr(dict)
+  )
+  for key in dict.keys() {
+    assert(key in known, message:
+      "Unknown key '" + key + "' of " + of + ", known keys are [" +
+      known.map(repr).join(", ") + "]"
+    )
+  }
+  for key in required {
+    assert(dict.at(key, default: none) != none, message:
+      "Key '" + key + "' of " + of + " must be set"
+    )
+  }
+}
+
+// Contact as vCard 3.0. All keys are optional, but one of firstname and
+// lastname is needed:
+// (title: "Dr.-Ing.", firstname: .., lastname: .., role: .., organization: ..,
+//  address: (street: .., zip: .., town: .., country: ..),
+//  telephone: .., email: .., url: ..)
+#let build-vcard(contact) = {
+  assert-keys(contact, "build-vcard", (
+    "title", "firstname", "lastname", "role", "organization", "address",
+    "telephone", "email", "url",
+  ))
+  let get(key) = contact.at(key, default: none)
+  let esc(key) = if get(key) == none { "" } else { escape-text(get(key)) }
+  assert(get("firstname") != none or get("lastname") != none, message:
+    "Key 'firstname' or 'lastname' of build-vcard must be set"
+  )
+
+  let lines = ("BEGIN:VCARD", "VERSION:3.0")
+  // N: family name; given name; additional names; prefix; suffix
+  lines.push("N:" + esc("lastname") + ";" + esc("firstname") + ";;" + esc("title") + ";")
+  lines.push("FN:" + escape-text(
+    ("title", "firstname", "lastname").map(get).filter(x => x != none).join(" ")
+  ))
+  if get("organization") != none { lines.push("ORG:" + esc("organization")) }
+  if get("role") != none { lines.push("TITLE:" + esc("role")) }
+  if get("address") != none {
+    let adr = get("address")
+    assert-keys(adr, "the address of build-vcard", ("street", "zip", "town", "country"))
+    let part(key) = escape-text(adr.at(key, default: ""))
+    // ADR: post office box; extended address; street; town; region; zip; country
+    lines.push("ADR;TYPE=WORK:;;" + part("street") + ";" + part("town") + ";;" +
+      part("zip") + ";" + part("country"))
+  }
+  if get("telephone") != none { lines.push("TEL;TYPE=WORK:" + esc("telephone")) }
+  if get("email") != none { lines.push("EMAIL;TYPE=INTERNET:" + esc("email")) }
+  if get("url") != none { lines.push("URL:" + esc("url")) }
+  lines.push("END:VCARD")
+  join-lines(lines)
+}
+
+// Date line of an iCalendar event: with time, or an all-day event for a
+// datetime without time
+#let vcalendar-date(key, date) = {
+  assert(type(date) == datetime, message:
+    "Key '" + lower(key.slice(2)) + "' of build-vcalendar must be a datetime, " +
+    "but was set to " + repr(date)
+  )
+  if date.hour() == none {
+    key + ";VALUE=DATE:" + date.display("[year][month][day]")
+  } else {
+    key + ":" + date.display("[year][month][day]T[hour][minute][second]")
+  }
+}
+
+// Event as iCalendar (RFC 5545). `name` and `start` are required, `start`
+// and `end` are datetimes, without time an all-day event:
+// (name: .., start: datetime, end: datetime, location: .., description: ..,
+//  uid: ..)
+#let build-vcalendar(event) = {
+  assert-keys(event, "build-vcalendar",
+    ("name", "start", "end", "location", "description", "uid"),
+    required: ("name", "start"),
+  )
+  let get(key) = event.at(key, default: none)
+  let start = vcalendar-date("DTSTART", event.start)
+  // a unique id is required, derived from the start and the name by default
+  let uid = if get("uid") != none { get("uid") } else {
+    start.split(":").last() + "-" + lower(event.name).replace(regex("[^a-z0-9]+"), "-") + "@ratsch-bmim"
+  }
+
+  let lines = (
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//ratsch-bmim//typst//EN",
+    "BEGIN:VEVENT",
+    "UID:" + escape-text(uid),
+    // creation time of the event, required
+    "DTSTAMP:" + datetime.today().display("[year][month][day]") + "T000000Z",
+    "SUMMARY:" + escape-text(event.name),
+    start,
+  )
+  if get("end") != none { lines.push(vcalendar-date("DTEND", event.end)) }
+  if get("location") != none { lines.push("LOCATION:" + escape-text(event.location)) }
+  if get("description") != none { lines.push("DESCRIPTION:" + escape-text(event.description)) }
+  lines += ("END:VEVENT", "END:VCALENDAR")
+  join-lines(lines)
+}
