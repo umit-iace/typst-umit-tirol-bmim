@@ -5,7 +5,7 @@
   // abstract environment for the article class
   let opts = options.final()
   set par(leading: .5em)
-  set text(font: "Source Sans 3", spacing: 80%, size: 1.1em)
+  set text(font: opts.fonts.sans, spacing: 80%, size: 1.1em)
   text(weight: "semibold", fill: opts.theme.primary)[#opts.spell.abstract.]
   text(style: "normal")[#body]
 }

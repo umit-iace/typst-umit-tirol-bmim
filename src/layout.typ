@@ -700,7 +700,7 @@
       v(1em - 27mm)
       // logo
       {
-        set text(11.3pt, font: "Nimbus Sans")
+        set text(11.3pt, font: opts.fonts.logo)
         if university =="LFUI" {
           pad(left: -18.5mm, image("./../assets/logo_lfui_color.png", width: 75mm))
           v(-2em)

@@ -75,7 +75,7 @@
             set par(leading: .4em)
             set text(
               fill: self.colors.background,
-              font: "Source Serif 4",
+              font: opts.fonts.serif,
               weight: "bold",
               size: 34pt
             )

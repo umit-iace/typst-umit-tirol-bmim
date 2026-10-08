@@ -10,7 +10,14 @@
   task-show: (..args) => {},
   task-show-points: false,
   task-wrap-counter: none,
-  font: ("Source Serif 4",),
+  font: auto, // auto (= fonts.serif, slides: fonts.sans) or font name(s)
+  fonts: (
+    serif: "Source Serif 4", // body text
+    sans: "Source Sans 3", // slides, abstract
+    mono: "Source Code Pro", // code
+    letter: "Bitstream Vera Sans", // letter, free font that looks like Arial
+    logo: "Nimbus Sans", // text next to the LFUI logo
+  ),
   size: 11pt,
   logo: auto, // none, auto, (left: // , right: //)
   titleblock: auto, // none, auto, function
@@ -25,7 +32,16 @@
         "Unknown option '" + key + "', known options are [" +
         known.map(repr).join(", ") + "]"
       )
-      if key == "lang" {
+      if key == "fonts" {
+        // only the given fonts are replaced, the others keep their defaults
+        for font-key in val.keys() {
+          assert(font-key in o.fonts, message:
+            "Unknown font '" + font-key + "', known fonts are [" +
+            o.fonts.keys().map(repr).join(", ") + "]"
+          )
+        }
+        o.fonts += val
+      } else if key == "lang" {
         assert-one-of("lang", val, i18n.keys())
         o.lang = val
         o.spell = i18n.at(val)
@@ -38,4 +54,11 @@
     }
     return o
   })
+}
+
+// Main text font: the `font` option, or the given role of `fonts` for auto.
+#let main-font(opts, role: "serif") = if opts.font == auto {
+  opts.fonts.at(role)
+} else {
+  opts.font
 }

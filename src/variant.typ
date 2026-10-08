@@ -25,11 +25,11 @@
   set text(
     lang: opts.lang,
     size: opts.size,
-    font: opts.font,
+    font: main-font(opts),
     weight: "regular",
   )
   set strong(delta: 250) // Source serif is quite heavy, this will lighten the bold settings
-  show raw: set text(font: "Source Code Pro", size: opts.size)
+  show raw: set text(font: opts.fonts.mono, size: opts.size)
 
   show figure.where(kind: table): set figure(
     placement: none,
@@ -379,12 +379,12 @@
     signature: none,
   ),
   ..chosen
-) = { body => {
+) = { body => context {
   option-set(
     chosen.named()
   )
   set text(
-    font: "Bitstream Vera Sans", // free font that looks like Arial
+    font: options.final().fonts.letter,
     size: 10pt,
   )
   set par( // from 2020 CD
@@ -712,7 +712,7 @@
   date: none, // datetime
   bib-as-footnote: true, // true or false
   aspect-ratio: "16-9", // "16-10" or "16-9" or "4-3"
-  font: "Source Sans 3",
+  font: auto, // auto (= fonts.sans) or font name(s)
   align: horizon,
   progressAnimation: none, // shows the progress in footer: dict with slide/section
   size: 18pt,
@@ -731,7 +731,7 @@
 
   set text(
     lang: opts.lang,
-    font: opts.font,
+    font: main-font(opts, role: "sans"),
     size: opts.size,
   )
 
@@ -811,7 +811,7 @@
 
         show strong: self.methods.alert.with(self: self)
 
-        show raw: set text(font: "Source Code Pro")
+        show raw: set text(font: opts.fonts.mono)
 
         body
       },

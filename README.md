@@ -65,16 +65,28 @@ This will watch your file and recompile it to a pdf when the file is saved.
 
 ## Fonts
 
-Several fonts are used:
-- Source Sans 3 for text in slides
-- Source Serif 4 for body text
-- Source Code Pro for code
-- Bitstream Vera Sans for text in letter
+Several fonts are used, each for a role of the `fonts` option:
+- `serif`: Source Serif 4 for body text
+- `sans`: Source Sans 3 for text in slides and the abstract
+- `mono`: Source Code Pro for code
+- `letter`: Bitstream Vera Sans for text in letter
+- `logo`: Nimbus Sans for the text next to the LFUI logo (thesis)
 
 To install these under arch linux:
   ```bash
-  % yay -S adobe-source-sans-fonts adobe-source-serif-fonts adobe-source-code-pro-fonts otf-xcharter-math ttf-bitstream-vera
+  % yay -S adobe-source-sans-fonts adobe-source-serif-fonts adobe-source-code-pro-fonts ttf-bitstream-vera gsfonts
   ```
+
+Single fonts can be replaced, the others keep their defaults:
+  ```typst
+  #show: bmim.report(
+    // ...
+    fonts: (mono: "Fira Code"),
+  )
+  ```
+
+The option `font` sets the main text font directly; by default (`auto`) it is
+`fonts.serif`, for slides `fonts.sans`.
 
 ## License
 
