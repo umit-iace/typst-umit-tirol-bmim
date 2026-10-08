@@ -107,26 +107,6 @@
   )
 }
 
-#let header-plain(course, title) = context {
-  set text(size: 0.8em)
-  let opts = options.final()
-  let course = if type(course) == array { course.at(1) } else { course }
-  let this-page = here().page()
-  let head = [
-    #title -- #course
-  ]
-  let pagenum = [
-    #opts.spell.page #this-page #opts.spell.of
-    #counter(page).final().first()
-  ]
-  if calc.odd(this-page) {
-    head; h(1fr); pagenum
-  } else {
-    pagenum; h(1fr); head
-  }
-  line(length: 100%, stroke: 0.25mm)
-}
-
 #let chapter-header(oneside: false, rule: false) = context {
   set par(spacing: 0.5em)
 
@@ -882,20 +862,3 @@
     content
   )
 }
-
-#let solution-box(sol) = {
-  block(
-    // stroke:0.5pt,
-    width: 100%,
-    fill: color.red,
-    inset: 2pt,
-    box(
-      stroke:0.5pt,
-      width: 100%,
-      fill: white,
-      inset: 0.3em,
-      sol,
-    ),
-  )
-}
-

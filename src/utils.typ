@@ -116,14 +116,6 @@
   return chain.map(str).join(".")
 }
 
-#let current-title(lvl: 1) = context {
-  let headings = query(heading.where(level: lvl).before(here()))
-  if headings == () { return none}
-  headings.last().body
-}
-
-#let page-number() = numbering(here().page-numbering(), here().page())
-
 #let is-empty(value) = {
   let empty-values = (
     array: (),
