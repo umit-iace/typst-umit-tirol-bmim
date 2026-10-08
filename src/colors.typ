@@ -33,27 +33,26 @@
   link: rgb(118, 50, 55),
 )
 
+// Predefined themes, select one with the option `theme: "cd26"` or "cd20".
+// All themes have the same keys:
+// - primary: headers, footers, headings and other accents
+// - secondary: second accent color
+// - highlight: boxes (poster) and the slide progress bar
+// - background: text on primary colored areas
+// - neutral-lightest: lightest neutral color (slides)
 #let color-theme = (
-  cd26:
-  (
+  cd26: (
     primary: color-cd2026.blue,
     secondary: color-cd2026.darkblue,
-    tertiary: color-cd2026.black,
-    lolight: color-cd2026.blue_Z2,
-    meanlight: color-cd2026.blue_Z1,
     highlight: color-cd2026.meanblue,
     background: white,
     neutral-lightest: white,
   ),
-  cd20:
-  (
+  cd20: (
     primary: color-cd2020.blue,
     secondary: color-cd2020.yellow,
-    lolight: color-cd2020.dark_gray,
-    meanlight: color-cd2020.gray,
     highlight: color-cd2020.teal,
     background: white,
     neutral-lightest: white,
-  )
+  ),
 )
-

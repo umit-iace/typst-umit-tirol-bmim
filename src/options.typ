@@ -3,7 +3,7 @@
 #import "check.typ": *
 
 #let options = state("bmim-options", (
-  theme: color-theme.cd26,
+  theme: color-theme.cd26, // name of a theme in color-theme, or single colors
   lang: "de", // "de", "en"
   spell: i18n.de,
   show-solution: none, // none, "inline", "bottom"
@@ -32,7 +32,25 @@
         "Unknown option '" + key + "', known options are [" +
         known.map(repr).join(", ") + "]"
       )
-      if key == "fonts" {
+      if key == "theme" {
+        if type(val) == str {
+          assert-one-of("theme", val, color-theme.keys())
+          o.theme = color-theme.at(val)
+        } else {
+          assert(type(val) == dictionary, message:
+            "Option 'theme' must be the name of a theme or a dictionary " +
+            "of colors, but was set to " + repr(val)
+          )
+          // only the given colors are replaced, the others keep their values
+          for color-key in val.keys() {
+            assert(color-key in o.theme, message:
+              "Unknown theme color '" + color-key + "', known colors are [" +
+              o.theme.keys().map(repr).join(", ") + "]"
+            )
+          }
+          o.theme += val
+        }
+      } else if key == "fonts" {
         // only the given fonts are replaced, the others keep their defaults
         for font-key in val.keys() {
           assert(font-key in o.fonts, message:

@@ -63,6 +63,23 @@ This will watch your file and recompile it to a pdf when the file is saved.
 - Store the package in `~/.local/share/typst/packages/local/ratsch-bmim/0.4.1`
 - Import from it with `#import "@local/ratsch-bmim:0.4.1": *`
 
+## Themes
+
+The colors follow the corporate design of UMIT TIROL. Two themes are
+predefined in `color-theme` (see [colors.typ](src/colors.typ)): `cd26`
+(default, CD 2026) and `cd20` (CD 2020). Select one by name, or replace single
+colors (`primary`, `secondary`, `highlight`, `background`, `neutral-lightest`):
+  ```typst
+  #show: bmim.report(
+    // ...
+    theme: "cd20",
+  )
+  #show: bmim.report(
+    // ...
+    theme: (primary: rgb("#008000")),
+  )
+  ```
+
 ## Fonts
 
 Several fonts are used, each for a role of the `fonts` option:
