@@ -34,6 +34,54 @@
     lecture-notes: "Lecture notes for the course",
     workbook: "Exercises for the course",
     institute-iace: "Institute of Automation and Control Engineering",
+    name: "Name",
+    student-id: "Student ID",
+    student-id-short: "Student ID",
+    points-short: "pts.",
+    hints: "Notes",
+    exam-hints: (count, time, points) => [
+      - The exam consists of *#count* tasks, the working time is *#time*.
+      - A total of *#points* points can be achieved.
+      - Permitted aids:
+        - *One handwritten* A4 sheet, which must be *handed in* at the end of the exam.
+      - *Not permitted* aids:
+        - Any other documents
+        - Electronic devices
+      - Write *legibly* and show your *solution steps* in full.
+      - Do *not* write in pencil or in red ink.
+    ],
+    // thesis
+    bachelor-thesis: "Bachelor’s Thesis",
+    master-thesis: "Master’s Thesis",
+    assessor: "Assessor",
+    supervisor: "Supervisor",
+    co-supervisor: "Co-supervisor",
+    lfui-faculty-logo: [Faculty of\ Engineering Science],
+    umit-department: [Department for Biomedical Informatics and Mechatronics],
+    thesis-joint: (program) => [
+      written as part of a joint #if program == "Bachelor" [Bachelor's] else [Master's]
+      degree programme of LFUI and UMIT TIROL -- Joint Degree Programme
+    ],
+    thesis-submitted: (university) => [
+      submitted to #if university == "LFUI" [
+        the University of Innsbruck, Faculty of Engineering Sciences,
+      ] else [
+        UMIT TIROL – Private University for Health Sciences and Health Technology,
+        Department for Biomedical Informatics and Mechatronics,
+      ]
+      in partial fulfilment of the requirements for the academic degree of
+    ],
+    declaration-title: [Statutory Declaration],
+    declaration: [
+      I hereby declare in lieu of an oath, by my own signature, that I have
+      written the present thesis independently and have not used any sources
+      or aids other than those indicated. All passages taken literally or in
+      substance from the indicated sources have been marked as such.
+
+      The present thesis has not been submitted in the same or a similar form
+      as an academic thesis before.
+    ],
+    signed-at: (city) => [#city,],
   ),
   de: (
     date: "Datum",
@@ -70,6 +118,62 @@
     lecture-notes: "Skriptum zur Lehrveranstaltung",
     workbook: "Übungsaufgaben zur Lehrveranstaltung",
     institute-iace: "Institut für Automatisierungs- und Regelungstechnik",
+    name: "Name",
+    student-id: "Matrikelnummer",
+    student-id-short: "Matrikelnr",
+    points-short: "P.",
+    hints: "Hinweise",
+    exam-hints: (count, time, points) => [
+      - Die Prüfung umfasst *#count* Aufgaben, die Bearbeitungszeit beträgt *#time*.
+      - Es können insgesamt *#points* Punkte erreicht werden.
+      - Zugelassene Hilfsmittel:
+        - *Ein handschriftlich* beschriebener A4 Zettel, am Ende der Klausur *abzugeben*.
+      - *Nicht zugelassene* Hilfsmittel:
+        - Jegliche Unterlagen
+        - Elektronische Geräte
+      - Schreiben Sie *leserlich* und geben Sie den *Lösungsweg* vollständig an.
+      - Schreiben Sie *nicht* mit Bleistift und *nicht* mit Rotstift.
+    ],
+    // thesis
+    bachelor-thesis: "Bachelorarbeit",
+    master-thesis: "Masterarbeit",
+    assessor: "Beurteiler",
+    supervisor: "Betreuer",
+    co-supervisor: "Mitbetreuer",
+    lfui-faculty-logo: [Fakultät für Technische\ Wissenschaften],
+    umit-department: [Department für Biomedizinische Informatik und Mechatronik],
+    thesis-joint: (program) => [
+      verfasst im Rahmen eines gemeinsamen #if program == "Bachelor" [
+        Bachelorstudienprogramms
+      ] else [
+        Masterstudienprogramms
+      ]
+      von LFUI und UMIT TIROL -- Joint Degree Programme
+    ],
+    thesis-submitted: (university) => [
+      eingereicht an der
+      #if university == "LFUI" [
+        Leopold-Franzens-Universität Innsbruck,
+        Fakultät für Technische Wissenschaften
+      ] else [
+        UMIT TIROL – Privatuniversität für Gesundheitswissenschaften und -technologie,
+        Department für Biomedizinische Informatik und Mechatronik
+      ]
+      zur Erlangung
+      des akademischen Grades
+    ],
+    declaration-title: [Verpflichtungs- und\ Einverständniserklärung],
+    declaration: [
+      Ich erkläre hiermit an Eides statt durch meine eigenhändige Unterschrift,
+      dass ich die vorliegende Arbeit selbständig verfasst und keine anderen als
+      die angegebenen Quellen und Hilfsmittel verwendet habe. Alle Stellen, die
+      wörtlich oder inhaltlich den angegebenen Quellen entnommen wurden, sind
+      als solche kenntlich gemacht.
+
+      Die vorliegende Arbeit wurde bisher in gleicher oder ähnlicher Form noch
+      nicht als wissenschaftliche Arbeit eingereicht.
+    ],
+    signed-at: (city) => [#city am],
   )
 )
 

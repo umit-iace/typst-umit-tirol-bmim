@@ -156,7 +156,7 @@
       grid(
         columns: 2,
         repeat("." + h(2.5pt)),
-        [$Sigma$ #p P.]
+        [$Sigma$ #p #opts.spell.points-short]
       )
     )}
 

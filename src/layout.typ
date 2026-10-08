@@ -281,7 +281,7 @@
       ]
     ]
     if calc.odd(here().page()) and here().page() != 1 {
-      bmim-footer([#foot #h(1fr) Matrikelnr: #underline-space(25%)], pagenum: counter(page).display("1/1", both: true))
+      bmim-footer([#foot #h(1fr) #opts.spell.student-id-short: #underline-space(25%)], pagenum: counter(page).display("1/1", both: true))
     } else {
       bmim-footer(foot, pagenum: counter(page).display("1/1", both: true))
     }
@@ -390,34 +390,29 @@
   },
 )
 
+#let university-city(university) = if university == "LFUI" {
+  [Innsbruck]
+} else if university == "UMIT" {
+  [Hall in Tirol]
+} else {
+  panic("The used university is not implemented yet!")
+}
+
 #let finalblock = (
   thesis: (author, university) => context {
     set page(numbering: none)
     set heading(numbering: none, outlined: false, bookmarked: false)
     [
-      = Verpflichtungs- und\ Einverständniserklärung
+      = #spell.declaration-title
 
-      Ich erkläre hiermit an Eides statt durch meine eigenhändige Unterschrift,
-      dass ich die vorliegende Arbeit selbständig verfasst und keine anderen als
-      die angegebenen Quellen und Hilfsmittel verwendet habe. Alle Stellen, die
-      wörtlich oder inhaltlich den angegebenen Quellen entnommen wurden, sind
-      als solche kenntlich gemacht.
-
-      Die vorliegende Arbeit wurde bisher in gleicher oder ähnlicher Form noch
-      nicht als wissenschaftliche Arbeit eingereicht.
+      #spell.declaration
 
       #v(3em)
       #grid(
         columns:(35%, 15%, 50%),
         [
-          #if university == "LFUI" [
-            Innsbruck
-          ] else if university == "UMIT" [
-            Hall in Tirol
-          ] else {
-            panic("The used university is not implemented yet!")
-          }
-          am #box(width:1fr, repeat(gap:0.25em)[.])
+          #(spell.signed-at)(university-city(university))
+          #box(width:1fr, repeat(gap:0.25em)[.])
         ],
         [],
         [
@@ -494,10 +489,10 @@
       gutter: 0.5em,
       align: (right, left),
       [
-        Name: #underline-space(73%) #h(2em)
+        #opts.spell.name: #underline-space(73%) #h(2em)
       ],
       [
-        Matrikelnummer: #underline-space(50%)
+        #opts.spell.student-id: #underline-space(50%)
       ],
     )
     v(1.25em)
@@ -511,19 +506,13 @@
         {
           set list(spacing: 1.3em)
           [
-            *Hinweise*
+            *#opts.spell.hints*
             #set text(size: 0.9em)
-            #pad(left: 1.4em)[
-              - Die Prüfung umfasst *#context task.total-count()* Aufgaben, die Bearbeitungszeit beträgt *#args.total-time*.
-              - Es können insgesamt *#context task.total-points()* Punkte erreicht werden.
-              - Zugelassene Hilfsmittel:
-                - *Ein handschriftlich* beschriebener A4 Zettel, am Ende der Klausur *abzugeben*.
-              - *Nicht zugelassene* Hilfsmittel:
-                - Jegliche Unterlagen
-                - Elektronische Geräte
-              - Schreiben Sie *leserlich* und geben Sie den *Lösungsweg* vollständig an.
-              - Schreiben Sie *nicht* mit Bleistift und *nicht* mit Rotstift.
-            ]
+            #pad(left: 1.4em, (opts.spell.exam-hints)(
+              context task.total-count(),
+              args.total-time,
+              context task.total-points(),
+            ))
           ]
         }
       }
@@ -727,8 +716,8 @@
   slides: () => context {},
   thesis: (program, university, study, title, subtitle, author, date, advisor) => context {
     let opts = options.final()
-    let degree = if program == "Bachelor" [Bachelor of Science] else if program == "Master" [Diplomingenieur]
-    let work = if program == "Bachelor" [Bachelorarbeit] else if program == "Master" [Masterarbeit]
+    let degree = if program == "Bachelor" [Bachelor of Science] else if program == "Master" [Diplom-Ingenieur]
+    let work = if program == "Bachelor" { opts.spell.bachelor-thesis } else { opts.spell.master-thesis }
     pad(left: 0mm, right: -5mm, {
       set text(12pt)
       let large(content) = text(12pt, content)
@@ -743,20 +732,13 @@
         if university =="LFUI" {
           pad(left: -18.5mm, image("./../assets/logo_lfui_color.png", width: 75mm))
           v(-2em)
-          [Fakultät für Technische\ Wissenschaften]
+          opts.spell.lfui-faculty-logo
         } else {
-          if opts.lang == "de" {
-            pad(left: -4.4mm, top: 7.5mm, image("./../assets/logo_umit_blue_gr.svg", height: 16.5mm))
-            v(-0.5em)
-            [Department für Biomedizinische Informatik und Mechatronik]
-            v(1.3em)
-          }
-          else {
-            pad(left: -4.4mm, top: 7.5mm, image("./../assets/logo_umit_blue_en.svg", height: 16.5mm))
-            v(-0.5em)
-            [Department for Biomedical Informatics and Mechatronics]
-            v(1.3em)
-          }
+          let logo = if opts.lang == "de" { "logo_umit_blue_gr.svg" } else { "logo_umit_blue_en.svg" }
+          pad(left: -4.4mm, top: 7.5mm, image("./../assets/" + logo, height: 16.5mm))
+          v(-0.5em)
+          opts.spell.umit-department
+          v(1.3em)
         }
       }
       // text
@@ -771,13 +753,7 @@
       ]
       v(8pt)
       large[
-        #if university == "LFUI" [
-          Innsbruck,
-        ] else if university == "UMIT" [
-          Hall in Tirol,
-        ] else {
-          panic("The used university is not implemented yet!")
-        } #if type(date) == datetime [
++        #university-city(university), #if type(date) == datetime [
           #translatedMonth(date, opts.lang) #date.year()
         ] else [
           #date
@@ -787,35 +763,15 @@
       // align the rest to bottom
       v(1fr)
       Large(work)
-      par[
-        verfasst im Rahmen eines gemeinsamen #if program == "Bachelor" [
-          Bachelorstudienprogramms
-        ] else if program == "Master" [
-          Masterstudienprogramms
-        ] else {panic("what")}
-        von LFUI und UMIT TIROL -- Joint Degree Programme
-      ]
+      par((opts.spell.thesis-joint)(program))
       smallskip
-      par[
-        eingereicht an der
-        #if university == "LFUI" [
-          Leopold-Franzens-Universität Innsbruck,
-          Fakultät für Technische Wissenschaften
-        ] else if university == "UMIT" [
-          UMIT TIROL – Privatuniversität für Gesundheitswissenschaften und -technologie,
-          Department für Biomedizinische Informatik und Mechatronik
-        ] else {
-          panic("The used university is not implemented yet!")
-        }
-        zur Erlangung
-        des akademischen Grades
-      ]
+      par((opts.spell.thesis-submitted)(university))
       smallskip
       par(Large(degree))
       bigskip
 
       bigskip
-      [Beurteiler:]
+      [#opts.spell.assessor:]
       linebreak()
       let adv = advisor.at(0)
       adv.name
@@ -830,11 +786,11 @@
       let z= h(0pt, weak:true)
       grid(
         columns:(1fr, 3.2fr), gutter:1.2em,
-        [Betreuer:],
+        [#opts.spell.supervisor:],
         [#adv.name#z, #adv.university#z, #adv.department#z, #adv.unit],
         ..if advisor.len() > 1 {
           let adv = advisor.at(1)
-          (align(top,[Mitbetreuer:]),
+          (align(top,[#opts.spell.co-supervisor:]),
           [#adv.name#z, #adv.university#z, #adv.department#z, #adv.unit])
         }
       )
