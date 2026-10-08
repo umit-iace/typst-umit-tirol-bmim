@@ -16,8 +16,10 @@
     .contains(here().page())
 }
 
-#let long(x) = if type(x) == array { x.at(0) } else { x }
-#let short(x) = if type(x) == array { x.at(1) } else { x }
+// Long or short form of a value given as either `x` or `(long, short)`.
+// A single-element array `(x,)` is treated like `x`.
+#let long(x) = if type(x) == array { x.first() } else { x }
+#let short(x) = if type(x) == array { x.last() } else { x }
 
 #let chapter-break(oneside, to: "odd") = if oneside {
   pagebreak(weak: true)

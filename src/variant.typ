@@ -130,7 +130,7 @@
 }
 
 #let article(
-  title: none, // str or content
+  title: none, // [Title] or ([Long Title], [Short Title])
   subtitle: none,
   course: none, // either [Course Name] , or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
@@ -199,7 +199,7 @@
 
 #let exam(
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
-  title: none, // str or content
+  title: none, // [Title] or ([Long Title], [Short Title])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
   total-time: none, // str or content
@@ -262,7 +262,7 @@
 
 #let exercise(
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
-  title: none, // str or content
+  title: none, // [Title] or ([Long Title], [Short Title])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
   show-solution: none, // none, "inline", "bottom"
@@ -433,7 +433,7 @@
 }}
 
 #let poster(
-  title: none, // str or content
+  title: none, // [Title] or ([Long Title], [Short Title])
   authors: none, // array of str or content
   page: "a2", // pagesize
   orientation: "landscape", // "landscape", "portrait"
@@ -472,7 +472,7 @@
 }}
 
 #let report(
-  title: none, // either [Title] , or ([Topic], [Title])
+  title: none, // [Title] or ([Long Title], [Short Title])
   course: none, // [Course Name] or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
@@ -516,7 +516,7 @@
   program: "Master", // Master, Bachelor
   university: "LFUI", // UMIT, LFUI
   study: "Mech", // BauUmwelt, Elek, Mech, Bau, Umwelt
-  title: [Thesis],
+  title: [Thesis], // [Title] or ([Long Title], [Short Title])
   subtitle: [],
   author: none, // str or content
   date: datetime.today(), // datetime (shown as month and year) or content
@@ -831,7 +831,7 @@
         } else {
           authors-short
         },
-        title: if type(title) != array { title } else { title.at(1) },
+        title: short(title),
         date: date,
         pagenum: utils.call-or-display(self, self.store.footer-pagenum),
         progress-animation: progress-animation,

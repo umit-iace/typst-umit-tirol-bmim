@@ -88,8 +88,8 @@ variant plus `lang`, `spell` (the translations) and `show-solution`, see
 
 ### Variants
 
-Values given as `([Long], [Short])` use the long form in the title and the
-short form in headers and footers. `authors` is required for all variants
+`title` and `course` can be given as `[Text]` or `([Long], [Short])`: the long
+form is used in the title block, the short form in headers and footers. `authors` is required for all variants
 except `letter` and `slides`.
 
 | Variant | Parameters |

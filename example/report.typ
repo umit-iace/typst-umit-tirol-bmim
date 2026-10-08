@@ -1,7 +1,10 @@
 #import "./preamble.typ": *
 
 #show: bmim.report(
-  title: ("Task description"),
+  title: (
+    "This is a very long \n task description",
+    "Task description",
+  ),
   lang: "en",
   course: ("Document creation Laboratory", "DCL"),
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),

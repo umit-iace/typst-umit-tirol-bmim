@@ -231,7 +231,7 @@
 #let footer-course-title(course, title) = context {
   let opts = options.final()
   let course = short(course)
-  let title = if type(title) == array { title.join([ \- ]) } else { title }
+  let title = short(title)
   let foot = [
     #course - #title
     #if opts.show-solution != none [
@@ -428,7 +428,7 @@
         stroke: (bottom: 1pt),
         inset: (bottom: 7pt),
         [
-          #text(size: 2em)[#args.title]
+          #text(size: 2em)[#long(args.title)]
           #v(-1.5em)
           #text(size: 1.2em)[#course]
         ])
@@ -660,7 +660,7 @@
   poster: (args) => context {
     let (title, authors, ..) = args
     place(top+center, float: true, scope: "parent",[
-      #text(1.4em, strong(title))\
+      #text(1.4em, strong(long(title)))\
       #authors.join([\ ])
     ])
   },
@@ -672,7 +672,7 @@
       block(
         {
           set par(spacing: .7em, leading: .7em)
-          text(size: 2.5em, weight: "semibold", args.title)
+          text(size: 2.5em, weight: "semibold", long(args.title))
           linebreak()
           text(size: 1.5em, weight: "semibold", args.subtitle)
           line(length: 33%)
@@ -716,7 +716,7 @@
       // text
       bigskip
       block(height: 3cm, above:1.25cm, {
-        Large(strong(title))
+        Large(strong(long(title)))
         Large(subtitle)
       })
       bigskip
