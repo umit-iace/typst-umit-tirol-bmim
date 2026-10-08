@@ -22,10 +22,13 @@ fi
 
 new=$1
 
+# escape the dots, otherwise they match any character
+v_re=$(printf '%s' "$v" | sed 's/\./\\./g')
+
 for file in README.md typst.toml
 do
-    sed s/$v/$new/ -i $file
-    git add $file
+    sed "s/$v_re/$new/g" -i "$file"
+    git add "$file"
 done
 
 git commit -m"bump version"
