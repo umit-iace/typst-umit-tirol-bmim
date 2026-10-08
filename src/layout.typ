@@ -1,5 +1,5 @@
 #import "task.typ"
-#import "utils.typ": *
+#import "helpers.typ": *
 #import "options.typ": *
 #import "slides.typ": *
 

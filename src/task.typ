@@ -1,4 +1,4 @@
-#import "utils.typ"
+#import "helpers.typ"
 #import "options.typ": options, color
 #let t-count = counter("task")
 #let t-points = state("task-points", ())
@@ -196,7 +196,7 @@
     let loc = el.location()
     let num = if opts.task-wrap-counter != none { opts.task-wrap-counter.at(1) * "1." } + "1.a"
     let ref-counter = numbering(num, ..t-count.at(loc))
-    if utils.is-empty(supp) {
+    if helpers.is-empty(supp) {
       link(el.location(), ref-counter)
     }
     else {

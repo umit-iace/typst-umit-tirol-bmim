@@ -1,4 +1,4 @@
-#import "utils.typ"
+#import "helpers.typ"
 #let enum-label-mark = metadata("enumeration_label")
 #let enum-counter = counter("enum-counter")
 #let enum-numbering-state = state("enum-numbering", none)
@@ -35,7 +35,7 @@
       num = num.with(loc:loc)
     }
     let ref-counter = numbering(num, ..enum-counter.at(loc))
-    if utils.is-empty(supp) {
+    if helpers.is-empty(supp) {
       link(el.location(), ref-counter)
     }
     else {

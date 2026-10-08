@@ -1,7 +1,7 @@
 #import "@preview/touying:0.8.0": *
 #import "colors.typ": *
 #import "data.typ": *
-#import "utils.typ": print-date, pick-logo
+#import "helpers.typ": print-date, pick-logo
 #import "options.typ": options
 
 #let title-slide(
