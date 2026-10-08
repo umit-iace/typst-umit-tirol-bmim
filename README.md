@@ -30,6 +30,7 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 - [example/report.typ](example/report.typ) for the corresponding report Typst file.
 - [example/slides-longTitle.typ](example/slides-longTitle.typ) for the corresponding slide Typst file using different logos, activate progress animation with a huge number of authors and a long title, see [Github Pages](https://umit-iace.github.io/typst-umit-tirol-bmim) for an example output.
 - [example/slides-shortTitle.typ](example/slides-shortTitle.typ) for the corresponding slide Typst file.
+- [example/slides-article.typ](example/slides-article.typ) for the slides of slides-longTitle rendered as an article (article mode); both share the slides in [example/content/slides.typ](example/content/slides.typ).
 - [example/thesis.typ](example/thesis.typ) for the corresponding thesis Typst file.
 - [example/workbook.typ](example/workbook.typ) for the corresponding workbook Typst file.
 
@@ -101,7 +102,7 @@ except `letter` and `slides`.
 | `letter` | `subject`, `date`, `location`, `recipient` (`name`, `address`, `pro`, `institution`), `sender` (`name`, `pos`, `institute`, `department`, `tel`, `fax`, `email`, `signature`) |
 | `poster` | `title`, `authors`, `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `event`, `location`, `contact` |
 | `report` | `title`, `course`, `authors`, `date`, `show-solution` |
-| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `notes`, `margins`, `section-slide` |
+| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as report, see below), `notes`, `margins`, `section-slide` |
 | `thesis` | `program` (`"Master"`, `"Bachelor"`), `university` (`"LFUI"`, `"UMIT"`), `title`, `subtitle`, `author` (required), `date`, `advisor` (array of `(name, university, department, unit)`), `abstract` (`(english, german)`), `thanks`, `oneside` (`false`) |
 | `workbook` | `course`, `authors`, `date`, `show-solution`, `task-show-points`, `oneside` (`false`) |
 
@@ -121,6 +122,21 @@ except `letter` and `slides`.
   )
   ```
 Missing or misspelled arguments are reported with an error message.
+
+### Slides as article
+
+touying's article mode renders the same source as a document instead of slides,
+in the layout of the `report` variant: `title`, `subtitle` (in place of the
+course), `authors` and `date` of the slides form its title block, `title-slide` and `outline-slide` are
+skipped and animations show their final state. Enable it with
+`article-mode: true` or when compiling:
+  ```bash
+  % typst compile slides.typ --input export-mode=article
+  ```
+touying's markers select content per output, e.g. `#article-text[..]` (prose
+that replaces the whole content of its slide), `#article-only[..]` and
+`#slides-only[..]`, see
+[example/slides-article.typ](example/slides-article.typ).
 
 ### Helpers
 

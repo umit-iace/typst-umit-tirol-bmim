@@ -233,7 +233,7 @@
   let course = short(course)
   let title = short(title)
   let foot = [
-    #course - #title
+    #if course != none [#course - ]#title
     #if opts.show-solution != none [
       #set text(color.red)
       *#opts.spell.with #opts.spell.sol*

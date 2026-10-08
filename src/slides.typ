@@ -7,6 +7,8 @@
 #let title-slide(
   ..args,
 ) = touying-slide-wrapper(self => {
+  // not shown in article mode, the report variant has its own title block
+  if self.at("article-mode", default: false) { return touying-slide(self: self, []) }
   let opts = options.final()
   let new-config = utils.merge-dicts(
     opts,
@@ -159,6 +161,8 @@
   cover-lvl: 1,
   ..args,
 ) = touying-slide-wrapper(self => {
+  // not shown in article mode, the report variant has its own outline
+  if self.at("article-mode", default: false) { return touying-slide(self: self, []) }
   let opts = options.final()
   let new-config = utils.merge-dicts(
     opts,

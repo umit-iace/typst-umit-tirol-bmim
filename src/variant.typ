@@ -193,7 +193,12 @@
 
   show figure.caption: set text(size: 0.9em)
 
-  set enum(full: true, numbering: "a)")
+  // one style per level: a) / i) / 1), then again a) / ...; with
+  // `full: true` and a single pattern, nested items showed "a)a)"
+  set enum(full: true, numbering: (..n) => {
+    let n = n.pos()
+    numbering(("a)", "i)", "1)").at(calc.rem(n.len() - 1, 3)), n.last())
+  })
 
   render-titleblock("article", (
     title: title,
@@ -723,6 +728,7 @@
   progress-animation: none, // progress in header/footer: (slides: bool, section: bool)
   size: 18pt,
   handout: false, // render as handout: false, true
+  article-mode: false, // render the slides as a report (touying article mode): false, true
   notes: none, // show speaker notes: none, right, bottom
   margins: (x: 27pt, ),
   section-slide: auto, // auto, none, function
@@ -780,6 +786,16 @@
       show-bibliography-as-footnote: bib-as-footnote,
       handout: handout,
       show-notes-on-second-screen: notes,
+      export-mode: if article-mode { "article" } else { "slides" },
+      // the report variant of this template renders the article mode, the
+      // subtitle of the slides takes the place of the course
+      article-theme: body => report(
+        title: title,
+        course: subtitle,
+        authors: (authors,).flatten(),
+        date: if date == none { datetime.today() } else { date },
+        size: 11pt,
+      )(body),
     ),
     config-methods(
       alert: utils.alert-with-primary-color,

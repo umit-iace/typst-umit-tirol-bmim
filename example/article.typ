@@ -63,6 +63,13 @@ We have different listings. Bullet lists:
 Enumerations:
 + Solve the equation for $x$
 + Solve the equation for $y$
+Nested enumerations:
++ First level
+  + Second level
+    + Third level
+    + Third level
+  + Second level
++ First level
 
 == Figures & Tables
 
