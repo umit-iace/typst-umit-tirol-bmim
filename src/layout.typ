@@ -50,8 +50,9 @@
       pad(right: 1em, align(horizon, stack(
         dir: ltr,
         spacing: 10pt,
-        ..query(outline.entry.where(level: 1)).map(sec => dot(
-          current-section != none and sec.element.location() == current-section.location()
+        // one dot per outlined section, also without an outline in the document
+        ..query(heading.where(level: 1, outlined: true)).map(sec => dot(
+          current-section != none and sec.location() == current-section.location()
         ))
       )))
     )
