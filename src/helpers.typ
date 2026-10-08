@@ -31,14 +31,14 @@
   show heading: it => {
     // Clever trick to reduce spacing between consecutive headings
     // See https://github.com/typst/typst/issues/2953
-    let previous_headings = query(selector(heading).before(here(),
+    let previous-headings = query(selector(heading).before(here(),
       inclusive: false))
-    if previous_headings.len() > 0 {
-      let prev_loc = previous_headings.last().location().position()
-      let it_loc = it.location().position()
-      if (it_loc.page == prev_loc.page
-        and it_loc.x == prev_loc.x
-        and it_loc.y - prev_loc.y < 60pt) { // threshold
+    if previous-headings.len() > 0 {
+      let prev-pos = previous-headings.last().location().position()
+      let it-pos = it.location().position()
+      if (it-pos.page == prev-pos.page
+        and it-pos.x == prev-pos.x
+        and it-pos.y - prev-pos.y < 60pt) { // threshold
         // amount to reduce spacing, could make this dependent on it.level
         v(-0.3em)
       }
@@ -121,9 +121,6 @@
   }
 }
 
-// Deprecated alias, use translated-month instead
-#let translatedMonth = translated-month
-
 #let print-date(date) = {
   let opts = options.final()
   if type(date) != datetime {
@@ -145,14 +142,6 @@
     let start = if date.month() <= 3 { date.year() - 1 } else { date.year() }
     [#opts.spell.winter-term #start/#(start + 1)]
   }
-}
-
-#let heading-prefix-numbering(..args, loc: none) = context {
-  let hdr = counter(heading).at(
-    if loc == none { here() } else { loc }
-  )
-  let chain = hdr + args.pos()
-  return chain.map(str).join(".")
 }
 
 #let is-empty(value) = {

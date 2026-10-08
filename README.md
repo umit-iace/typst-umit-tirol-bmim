@@ -7,7 +7,7 @@
 - Subset of predefined colors (see [colors.typ](src/colors.typ)).
 - Variants:
     - article
-    - exams
+    - exam
     - exercise
     - lecture
     - letter
@@ -121,6 +121,20 @@ except `letter` and `slides`.
   )
   ```
 Missing or misspelled arguments are reported with an error message.
+
+### Helpers
+
+| Function | Description |
+|---|---|
+| `#show: mainmatter` | Starts the main part: page numbering restarts at 1, chapters start on a new (two-sided: odd) page |
+| `#show: backmatter` | Starts the appendix: chapters are numbered A, B, …; `to: "odd"` sets the page break (two-sided) |
+| `abstract[...]` | Abstract block for the article |
+| `enum-label("name")` | Inside an enum item: makes the item referable with `@name` |
+| `wrapped-enum-numbering("A")` | Enum numbering that works with `enum-label`, e.g. `#set enum(numbering: wrapped-enum-numbering("A"))` |
+| `poster-box([Heading], [Content], height: none)` | Colored box with heading for posters |
+| `title-slide()` | Title slide of the slides, uses the information of `slides(...)` |
+| `outline-slide(title: [...], cover-lvl: 1)` | Slide with the outline, the section `cover-lvl` is highlighted |
+| `translated-month(date, lang)` | Name of the month of `date` in the language `lang` |
 
 ## Themes
 
