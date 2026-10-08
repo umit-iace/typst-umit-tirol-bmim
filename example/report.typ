@@ -176,7 +176,7 @@ It is important to remember Newton's third law @newton-third, and Hook's law
       This is a subtask description, it will tell you what to do.
     ],
     solution: [
-      This is the solution of the subtask. 
+      This is the solution of the subtask.
       We concolude that $1+1=2$.
       w/e @task:main11 before @task:sub12
     ]
@@ -212,6 +212,13 @@ It is important to remember Newton's third law @newton-third, and Hook's law
 #lorem(80)
 
 = Appendix Section
+
+Lists:
+- Element 1
+- Element 1
+- Element 1
+- Element 1
+and some text around.
 
 #lorem(80)
 

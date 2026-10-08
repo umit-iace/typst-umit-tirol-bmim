@@ -97,6 +97,13 @@ Neben einem Bild in @fig:test gibt es Nummern in @tab:try.
 
 = Second
 
+Lists:
+- Element 1
+- Element 1
+- Element 1
+- Element 1
+and some text around.
+
 #lorem(30)
 
 #pagebreak()

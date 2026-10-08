@@ -138,6 +138,13 @@ Wir haben den Beweis:
 
 == Andere Details
 
+Lists:
+- Element 1
+- Element 1
+- Element 1
+- Element 1
+and some text around.
+
 #lorem(500)
 
 #outline(

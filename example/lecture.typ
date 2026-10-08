@@ -198,5 +198,12 @@ Wir haben den Beweis:
 
 = Das ließt niemand mehr
 
+Lists:
+- Element 1
+- Element 1
+- Element 1
+- Element 1
+and some text around.
+
 
 #bibliography("sources.bib")

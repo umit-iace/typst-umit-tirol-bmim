@@ -66,6 +66,14 @@
     item-cnt.update(i => i + it.children.len())
   }
 
+  // A tight bullet list attached to a paragraph uses the leading above, so use
+  // the leading below as well instead of the (larger) paragraph spacing.
+  // Enums are excluded, they hold the subtasks followed by the solution box.
+  show list.where(tight: true): it => context {
+    set block(below: par.leading)
+    it
+  }
+
   show heading: set text(weight: "semibold")
   show heading.where(level: 1): it => {
     item-cnt.update(0)
