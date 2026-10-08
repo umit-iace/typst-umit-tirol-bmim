@@ -77,7 +77,11 @@ Content at the third level will appear here.
 This level will not appear in the slide title.
 
 
-= Formatting
+= Formatting I
+
+== This is a very very very very very very very very long slide head
+
+= Formatting II
 
 == Paragraphs
 

@@ -28,10 +28,11 @@
   show text: set text(size: size, fill: opts.theme.background)
 
   let content = box(
-    width: if show-progress { 80% } else { 100% },
+    width: 100%,
     height: height,
     if body.pos().len() != 0 {
-      set align(if show-progress { horizon+left } else { horizon+center })
+      // slides: always left aligned, other headers and footers: centered
+      set align(if slide { horizon+left } else { horizon+center })
       pad(x: 15pt, body.pos().first())
     }
   )
@@ -44,21 +45,22 @@
       fill: if filled { gray.lighten(20%) },
     )
     box(
-      width: 100%,
       height: height,
-      align(horizon+center, stack(
+      // keep a small distance to the logo on the right
+      pad(right: 1em, align(horizon, stack(
         dir: ltr,
         spacing: 10pt,
         ..query(outline.entry.where(level: 1)).map(sec => dot(
           current-section != none and sec.element.location() == current-section.location()
         ))
-      ))
+      )))
     )
   }
 
   grid(
-    columns: if show-progress { (auto, 1fr) } else { (auto,) },
-    gutter: 1pt,
+    // the title takes the free space, the dots only their own width
+    columns: if show-progress { (1fr, auto) } else { (auto,) },
+    gutter: 1em,
     content,
     ..if show-progress { (progress-dots(),) },
   )
