@@ -523,7 +523,6 @@
 #let thesis(
   program: "Master", // Master, Bachelor
   university: "LFUI", // UMIT, LFUI
-  study: "Mech", // BauUmwelt, Elek, Mech, Bau, Umwelt
   title: [Thesis], // [Title] or ([Long Title], [Short Title])
   subtitle: [],
   author: none, // str or content
@@ -565,7 +564,6 @@
   render-titleblock("thesis", (
     program: program,
     university: university,
-    study: study,
     title: title,
     subtitle: subtitle,
     author: author,
