@@ -10,6 +10,13 @@
 #let total-points() = task-points().sum(default:0)
 
 #let t-mark = metadata("bmim-task-locator")
+
+// Numbering of tasks, prefixed by the wrap counter (e.g. the chapter) if set:
+// "1.a" gives "1" for a task and "1.a" for a subtask.
+#let task-numbering(opts) = {
+  let lvl = if opts.task-wrap-counter == none { 0 } else { opts.task-wrap-counter.at(1) }
+  "1." * lvl + "1.a"
+}
 #let t-label(lbl) = label("bmim-"+str(lbl)+"-tsk")
 #let t-label-sol(lbl) = label("bmim-"+str(lbl)+"-sol")
 
@@ -19,7 +26,7 @@
   #let spell = opts.spell
 
   #let msg = {
-    [#spell.task #context numbering("1.1.a", ..t-count.get())]
+    [#spell.task #context numbering(task-numbering(opts), ..t-count.get())]
     if name != none { h(1em) + name }
     h(1fr)
     if opts.task-show-points [#spell.poi: #points]
@@ -38,7 +45,11 @@
       sym.space.nobreak.narrow
       spell.page
       sym.space.nobreak.narrow
-      str(counter(page).at(loc).first())
+      // in the numbering of the solution page, e.g. roman
+      numbering(
+        if loc.page-numbering() == none { "1" } else { loc.page-numbering() },
+        ..counter(page).at(loc),
+      )
     }
     [_#spell.solution-on #link(loc, msg)._]
   }
@@ -51,7 +62,7 @@
     if level == 3 {
       numbering("a)", t-count.get().at(2))
     } else {
-      numbering("1.1.a", ..t-count.get())
+      numbering(task-numbering(opts), ..t-count.get())
     }
   })
   lbl + enum(task)
@@ -150,10 +161,8 @@
   let wrap = if opts.task-wrap-counter == none {
     (c: counter("bmim-task-counter-ignore"), lvl: 0)
   } else {
-    ("c", "lvl").zip(opts.task-wrap-counter).fold((:), (acc, it) => {
-      acc += (it.first(): it.last())
-      acc
-    })
+    let (c, lvl) = opts.task-wrap-counter
+    (c: c, lvl: lvl)
   }
   if wrap.lvl != 0 { // check if we need to reset, recursively
     let w = wrap.c.get()
@@ -243,8 +252,7 @@
       supp = opts.spell.task
     }
     let loc = el.location()
-    let num = if opts.task-wrap-counter != none { opts.task-wrap-counter.at(1) * "1." } + "1.a"
-    let ref-counter = numbering(num, ..t-count.at(loc))
+    let ref-counter = numbering(task-numbering(opts), ..t-count.at(loc))
     if helpers.is-empty(supp) {
       link(el.location(), ref-counter)
     }
