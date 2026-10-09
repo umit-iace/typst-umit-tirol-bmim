@@ -101,7 +101,7 @@ except `flyer`, `letter` and `slides`.
 | `article` | `title`, `subtitle`, `course`, `authors`, `date` |
 | `exam` | `course`, `title`, `authors`, `date`, `total-time` (required), `show-solution`, `empty-sheets` (`auto` = one per task, `none`, int), `show-hints` (`true`), `oneside` (`false`) |
 | `exercise` | `course`, `title`, `authors`, `date`, `show-solution`, `task-show-points` |
-| `flyer` | `title` (required), `series` (above the title), `details` (rows below the title with free labels: `(([Presenter], [...]), ([Date], [...]))`), `background` (image of the front page), `qr-code`, `back-image` (image at the top of the back page), `badge` (content, or a datetime shown with date and time in the language of the document), `back-title` (`auto` = `title`), `back-bottom-title`, `back-bottom`, `back-bottom-rule` (length of the line below `back-bottom-title`, `100%`); the back page has an upper area (`back-title` and the document body) and a lower area (`back-bottom-title` and `back-bottom`) in the same style, a second logo next to the UMIT logo is set with `logo: (flyer-left: ..)`, `flyer-right` replaces the UMIT logo |
+| `flyer` | `title` (required), `series` (above the title), `details` (rows below the title with free labels: `(([Presenter], [...]), ([Date], [...]))`), `background` (image of the front page), `qr-code`, `back-image` (image at the top of the back page); the document body is the back page, designed freely with `flyer-heading` and `flyer-badge` (see Helpers), a second logo next to the UMIT logo is set with `logo: (flyer-left: ..)`, `flyer-right` replaces the UMIT logo |
 | `lecture` | `course`, `authors`, `date`, `oneside` (`false`) |
 | `letter` | `subject`, `date`, `location`, `recipient` (`name`, `address`, `pro`, `institution`), `sender` (`name`, `pos`, `institute`, `department`, `tel`, `fax`, `email`, `signature`) |
 | `poster` | `title`, `authors`, `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `event`, `location`, `contact` |
@@ -155,6 +155,8 @@ that replaces the whole content of its slide), `#article-only[..]` and
 | `title-slide()` | Title slide of the slides, uses the information of `slides(...)` |
 | `outline-slide(title: [...], cover-lvl: 1)` | Slide with the outline, the section `cover-lvl` is highlighted |
 | `translated-month(date, lang)` | Name of the month of `date` in the language `lang` |
+| `flyer-heading(body, size: 20pt, rule: 100%)` | Heading with a line below on the back page of the flyer; `rule` is the length of the line |
+| `flyer-badge(body)` | Rotated badge on the back page of the flyer, right aligned up to the page edge, where it is placed; a datetime is shown with date and time |
 | `context print-date-time(date)` | Date with the time of a datetime in the language of the document, e.g. "5th November 2026, 17:00" or "5. November 2026, 17.00 Uhr" (as in the badge of the flyer) |
 | `build-vcard((firstname: .., lastname: .., ..))` | Contact as vCard 3.0, e.g. as data of a QR code; optional keys `title`, `role`, `organization`, `address` (`street`, `zip`, `town`, `country`), `telephone`, `email`, `url`, one of `firstname` and `lastname` is required |
 | `build-vcalendar((name: .., start: .., ..))` | Event as iCalendar (RFC 5545), e.g. as data of a QR code; `start` and optional `end` are datetimes (without time an all-day event), optional `location`, `description`, `uid` |

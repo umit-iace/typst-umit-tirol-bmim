@@ -5,6 +5,6 @@
   title: [Mit Bildern],
   background: image("/assets/background_umit.jpg"),
   back-image: image("/assets/background_bettelwurf.jpg"),
-  badge: [Badge],
 )
 Text oben
+#bmim.flyer-badge[Badge]

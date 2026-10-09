@@ -465,6 +465,36 @@
   angle: 90deg,
 )
 
+// Left and right margin of the back page of the flyer
+#let flyer-side = 8%
+
+// Heading on the back page of the flyer, with a line below; `rule` is the
+// length of the line
+#let flyer-heading(body, size: 20pt, rule: 100%) = context {
+  let opts = options.final()
+  block(below: 1.2em, {
+    block(below: 8pt, {
+      set par(leading: 0.4em)
+      text(size: size, weight: "medium", hyphenate: false, body)
+    })
+    line(length: rule, stroke: 1.2pt + opts.theme.background)
+  })
+}
+
+// Rotated badge on the back page of the flyer, e.g. with date and time; a
+// datetime is shown with date and time in the language of the document. It is
+// right aligned and reaches beyond the right page edge: right margin plus some
+// extra, so that the rotated edge is outside of the page as well.
+#let flyer-badge(body) = context {
+  let opts = options.final()
+  let bleed = page.width * (flyer-side / 100%) + 2em
+  align(right, move(dx: bleed, rotate(-5deg, reflow: true, box(
+    fill: opts.theme.highlight,
+    inset: (left: 1em, right: 1em + bleed, y: 1.7em),
+    text(size: 11pt, weight: "bold", print-date-time(body)),
+  ))))
+}
+
 #let titleblock = (
   exam:     (args) => context {
     let opts = options.final()

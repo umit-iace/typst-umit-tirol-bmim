@@ -41,22 +41,14 @@
     ),
     width: 70pt,
   ),
-  badge: [14\. März 2026, 10.00 Uhr],
-  // lower area of the back page: a second text with its own heading
-  back-title: [Was Sie erwartet],
-  back-bottom-title: [Anfahrt und Kontakt],
-  back-bottom: [
-    Die UMIT TIROL erreichen Sie mit der S-Bahn bis Hall in Tirol, von dort
-    sind es etwa zehn Minuten zu Fuß. Parkplätze stehen am Campus in
-    begrenzter Zahl zur Verfügung.
-
-    #lorem(40)
-
-    Bei Fragen erreichen Sie uns unter iace\@umit-tirol.at.
-  ],
 )
 
-// upper area of the back page
+// The document body is the back page, designed freely; here the badge is
+// placed directly below the first heading.
+#bmim.flyer-heading[Was Sie erwartet]
+
+#bmim.flyer-badge[14\. März 2026, 10.00 Uhr]
+
 An unseren Laboren zeigen wir, wie Regelungstechnik und Mechatronik im Alltag
 wirken: von Robotern über medizinische Assistenzsysteme bis zu Prüfständen für
 Antriebe.
@@ -66,3 +58,16 @@ Antriebe.
 - Führungen durch die Labore
 - Vorträge zu den Studiengängen
 - Gespräche mit Studierenden und Lehrenden
+
+// push the following to the bottom of the page
+#v(1fr)
+
+#bmim.flyer-heading(size: 16pt)[Anfahrt und Kontakt]
+
+Die UMIT TIROL erreichen Sie mit der S-Bahn bis Hall in Tirol, von dort sind es
+etwa zehn Minuten zu Fuß. Parkplätze stehen am Campus in begrenzter Zahl zur
+Verfügung.
+
+#lorem(40)
+
+Bei Fragen erreichen Sie uns unter iace\@umit-tirol.at.
