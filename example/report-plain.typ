@@ -6,12 +6,12 @@
     "",
   ),
   lang: "en",
-  course: ("", ""),
+  course: none,
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   date: datetime.today(),
-  show-solution: "inline",
+  show-solution: none,
   titleblock: none,
-  task-show-points: true
+  task-show-points: false,
 )
 
 #align(center)[
