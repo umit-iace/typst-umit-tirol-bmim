@@ -484,6 +484,70 @@
   body
 }}
 
+#let flyer(
+  title: none, // [Title] or ([Long Title], [Short Title])
+  series: none, // e.g. [Mechatronisches Kolloquium], shown above the title
+  details: (), // rows below the title: (([Label], [Text]), ...), e.g. presenter, date
+  background: none, // content, e.g. image("…"), background of the front page
+  qr-code: none, // content, e.g. a QR code, bottom left of the front page
+  back-image: none, // content, e.g. image("…"), top of the back page
+  ..chosen // other options: theme, lang, logo, etc
+) = { body => {
+  // the document body is the back page, designed freely, e.g. with
+  // flyer-heading and flyer-badge
+  assert-set("title", title)
+  assert(type(details) == array and details.all(d => type(d) == array and d.len() == 2), message:
+    "Option 'details' must be an array of ([Label], [Text]) pairs, but was set to " + repr(details)
+  )
+  option-set(chosen.named())
+  show: bmim-common
+  context {
+    let opts = options.final()
+    set text(font: opts.fonts.sans, fill: opts.theme.background)
+    set par(justify: true)
+
+    // front page
+    page(margin: 0pt, header: none, footer: none, render-titleblock("flyer", (
+      title: title,
+      series: series,
+      details: details,
+      background: background,
+      qr-code: qr-code,
+    )))
+
+    // back page: image at the top, the gradient below, the body as content
+    let image-height = 22%
+    page(
+      margin: (
+        x: flyer-side,
+        top: if back-image != none { image-height + 2em } else { 2.5em },
+        bottom: 2.5em,
+      ),
+      header: none,
+      footer: none,
+      // same gradient as the box on the front page, starting below the image
+      fill: opts.theme.primary.darken(80%),
+      background: {
+        let start = if back-image != none { image-height } else { 0% }
+        place(top, dy: start, box(
+          width: 100%,
+          height: 100% - start,
+          fill: flyer-gradient(opts),
+        ))
+        if back-image != none {
+          place(top, box(width: 100%, height: image-height, clip: true, {
+            set image(width: 100%, height: 100%, fit: "cover")
+            back-image
+          }))
+        }
+      },
+    )[
+      #set text(size: 9.5pt)
+      #body
+    ]
+  }
+}}
+
 #let report(
   title: none, // [Title] or ([Long Title], [Short Title])
   course: none, // [Course Name] or ([Course Name], [Short Course Name])

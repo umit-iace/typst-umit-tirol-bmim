@@ -9,6 +9,7 @@
     - article
     - exam
     - exercise
+    - flyer
     - lecture
     - letter
     - poster
@@ -23,6 +24,8 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 - [example/article.typ](example/article.typ) for the corresponding article Typst file.
 - [example/exam.typ](example/exam.typ) for the corresponding exam Typst file,
 - [example/exercise.typ](example/exercise.typ) for the corresponding exercise Typst file.
+- [example/flyer-bio.typ](example/flyer-bio.typ) for the corresponding flyer Typst file (A4, front and back page) with a short bio in the lower area of the back page.
+- [example/flyer-text.typ](example/flyer-text.typ) for a flyer with a second text in the lower area of the back page, in German.
 - [example/lab.typ](example/lab.typ) for the corresponding report Typst file with self defined title block.
 - [example/lecture.typ](example/lecture.typ) for the corresponding lecture notes Typst file.
 - [example/letter.typ](example/letter.typ) for the corresponding letter Typst file.
@@ -77,7 +80,7 @@ These options can be passed to every variant:
 | `font` | `auto` | Main text font; `auto` uses `fonts.serif` (slides: `fonts.sans`) |
 | `fonts` | see [Fonts](#fonts) | Fonts per role, single roles can be replaced |
 | `size` | `11pt` | Font size (poster: `20pt`, slides: `18pt`) |
-| `logo` | `auto` | `auto`, `none`, content, or a dictionary with `left`, `right`, `title-left`, `title-right` (slides) |
+| `logo` | `auto` | `auto`, `none`, content, or a dictionary with `left`, `right`, `title-left`, `title-right` (slides), `flyer-left`, `flyer-right` (flyer) |
 | `titleblock` | `auto` | `auto` (title block of the variant), `none`, or a function `args => content` |
 | `show-solution` | `none` | `none`, `"inline"` or `"bottom"` (exam, exercise, report, workbook) |
 | `task-show-points` | `false` | Show the points of each task (exercise, workbook) |
@@ -91,13 +94,14 @@ variant plus `lang`, `spell` (the translations) and `show-solution`, see
 
 `title` and `course` can be given as `[Text]` or `([Long], [Short])`: the long
 form is used in the title block, the short form in headers and footers. `authors` is required for all variants
-except `letter` and `slides`.
+except `flyer`, `letter` and `slides`.
 
 | Variant | Parameters |
 |---|---|
 | `article` | `title`, `subtitle`, `course`, `authors`, `date` |
 | `exam` | `course`, `title`, `authors`, `date`, `total-time` (required), `show-solution`, `empty-sheets` (`auto` = one per task, `none`, int), `show-hints` (`true`), `oneside` (`false`) |
 | `exercise` | `course`, `title`, `authors`, `date`, `show-solution`, `task-show-points` |
+| `flyer` | `title` (required), `series` (above the title), `details` (rows below the title with free labels: `(([Presenter], [...]), ([Date], [...]))`), `background` (image of the front page), `qr-code`, `back-image` (image at the top of the back page); the document body is the back page, designed freely with `flyer-heading` and `flyer-badge` (see Helpers), a second logo next to the UMIT logo is set with `logo: (flyer-left: ..)`, `flyer-right` replaces the UMIT logo |
 | `lecture` | `course`, `authors`, `date`, `oneside` (`false`) |
 | `letter` | `subject`, `date`, `location`, `recipient` (`name`, `address`, `pro`, `institution`), `sender` (`name`, `pos`, `institute`, `department`, `tel`, `fax`, `email`, `signature`) |
 | `poster` | `title`, `authors`, `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `event`, `location`, `contact` |
@@ -151,6 +155,11 @@ that replaces the whole content of its slide), `#article-only[..]` and
 | `title-slide()` | Title slide of the slides, uses the information of `slides(...)` |
 | `outline-slide(title: [...], cover-lvl: 1)` | Slide with the outline, the section `cover-lvl` is highlighted |
 | `translated-month(date, lang)` | Name of the month of `date` in the language `lang` |
+| `flyer-heading(body, size: 20pt, rule: 100%)` | Heading with a line below on the back page of the flyer; `rule` is the length of the line |
+| `flyer-badge(body)` | Rotated badge on the back page of the flyer, right aligned up to the page edge, where it is placed; a datetime is shown with date and time |
+| `context print-date-time(date)` | Date with the time of a datetime in the language of the document, e.g. "5th November 2026, 17:00" or "5. November 2026, 17.00 Uhr" (as in the badge of the flyer) |
+| `build-vcard((firstname: .., lastname: .., ..))` | Contact as vCard 3.0, e.g. as data of a QR code; optional keys `title`, `role`, `organization`, `address` (`street`, `zip`, `town`, `country`), `telephone`, `email`, `url`, one of `firstname` and `lastname` is required |
+| `build-vcalendar((name: .., start: .., ..))` | Event as iCalendar (RFC 5545), e.g. as data of a QR code; `start` and optional `end` are datetimes (without time an all-day event), optional `location`, `description`, `uid` |
 
 ## Themes
 
