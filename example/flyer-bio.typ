@@ -1,6 +1,6 @@
 #import "./preamble.typ": *
 
-// date and time of the event, used for the badge and the QR code
+// date and time of the event, used for the details, the badge and the QR code
 #let start = datetime(year: 2026, month: 11, day: 5, hour: 17, minute: 0, second: 0)
 #let end = datetime(year: 2026, month: 11, day: 5, hour: 18, minute: 30, second: 0)
 
@@ -14,7 +14,7 @@
       University of Somewhere, Institute for Systems Theory and Automatic Control
     ]),
     ([Date], [
-      5#super[th] of November from 17.00 to 18.30 \
+      #context bmim.print-date-time(start) to #end.display("[hour]:[minute]") \
       PR204 \
       #text(size: 0.85em)[UMIT TIROL, Eduard-Wallnöfer-Zentrum 1, 6060 Hall in Tirol]
     ]),
