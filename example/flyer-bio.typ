@@ -3,10 +3,12 @@
 // date and time of the event, used for the details, the badge and the QR code
 #let start = datetime(year: 2026, month: 11, day: 5, hour: 17, minute: 0, second: 0)
 #let end = datetime(year: 2026, month: 11, day: 5, hour: 18, minute: 30, second: 0)
+// title on the front page and as heading on the back page
+#let title = [Bringing quantum systems under control: From algorithms to hardware]
 
 #show: bmim.flyer(
   lang: "en",
-  title: [Bringing quantum systems under control: From algorithms to hardware],
+  title: title,
   series: [Mechatronisches Kolloquium],
   details: (
     ([Presenter], [
@@ -42,30 +44,12 @@
   logo: (
     flyer-left: image("./../assets/logo_iace_white.svg", height: 40pt),
   ),
-  // a datetime is shown with date and time, like the QR code
-  badge: start,
-  // lower area of the back page
-  back-bottom-title: [Short bio],
-  // line below the title as wide as the portrait
-  back-bottom-rule: 25%,
-  back-bottom: grid(
-    columns: (25%, 1fr),
-    column-gutter: 1.5em,
-    // e.g. image("portrait.jpg", width: 100%)
-    rect(width: 100%, height: 9em, fill: white.transparentize(80%), stroke: none)[
-      #set align(center + horizon)
-      Portrait
-    ],
-    [
-      *Dr.-Ing. Jane Doe,* University of Somewhere, Institute for Systems Theory
-      and Automatic Control
-
-      #lorem(80)
-    ],
-  ),
 )
 
-// upper area of the back page
+// The document body is the back page, designed freely; flyer-heading and
+// flyer-badge give headings and the badge in the style of the flyer.
+#bmim.flyer-heading(title)
+
 Imagine a system whose state dimension doubles with every component you add,
 whose state is irreversibly disturbed the moment you measure it, and which
 constantly leaks information into its environment. A control engineer's
@@ -74,3 +58,28 @@ nightmare? Welcome to quantum computing.
 #lorem(60)
 
 #lorem(50)
+
+// the badge where it is placed, a datetime is shown with date and time
+#bmim.flyer-badge(start)
+
+// push the following to the bottom of the page
+#v(1fr)
+
+// line below the heading as wide as the portrait
+#bmim.flyer-heading(size: 16pt, rule: 25%)[Short bio]
+
+#grid(
+  columns: (25%, 1fr),
+  column-gutter: 1.5em,
+  // e.g. image("portrait.jpg", width: 100%)
+  rect(width: 100%, height: 9em, fill: white.transparentize(80%), stroke: none)[
+    #set align(center + horizon)
+    Portrait
+  ],
+  [
+    *Dr.-Ing. Jane Doe,* University of Somewhere, Institute for Systems Theory
+    and Automatic Control
+
+    #lorem(80)
+  ],
+)
