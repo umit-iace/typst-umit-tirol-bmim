@@ -1,43 +1,54 @@
 #import "./preamble.typ": *
 
-#let my-title-slide(info) = grid(
-  columns: (3fr, 2fr),
-  rows: 100%,
-  block(
-    width: 100%,
-    height: 100%,
-    fill: info.theme.primary,
-    inset: (x: 28pt, y: 32pt),
-    {
-      set align(left + horizon)
-      set par(justify: false, leading: 0.4em)
-      set text(fill: white)
-      text(size: 11pt, weight: "semibold", upper(info.conference))
-      v(0.6em)
-      text(size: 26pt, weight: "bold", info.title)
-      if info.subtitle != none {
-        v(0.4em)
-        text(size: 15pt, info.subtitle)
-      }
-      line(length: 30%, stroke: 1.2pt + info.theme.highlight)
-      text(size: 11pt, info.authors.join[, ])
-      v(0.3em)
-      text(size: 8pt, info.institution.join[\ ])
-      place(bottom + left, dy: 12pt, text(size: 12pt)[
-        #info.date.display("[day].[month].[year]"), #info.location
-      ])
-    },
-  ),
-  block(width: 100%, height: 100%, clip: true, {
-    image("./../assets/background_bettelwurf.jpg", width: 100%, height: 100%, fit: "cover")
-    place(bottom + right, dx: -20pt, dy: -20pt, stack(
-      dir: ltr,
-      spacing: 14pt,
-      image("./../assets/logo_lfui_color_invert.png", height: 36pt),
-      image("./../assets/logo_umit_white_en.svg", height: 30pt),
-    ))
-  }),
-)
+// Own title slide, a slide function like section-slide: the information of
+// the slides is in self.info, the colors in self.colors.
+#let my-title-slide(..args) = touying-slide-wrapper(self => {
+  self = utils.merge-dicts(
+    self,
+    config-page(margin: 0pt, header: none, footer: none),
+    config-common(freeze-slide-counter: true),
+  )
+  let info = self.info
+  touying-slide(self: self, grid(
+    columns: (3fr, 2fr),
+    rows: 100%,
+    block(
+      width: 100%,
+      height: 100%,
+      fill: self.colors.primary,
+      inset: (x: 28pt, y: 32pt),
+      {
+        set align(left + horizon)
+        set par(justify: false, leading: 0.4em)
+        set text(fill: white)
+        text(size: 11pt, weight: "semibold", upper(info.conference))
+        v(0.6em)
+        // the title is the long title, if a long and a short one are given
+        text(size: 26pt, weight: "bold", (info.title,).flatten().first())
+        if info.subtitle != none {
+          v(0.4em)
+          text(size: 15pt, info.subtitle)
+        }
+        line(length: 30%, stroke: 1.2pt + self.colors.highlight)
+        text(size: 11pt, info.authors.join[, ])
+        v(0.3em)
+        text(size: 8pt, info.institution.join[\ ])
+        place(bottom + left, dy: 12pt, text(size: 12pt)[
+          #info.date.display("[day].[month].[year]"), #info.location
+        ])
+      },
+    ),
+    block(width: 100%, height: 100%, clip: true, {
+      image("./../assets/background_bettelwurf.jpg", width: 100%, height: 100%, fit: "cover")
+      place(bottom + right, dx: -20pt, dy: -20pt, stack(
+        dir: ltr,
+        spacing: 14pt,
+        image("./../assets/logo_lfui_color_invert.png", height: 36pt),
+        image("./../assets/logo_umit_white_en.svg", height: 30pt),
+      ))
+    }),
+  ))
+})
 
 #show: bmim.slides(
   title: (

@@ -5,7 +5,7 @@
   authors: ([A], [B]),
   lang: "en",
   article-mode: true,
-  title-slide: info => [Not in the article],
+  title-slide: (..args) => [Not in the article],
 )
 #bmim.title-slide()
 == Details

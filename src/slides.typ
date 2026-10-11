@@ -1,7 +1,7 @@
 #import "@preview/touying:0.8.0": *
 #import "colors.typ": *
 #import "data.typ": *
-#import "helpers.typ": print-date, pick-logo, long, short
+#import "helpers.typ": print-date, pick-logo
 #import "options.typ": options
 
 #let title-slide(
@@ -9,6 +9,23 @@
 ) = touying-slide-wrapper(self => {
   // not shown in article mode, the report variant has its own title block
   if self.at("article-mode", default: false) { return touying-slide(self: self, []) }
+  // option title-slide of slides(): none shows no title slide, a function is
+  // a slide function like section-slide (touying-slide-wrapper), called with
+  // the arguments of title-slide()
+  let custom = self.store.at("title-slide", default: auto)
+  if custom == none { return [] }
+  if custom != auto {
+    // unwrap the touying-slide-wrapper, as touying does for section-slide
+    let wrapper = custom(..args)
+    let wrapper = if type(wrapper) == content and wrapper.func() == block { wrapper.body } else { wrapper }
+    assert(
+      type(wrapper) == content and wrapper.func() == metadata
+        and type(wrapper.value) == dictionary
+        and wrapper.value.at("kind", default: none) == "touying-slide-wrapper",
+      message: "Option 'title-slide' must return a touying-slide-wrapper",
+    )
+    return (wrapper.value.fn)(self)
+  }
   let opts = options.final()
   let new-config = utils.merge-dicts(
     opts,
@@ -24,26 +41,6 @@
   )
 
   self = utils.merge-dicts(self, new-config)
-
-  // user-defined title slide: gets the information of the slides and the
-  // whole page without margin, header, footer and background
-  let custom = self.store.at("title-slide", default: auto)
-  if custom != auto {
-    self = utils.merge-dicts(self, config-page(margin: 0pt, background: none))
-    return touying-slide(self: self, custom((
-      title: long(self.info.title),
-      title-short: short(self.info.title),
-      subtitle: self.info.subtitle,
-      authors: (self.info.authors,).flatten(),
-      authors-short: self.info.authors-short,
-      institution: self.info.institution,
-      conference: self.info.conference,
-      location: self.info.location,
-      date: self.info.date,
-      lang: opts.lang,
-      theme: opts.theme,
-    )))
-  }
 
   let logo-left = pick-logo(opts.logo, "title-left")
   let logo-right = pick-logo(opts.logo, "title-right")

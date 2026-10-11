@@ -796,12 +796,12 @@
   notes: none, // show speaker notes: none, right, bottom
   margins: (x: 27pt, ),
   section-slide: auto, // auto, none, function
-  title-slide: auto, // auto, function info => content
+  title-slide: auto, // auto, none, function (like section-slide)
   ..chosen,
 ) = { body => context {
   assert(
-    title-slide == auto or type(title-slide) == function,
-    message: "Option 'title-slide' must be auto or a function, but was set to " + repr(title-slide),
+    title-slide in (auto, none) or type(title-slide) == function,
+    message: "Option 'title-slide' must be auto, none or a function, but was set to " + repr(title-slide),
   )
   option-set(
     (size: size) +

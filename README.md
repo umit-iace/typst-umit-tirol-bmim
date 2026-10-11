@@ -107,7 +107,7 @@ except `flyer`, `letter` and `slides`.
 | `letter` | `subject`, `date`, `location`, `recipient` (`name`, `address`, `pro`, `institution`), `sender` (`name`, `pos`, `institute`, `department`, `tel`, `fax`, `email`, `signature`) |
 | `poster` | `title`, `authors`, `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `event`, `location`, `contact` |
 | `report` | `title`, `course`, `authors`, `date`, `show-solution` |
-| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as report, see below), `notes`, `margins`, `section-slide` (`auto`, `none` or a touying slide function), `title-slide` (`auto` or a function `info => content` for an own title slide, see below) |
+| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as report, see below), `notes`, `margins`, `section-slide` (`auto`, `none` or a touying slide function), `title-slide` (`auto`, `none` or a touying slide function, see below) |
 | `thesis` | `program` (`"Master"`, `"Bachelor"`), `university` (`"LFUI"`, `"UMIT"`), `title`, `subtitle`, `author` (required), `date`, `advisor` (array of `(name, university, department, unit)`), `abstract` (`(english, german)`), `thanks`, `oneside` (`false`) |
 | `workbook` | `course`, `authors`, `date`, `show-solution`, `task-show-points`, `oneside` (`false`) |
 
@@ -130,18 +130,23 @@ Missing or misspelled arguments are reported with an error message.
 
 ### Own title slide
 
-`title-slide` of `slides(...)` takes a function that gets the information of
-the slides as a dictionary (`title`, `title-short`, `subtitle`, `authors`
-(array), `authors-short`, `institution`, `conference`, `location`, `date`,
-`lang`, `theme`) and returns the content of the title slide. It fills the whole
-page without margin, header, footer and background, and is shown where
-`#title-slide()` is called (skipped in article mode):
+`title-slide` of `slides(...)` is handled like `section-slide`: `none` shows no
+title slide, a slide function (built with `touying-slide-wrapper`) replaces the
+title slide where `#title-slide()` is called, it gets the arguments of
+`title-slide()`. The information of the slides is in `self.info` (`title` is
+`[Title]` or `([Long], [Short])`), the colors in `self.colors`; in article mode
+the title slide is skipped:
   ```typst
   #show: bmim.slides(
     // ...
-    title-slide: info => block(width: 100%, height: 100%,
-      fill: info.theme.primary, inset: 2em,
-      text(fill: white, size: 28pt, info.title)),
+    title-slide: (..args) => touying-slide-wrapper(self => {
+      self = utils.merge-dicts(self,
+        config-page(margin: 0pt, header: none, footer: none),
+        config-common(freeze-slide-counter: true))
+      touying-slide(self: self, block(width: 100%, height: 100%,
+        fill: self.colors.primary, inset: 2em,
+        text(fill: white, size: 28pt, (self.info.title,).flatten().first())))
+    }),
   )
   ```
 See [example/slides-customTitle.typ](example/slides-customTitle.typ).

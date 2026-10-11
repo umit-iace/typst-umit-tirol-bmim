@@ -1,16 +1,16 @@
-// expect-text: Own title: Control design strategies (Short)
-// expect-text: by A and B, 31.12.2024
+// expect-text: Own title: Control design strategies (arg)
+// expect-text: by A and B
 #import "/src/lib.typ" as bmim
+#import "@preview/touying:0.8.0": touying-slide-wrapper, touying-slide
 #show: bmim.slides(
   title: ([Control design strategies], [Short]),
   authors: ([A], [B]),
-  date: datetime(day: 31, month: 12, year: 2024),
   lang: "en",
-  title-slide: info => [
-    Own title: #info.title (#info.title-short) \
-    by #info.authors.join[ and ], #info.date.display("[day].[month].[year]")
-  ],
+  title-slide: (extra: none) => touying-slide-wrapper(self => touying-slide(self: self, [
+    Own title: #self.info.title.first() (#extra) \
+    by #self.info.authors.join[ and ]
+  ])),
 )
-#bmim.title-slide()
+#bmim.title-slide(extra: [arg])
 == Details
 Text on the slide.
