@@ -18,6 +18,38 @@
 
 #let underline-space(fraction) = box(height: -1pt, line(length: fraction))
 
+// Plain text of `body`, or none if it holds more than text (e.g. math).
+#let plain-text(body) = {
+  if type(body) == str { return body }
+  if type(body) != content { return none }
+  if body == [ ] or body.func() == h { return " " }
+  if body.has("text") { return body.text }
+  if body.has("children") {
+    let parts = body.children.map(plain-text)
+    return if none in parts { none } else { parts.join() }
+  }
+  if body.has("body") { return plain-text(body.body) }
+  none
+}
+
+// Show `body` on a single line: a too long text is cut after the last fitting
+// word and ends with an ellipsis, other content is clipped.
+#let fit-line(body) = layout(size => {
+  if measure(body).width <= size.width { return body }
+  let plain = plain-text(body)
+  if plain == none {
+    // keep the content on one line and cut it at the end of the line, the
+    // outset keeps the descenders
+    return box(width: size.width, clip: true, outset: (y: 0.3em), block(width: 10 * size.width, body))
+  }
+  let words = plain.split(" ").filter(w => w != "")
+  let n = words.len() - 1
+  while n > 1 and measure(words.slice(0, n).join(" ") + "…").width > size.width {
+    n -= 1
+  }
+  words.slice(0, n).join(" ") + "…"
+})
+
 // Colored bar with optional centered content. On slides, `progress` adds one
 // dot per section on the right, the current section filled.
 #let banner(slide: false, size: 1em, progress: false, ..body) = {
@@ -26,6 +58,7 @@
   let height = if slide { 0.5em } else { 1.5em }
   let show-progress = slide and progress
   show text: set text(size: size, fill: opts.theme.background)
+  show math.equation: set text(fill: opts.theme.background)
 
   let content = box(
     width: 100%,

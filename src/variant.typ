@@ -922,7 +922,8 @@
       title-slide: title-slide,
       outline-slide: outline-slide,
       alpha: 20%,
-      heading: self => utils.display-current-heading(depth: self.slide-level),
+      // too long headings are cut to a single line
+      heading: self => utils.display-current-heading(depth: self.slide-level, setting: fit-line),
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
       header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading), progress-animation: progress-animation),
       footer: self => (footer.slides)(
