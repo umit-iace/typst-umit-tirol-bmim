@@ -4,28 +4,33 @@
 #import "helpers.typ": print-date, pick-logo
 #import "options.typ": options
 
+// Own slide of the option `name` (title-slide, outline-slide) of slides(),
+// handled like section-slide: auto returns auto (the slide of the template),
+// none returns no slide, a slide function (touying-slide-wrapper) is called
+// with `args` and rendered with `self`.
+#let custom-slide(self, name, args) = {
+  let custom = self.store.at(name, default: auto)
+  if custom == auto { return auto }
+  if custom == none { return [] }
+  // unwrap the touying-slide-wrapper, as touying does for section-slide
+  let wrapper = custom(..args)
+  let wrapper = if type(wrapper) == content and wrapper.func() == block { wrapper.body } else { wrapper }
+  assert(
+    type(wrapper) == content and wrapper.func() == metadata
+      and type(wrapper.value) == dictionary
+      and wrapper.value.at("kind", default: none) == "touying-slide-wrapper",
+    message: "Option '" + name + "' must return a touying-slide-wrapper",
+  )
+  (wrapper.value.fn)(self)
+}
+
 #let title-slide(
   ..args,
 ) = touying-slide-wrapper(self => {
   // not shown in article mode, the report variant has its own title block
   if self.at("article-mode", default: false) { return touying-slide(self: self, []) }
-  // option title-slide of slides(): none shows no title slide, a function is
-  // a slide function like section-slide (touying-slide-wrapper), called with
-  // the arguments of title-slide()
-  let custom = self.store.at("title-slide", default: auto)
-  if custom == none { return [] }
-  if custom != auto {
-    // unwrap the touying-slide-wrapper, as touying does for section-slide
-    let wrapper = custom(..args)
-    let wrapper = if type(wrapper) == content and wrapper.func() == block { wrapper.body } else { wrapper }
-    assert(
-      type(wrapper) == content and wrapper.func() == metadata
-        and type(wrapper.value) == dictionary
-        and wrapper.value.at("kind", default: none) == "touying-slide-wrapper",
-      message: "Option 'title-slide' must return a touying-slide-wrapper",
-    )
-    return (wrapper.value.fn)(self)
-  }
+  let custom = custom-slide(self, "title-slide", args)
+  if custom != auto { return custom }
   let opts = options.final()
   let new-config = utils.merge-dicts(
     opts,
@@ -185,6 +190,8 @@
 ) = touying-slide-wrapper(self => {
   // not shown in article mode, the report variant has its own outline
   if self.at("article-mode", default: false) { return touying-slide(self: self, []) }
+  let custom = custom-slide(self, "outline-slide", arguments(cover-lvl: cover-lvl, ..args))
+  if custom != auto { return custom }
   let opts = options.final()
   let new-config = utils.merge-dicts(
     opts,

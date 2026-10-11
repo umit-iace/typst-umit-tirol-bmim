@@ -797,12 +797,19 @@
   margins: (x: 27pt, ),
   section-slide: auto, // auto, none, function
   title-slide: auto, // auto, none, function (like section-slide)
+  outline-slide: auto, // auto, none, function (like section-slide)
   ..chosen,
 ) = { body => context {
-  assert(
-    title-slide in (auto, none) or type(title-slide) == function,
-    message: "Option 'title-slide' must be auto, none or a function, but was set to " + repr(title-slide),
-  )
+  for (name, value) in (
+    section-slide: section-slide,
+    title-slide: title-slide,
+    outline-slide: outline-slide,
+  ) {
+    assert(
+      value in (auto, none) or type(value) == function,
+      message: "Option '" + name + "' must be auto, none or a function, but was set to " + repr(value),
+    )
+  }
   option-set(
     (size: size) +
     (font: font)
@@ -913,6 +920,7 @@
     ),
     config-store(
       title-slide: title-slide,
+      outline-slide: outline-slide,
       alpha: 20%,
       heading: self => utils.display-current-heading(depth: self.slide-level),
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,

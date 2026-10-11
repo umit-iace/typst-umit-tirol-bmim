@@ -1,7 +1,6 @@
 #import "./preamble.typ": *
 
-// Own title slide, a slide function like section-slide: the information of
-// the slides is in self.info, the colors in self.colors.
+// Title slide, shown where #bmim.title-slide() is called
 #let my-title-slide(..args) = touying-slide-wrapper(self => {
   self = utils.merge-dicts(
     self,
@@ -50,6 +49,51 @@
   ))
 })
 
+// Outline slide, shown where #bmim.outline-slide(..) is called, gets its
+// arguments (cover-lvl and e.g. title)
+#let my-outline-slide(cover-lvl: 1, title: none) = touying-slide-wrapper(self => {
+  self = utils.merge-dicts(self, config-page(header: none))
+  touying-slide(self: self, grid(
+    columns: (1fr, 2fr),
+    column-gutter: 2em,
+    align: horizon,
+    text(size: 32pt, weight: "bold", fill: self.colors.primary, title),
+    // one row per section, the section cover-lvl is highlighted
+    context {
+      let sections = query(heading.where(level: 1, outlined: true))
+      for (i, it) in sections.enumerate(start: 1) {
+        let active = i == cover-lvl
+        block(
+          width: 100%,
+          inset: (x: 0.6em, y: 0.5em),
+          fill: if active { self.colors.primary } else { none },
+          stroke: (bottom: 0.8pt + self.colors.highlight),
+          link(it.location(), text(
+            fill: if active { white } else { self.colors.primary },
+            weight: "semibold",
+          )[#i #h(0.8em) #it.body]),
+        )
+      }
+    },
+  ))
+})
+
+// Section slide, shown at each first level heading
+#let my-section-slide(..args) = touying-slide-wrapper(self => {
+  self = utils.merge-dicts(
+    self,
+    config-page(margin: 0pt, header: none, footer: none, fill: self.colors.primary),
+  )
+  touying-slide(self: self, {
+    set text(fill: white)
+    place(left + horizon, dx: 28pt, {
+      text(size: 28pt, weight: "bold", utils.display-current-heading(level: 1, numbered: false))
+      v(-0.3em)
+      line(length: 20%, stroke: 2pt + white)
+    })
+  })
+})
+
 #show: bmim.slides(
   title: (
     "Control design strategies for better results that take a quite a long title to explain what's really happening",
@@ -86,6 +130,8 @@
     section: true,
   ),
   title-slide: my-title-slide,
+  outline-slide: my-outline-slide,
+  section-slide: my-section-slide,
 )
 
 #include "content/slides.typ"
