@@ -365,12 +365,14 @@
             bottom: page.height * 0.9%
           ),
           grid(
-            columns: (3cm, 1fr, 3cm, 2cm),
+            // author, date and page number never break, the title takes the
+            // rest and is cut to a single line
+            columns: (auto, 1fr, auto, auto),
             gutter: 2%,
             align: (left, left, right, right),
             rows: page.height * 2.8%,
             text(white)[#author],
-            text(white)[#title],
+            text(white, fit-line(title)),
             text(white)[#print-date(date)],
             text(white)[#pagenum],
           ),
