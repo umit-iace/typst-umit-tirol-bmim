@@ -1,7 +1,7 @@
 #import "@preview/touying:0.8.0": *
 #import "colors.typ": *
 #import "data.typ": *
-#import "helpers.typ": print-date, pick-logo
+#import "helpers.typ": print-date, pick-logo, long, short
 #import "options.typ": options
 
 #let title-slide(
@@ -23,10 +23,30 @@
     config-common(freeze-slide-counter:true),
   )
 
+  self = utils.merge-dicts(self, new-config)
+
+  // user-defined title slide: gets the information of the slides and the
+  // whole page without margin, header, footer and background
+  let custom = self.store.at("title-slide", default: auto)
+  if custom != auto {
+    self = utils.merge-dicts(self, config-page(margin: 0pt, background: none))
+    return touying-slide(self: self, custom((
+      title: long(self.info.title),
+      title-short: short(self.info.title),
+      subtitle: self.info.subtitle,
+      authors: (self.info.authors,).flatten(),
+      authors-short: self.info.authors-short,
+      institution: self.info.institution,
+      conference: self.info.conference,
+      location: self.info.location,
+      date: self.info.date,
+      lang: opts.lang,
+      theme: opts.theme,
+    )))
+  }
+
   let logo-left = pick-logo(opts.logo, "title-left")
   let logo-right = pick-logo(opts.logo, "title-right")
-
-  self = utils.merge-dicts(self, new-config)
 
   let authors = (self.info.authors,).flatten()
   let title = (self.info.title,).flatten()

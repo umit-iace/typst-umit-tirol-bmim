@@ -796,8 +796,13 @@
   notes: none, // show speaker notes: none, right, bottom
   margins: (x: 27pt, ),
   section-slide: auto, // auto, none, function
+  title-slide: auto, // auto, function info => content
   ..chosen,
 ) = { body => context {
+  assert(
+    title-slide == auto or type(title-slide) == function,
+    message: "Option 'title-slide' must be auto or a function, but was set to " + repr(title-slide),
+  )
   option-set(
     (size: size) +
     (font: font)
@@ -907,6 +912,7 @@
       neutral-lightest: white,
     ),
     config-store(
+      title-slide: title-slide,
       alpha: 20%,
       heading: self => utils.display-current-heading(depth: self.slide-level),
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,

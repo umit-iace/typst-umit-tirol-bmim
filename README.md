@@ -32,6 +32,7 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 - [example/poster.typ](example/poster.typ) for the corresponding poster Typst file.
 - [example/report.typ](example/report.typ) for the corresponding report Typst file.
 - [example/slides-longTitle.typ](example/slides-longTitle.typ) for the corresponding slide Typst file using different logos, activate progress animation with a huge number of authors and a long title, see [Github Pages](https://umit-iace.github.io/typst-umit-tirol-bmim) for an example output.
+- [example/slides-customTitle.typ](example/slides-customTitle.typ) for the slides of slides-longTitle with an own title slide (option `title-slide`).
 - [example/slides-shortTitle.typ](example/slides-shortTitle.typ) for the corresponding slide Typst file.
 - [example/slides-article.typ](example/slides-article.typ) for the slides of slides-longTitle rendered as an article (article mode); both share the slides in [example/content/slides.typ](example/content/slides.typ).
 - [example/thesis.typ](example/thesis.typ) for the corresponding thesis Typst file.
@@ -106,7 +107,7 @@ except `flyer`, `letter` and `slides`.
 | `letter` | `subject`, `date`, `location`, `recipient` (`name`, `address`, `pro`, `institution`), `sender` (`name`, `pos`, `institute`, `department`, `tel`, `fax`, `email`, `signature`) |
 | `poster` | `title`, `authors`, `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `event`, `location`, `contact` |
 | `report` | `title`, `course`, `authors`, `date`, `show-solution` |
-| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as report, see below), `notes`, `margins`, `section-slide` |
+| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as report, see below), `notes`, `margins`, `section-slide` (`auto`, `none` or a touying slide function), `title-slide` (`auto` or a function `info => content` for an own title slide, see below) |
 | `thesis` | `program` (`"Master"`, `"Bachelor"`), `university` (`"LFUI"`, `"UMIT"`), `title`, `subtitle`, `author` (required), `date`, `advisor` (array of `(name, university, department, unit)`), `abstract` (`(english, german)`), `thanks`, `oneside` (`false`) |
 | `workbook` | `course`, `authors`, `date`, `show-solution`, `task-show-points`, `oneside` (`false`) |
 
@@ -126,6 +127,24 @@ except `flyer`, `letter` and `slides`.
   )
   ```
 Missing or misspelled arguments are reported with an error message.
+
+### Own title slide
+
+`title-slide` of `slides(...)` takes a function that gets the information of
+the slides as a dictionary (`title`, `title-short`, `subtitle`, `authors`
+(array), `authors-short`, `institution`, `conference`, `location`, `date`,
+`lang`, `theme`) and returns the content of the title slide. It fills the whole
+page without margin, header, footer and background, and is shown where
+`#title-slide()` is called (skipped in article mode):
+  ```typst
+  #show: bmim.slides(
+    // ...
+    title-slide: info => block(width: 100%, height: 100%,
+      fill: info.theme.primary, inset: 2em,
+      text(fill: white, size: 28pt, info.title)),
+  )
+  ```
+See [example/slides-customTitle.typ](example/slides-customTitle.typ).
 
 ### Slides as article
 
@@ -152,7 +171,7 @@ that replaces the whole content of its slide), `#article-only[..]` and
 | `enum-label("name")` | Inside an enum item: makes the item referable with `@name` |
 | `wrapped-enum-numbering("A")` | Enum numbering that works with `enum-label`, e.g. `#set enum(numbering: wrapped-enum-numbering("A"))` |
 | `poster-box([Heading], [Content], height: none)` | Colored box with heading for posters |
-| `title-slide()` | Title slide of the slides, uses the information of `slides(...)` |
+| `title-slide()` | Title slide of the slides, uses the information of `slides(...)`, or the option `title-slide` if given |
 | `outline-slide(title: [...], cover-lvl: 1)` | Slide with the outline, the section `cover-lvl` is highlighted |
 | `translated-month(date, lang)` | Name of the month of `date` in the language `lang` |
 | `flyer-heading(body, size: 20pt, rule: 100%)` | Heading with a line below on the back page of the flyer; `rule` is the length of the line |
