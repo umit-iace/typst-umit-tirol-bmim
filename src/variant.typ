@@ -852,6 +852,7 @@
       institution: institution,
       conference: conference,
       location: location,
+      extra: (opts: opts),
     ),
     config-common(
       new-section-slide-fn: if section-slide != auto {
