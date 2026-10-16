@@ -18,6 +18,38 @@
 
 #let underline-space(fraction) = box(height: -1pt, line(length: fraction))
 
+// Plain text of `body`, or none if it holds more than text (e.g. math).
+#let plain-text(body) = {
+  if type(body) == str { return body }
+  if type(body) != content { return none }
+  if body == [ ] or body.func() == h { return " " }
+  if body.has("text") { return body.text }
+  if body.has("children") {
+    let parts = body.children.map(plain-text)
+    return if none in parts { none } else { parts.join() }
+  }
+  if body.has("body") { return plain-text(body.body) }
+  none
+}
+
+// Show `body` on a single line: a too long text is cut after the last fitting
+// word and ends with an ellipsis, other content is clipped.
+#let fit-line(body) = layout(size => {
+  if measure(body).width <= size.width { return body }
+  let plain = plain-text(body)
+  if plain == none {
+    // keep the content on one line and cut it at the end of the line, the
+    // outset keeps the descenders
+    return box(width: size.width, clip: true, outset: (y: 0.3em), block(width: 10 * size.width, body))
+  }
+  let words = plain.split(" ").filter(w => w != "")
+  let n = words.len() - 1
+  while n > 1 and measure(words.slice(0, n).join(" ") + "…").width > size.width {
+    n -= 1
+  }
+  words.slice(0, n).join(" ") + "…"
+})
+
 // Colored bar with optional centered content. On slides, `progress` adds one
 // dot per section on the right, the current section filled.
 #let banner(slide: false, size: 1em, progress: false, ..body) = {
@@ -26,6 +58,7 @@
   let height = if slide { 0.5em } else { 1.5em }
   let show-progress = slide and progress
   show text: set text(size: size, fill: opts.theme.background)
+  show math.equation: set text(fill: opts.theme.background)
 
   let content = box(
     width: 100%,
@@ -332,12 +365,14 @@
             bottom: page.height * 0.9%
           ),
           grid(
-            columns: (15%, 1fr, 10%, 5%),
+            // author, date and page number never break, the title takes the
+            // rest and is cut to a single line
+            columns: (auto, 1fr, auto, auto),
             gutter: 2%,
-            align: (left, left, center, right),
+            align: (left, left, right, right),
             rows: page.height * 2.8%,
             text(white)[#author],
-            text(white)[#title],
+            text(white, fit-line(title)),
             text(white)[#print-date(date)],
             text(white)[#pagenum],
           ),
@@ -468,10 +503,22 @@
 // Left and right margin of the back page of the flyer
 #let flyer-side = 8%
 
-// Heading on the back page of the flyer, with a line below; `rule` is the
-// length of the line
-#let flyer-heading(body, size: 20pt, rule: 100%) = context {
+// Font sizes of the flyer, set with the option `sizes` of flyer()
+#let flyer-size-defaults = (
+  series: 11pt, // above the title on the front page
+  title: 25pt, // title on the front page
+  details: 16pt, // rows below the title
+  badge: 11pt, // flyer-badge
+  heading: 20pt, // flyer-heading
+)
+#let flyer-sizes = state("bmim-flyer-sizes", flyer-size-defaults)
+
+// Heading on the back page of the flyer, with a line below; `size` (auto: the
+// size `heading` of the option `sizes`) is the font size, `rule` the length of
+// the line
+#let flyer-heading(body, size: auto, rule: 100%) = context {
   let opts = options.final()
+  let size = if size == auto { flyer-sizes.get().heading } else { size }
   block(below: 1.2em, {
     block(below: 8pt, {
       set par(leading: 0.4em)
@@ -485,13 +532,19 @@
 // datetime is shown with date and time in the language of the document. It is
 // right aligned and reaches beyond the right page edge: right margin plus some
 // extra, so that the rotated edge is outside of the page as well.
-#let flyer-badge(body) = context {
+#let flyer-badge(body, end: none) = context {
   let opts = options.final()
-  let bleed = page.width * (flyer-side / 100%) + 2em
+  // the spacings (em) refer to the default body size, not to the option size
+  // of the flyer, so the badge only changes with its own size
+  set text(size: 9.5pt)
+  let side = page.width * (flyer-side / 100%)
+  // the box reaches 2em beyond the page edge, the rotation leaves no gap
+  let bleed = side + 2em
   align(right, move(dx: bleed, rotate(-5deg, reflow: true, box(
     fill: opts.theme.highlight,
-    inset: (left: 1em, right: 1em + bleed, y: 1.7em),
-    text(size: 11pt, weight: "bold", print-date-time(body)),
+    // the text ends at half the side margin from the page edge
+    inset: (left: 1em, right: 2em + side / 2, y: 1.7em),
+    text(size: flyer-sizes.get().badge, weight: "bold", print-date-time(body, end: end)),
   ))))
 }
 
@@ -729,19 +782,30 @@
             below: 0.8em,
             stroke: (bottom: 0.6pt + fg),
             inset: (bottom: 0.5em),
-            text(size: 11pt, weight: "semibold", upper(args.series)),
+            text(size: args.sizes.series, weight: "semibold", upper(args.series)),
           )
         }
-        block(below: 1.8em, text(size: 25pt, weight: "semibold", hyphenate: false, long(args.title)))
+        block(below: 1.8em, text(size: args.sizes.title, weight: "semibold", hyphenate: false, long(args.title)))
         // freely labelled rows, e.g. presenter, organisation, date
-        set text(size: 16pt)
+        set text(size: args.sizes.details)
         grid(
           columns: (8em, 1fr),
           row-gutter: 0.9em,
-          ..args.details.map(((label, body)) => ([#label:], body)).flatten(),
+          // an empty label (none or []) shows no colon
+          ..args.details.map(((label, body)) => (
+            if label in (none, [], "") { [] } else [#label:],
+            body,
+          )).flatten(),
         )
-        // QR code bottom left, logos bottom right; the QR code is shown as
-        // given, so its colors have to contrast with the box
+        // logos bottom right, the QR code (or any content, e.g. an image)
+        // bottom left in its own size, both aligned at the bottom; it is shown
+        // as given, so its colors have to contrast with the box
+        let main-logo = if logo-right == auto {
+          let logo = if opts.lang == "de" { "logo_umit_white_gr.svg" } else { "logo_umit_white_en.svg" }
+          image("./../assets/" + logo, height: 50pt)
+        } else {
+          logo-right
+        }
         if args.qr-code != none {
           place(bottom + left, args.qr-code)
         }
@@ -749,12 +813,7 @@
           dir: ltr,
           spacing: 1.5em,
           if logo-left != auto { align(bottom, logo-left) },
-          align(bottom, if logo-right == auto {
-            let logo = if opts.lang == "de" { "logo_umit_white_gr.svg" } else { "logo_umit_white_en.svg" }
-            image("./../assets/" + logo, height: 50pt)
-          } else {
-            logo-right
-          }),
+          align(bottom, main-logo),
         ))
       }),
     ))

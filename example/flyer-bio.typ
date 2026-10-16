@@ -16,7 +16,7 @@
       University of Somewhere, Institute for Systems Theory and Automatic Control
     ]),
     ([Date], [
-      #context bmim.print-date-time(start) to #end.display("[hour]:[minute]") \
+      #context bmim.print-date-time(start, end: end.display("[hour]:[minute]")) \
       PR204 \
       #text(size: 0.85em)[UMIT TIROL, Eduard-Wallnöfer-Zentrum 1, 6060 Hall in Tirol]
     ]),
@@ -60,7 +60,7 @@ nightmare? Welcome to quantum computing.
 #lorem(50)
 
 // the badge where it is placed, a datetime is shown with date and time
-#bmim.flyer-badge(start)
+#bmim.flyer-badge(start, end: end)
 
 // push the following to the bottom of the page
 #v(1fr)

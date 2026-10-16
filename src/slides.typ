@@ -4,11 +4,33 @@
 #import "helpers.typ": print-date, pick-logo
 #import "options.typ": options
 
+// Own slide of the option `name` (title-slide, outline-slide) of slides(),
+// handled like section-slide: auto returns auto (the slide of the template),
+// none returns no slide, a slide function (touying-slide-wrapper) is called
+// with `args` and rendered with `self`.
+#let custom-slide(self, name, args) = {
+  let custom = self.store.at(name, default: auto)
+  if custom == auto { return auto }
+  if custom == none { return [] }
+  // unwrap the touying-slide-wrapper, as touying does for section-slide
+  let wrapper = custom(..args)
+  let wrapper = if type(wrapper) == content and wrapper.func() == block { wrapper.body } else { wrapper }
+  assert(
+    type(wrapper) == content and wrapper.func() == metadata
+      and type(wrapper.value) == dictionary
+      and wrapper.value.at("kind", default: none) == "touying-slide-wrapper",
+    message: "Option '" + name + "' must return a touying-slide-wrapper",
+  )
+  (wrapper.value.fn)(self)
+}
+
 #let title-slide(
   ..args,
 ) = touying-slide-wrapper(self => {
   // not shown in article mode, the report variant has its own title block
   if self.at("article-mode", default: false) { return touying-slide(self: self, []) }
+  let custom = custom-slide(self, "title-slide", args)
+  if custom != auto { return custom }
   let opts = options.final()
   let new-config = utils.merge-dicts(
     opts,
@@ -23,10 +45,10 @@
     config-common(freeze-slide-counter:true),
   )
 
+  self = utils.merge-dicts(self, new-config)
+
   let logo-left = pick-logo(opts.logo, "title-left")
   let logo-right = pick-logo(opts.logo, "title-right")
-
-  self = utils.merge-dicts(self, new-config)
 
   let authors = (self.info.authors,).flatten()
   let title = (self.info.title,).flatten()
@@ -85,7 +107,12 @@
               #title.at(0, default:none)
               #if subtitle != none {
                 parbreak()
-                text(size: 16pt, subtitle)
+                text(
+                  size: 12pt,
+                  font: "Source Serif 4",
+                  weight: "regular",
+                  subtitle
+                )
               }
             ]
         },
@@ -94,9 +121,9 @@
       v(2em)
       grid(
         columns: (1fr, 1fr),
-        gutter: 1pt,
+        gutter: 7pt,
         grid.cell(
-          align(left+bottom,{
+          align(left+top,{
             let loc-str = ""
             if location != none {
               loc-str = [, #location]
@@ -119,7 +146,7 @@
           })
         ),
         grid.cell(
-          align(center+bottom,
+          align(center+top,
             grid(
               columns: (1fr, 1fr),
               gutter: 0pt,
@@ -163,6 +190,8 @@
 ) = touying-slide-wrapper(self => {
   // not shown in article mode, the report variant has its own outline
   if self.at("article-mode", default: false) { return touying-slide(self: self, []) }
+  let custom = custom-slide(self, "outline-slide", arguments(cover-lvl: cover-lvl, ..args))
+  if custom != auto { return custom }
   let opts = options.final()
   let new-config = utils.merge-dicts(
     opts,

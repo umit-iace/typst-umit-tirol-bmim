@@ -26,12 +26,14 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 - [example/exercise.typ](example/exercise.typ) for the corresponding exercise Typst file.
 - [example/flyer-bio.typ](example/flyer-bio.typ) for the corresponding flyer Typst file (A4, front and back page) with a short bio in the lower area of the back page.
 - [example/flyer-text.typ](example/flyer-text.typ) for a flyer with a second text in the lower area of the back page, in German.
+- [example/flyer-custom.typ](example/flyer-custom.typ) for a flyer with own images: an image in place of the QR code and own logos bottom right.
 - [example/lab.typ](example/lab.typ) for the corresponding report Typst file with self defined title block.
 - [example/lecture.typ](example/lecture.typ) for the corresponding lecture notes Typst file.
 - [example/letter.typ](example/letter.typ) for the corresponding letter Typst file.
 - [example/poster.typ](example/poster.typ) for the corresponding poster Typst file.
 - [example/report.typ](example/report.typ) for the corresponding report Typst file.
 - [example/slides-longTitle.typ](example/slides-longTitle.typ) for the corresponding slide Typst file using different logos, activate progress animation with a huge number of authors and a long title, see [Github Pages](https://umit-iace.github.io/typst-umit-tirol-bmim) for an example output.
+- [example/slides-customSlides.typ](example/slides-customSlides.typ) for the slides of slides-longTitle with own title, outline and section slides (options `title-slide`, `outline-slide`, `section-slide`).
 - [example/slides-shortTitle.typ](example/slides-shortTitle.typ) for the corresponding slide Typst file.
 - [example/slides-article.typ](example/slides-article.typ) for the slides of slides-longTitle rendered as an article (article mode); both share the slides in [example/content/slides.typ](example/content/slides.typ).
 - [example/thesis.typ](example/thesis.typ) for the corresponding thesis Typst file.
@@ -101,12 +103,12 @@ except `flyer`, `letter` and `slides`.
 | `article` | `title`, `subtitle`, `course`, `authors`, `date` |
 | `exam` | `course`, `title`, `authors`, `date`, `total-time` (required), `show-solution`, `empty-sheets` (`auto` = one per task, `none`, int), `show-hints` (`true`), `oneside` (`false`) |
 | `exercise` | `course`, `title`, `authors`, `date`, `show-solution`, `task-show-points` |
-| `flyer` | `title` (required), `series` (above the title), `details` (rows below the title with free labels: `(([Presenter], [...]), ([Date], [...]))`), `background` (image of the front page), `qr-code`, `back-image` (image at the top of the back page); the document body is the back page, designed freely with `flyer-heading` and `flyer-badge` (see Helpers), a second logo next to the UMIT logo is set with `logo: (flyer-left: ..)`, `flyer-right` replaces the UMIT logo |
+| `flyer` | `title` (required), `series` (above the title), `details` (rows below the title with free labels: `(([Presenter], [...]), ([Date], [...]))`, `none` or `[]` as label gives a row without label and colon), `background` (image of the front page), `qr-code` (any content bottom left of the front page, e.g. a QR code or an image, its size is set by the user, e.g. `width: 70pt`), `back-image` (image at the top of the back page), `size` (`9.5pt`, body text of the back page), `sizes` (font sizes, single ones can be given: `series` `11pt`, `title` `25pt`, `details` `16pt`, `badge` `11pt`, `heading` `20pt`); the document body is the back page, designed freely with `flyer-heading` and `flyer-badge` (see Helpers), a second logo next to the UMIT logo is set with `logo: (flyer-left: ..)`, `flyer-right` replaces the UMIT logo |
 | `lecture` | `course`, `authors`, `date`, `oneside` (`false`) |
 | `letter` | `subject`, `date`, `location`, `recipient` (`name`, `address`, `pro`, `institution`), `sender` (`name`, `pos`, `institute`, `department`, `tel`, `fax`, `email`, `signature`) |
 | `poster` | `title`, `authors`, `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `event`, `location`, `contact` |
 | `report` | `title`, `course`, `authors`, `date`, `show-solution` |
-| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as report, see below), `notes`, `margins`, `section-slide` |
+| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as report, see below), `notes`, `margins`, `title-slide`, `outline-slide`, `section-slide` (`auto`, `none` or a touying slide function, see below) |
 | `thesis` | `program` (`"Master"`, `"Bachelor"`), `university` (`"LFUI"`, `"UMIT"`), `title`, `subtitle`, `author` (required), `date`, `advisor` (array of `(name, university, department, unit)`), `abstract` (`(english, german)`), `thanks`, `oneside` (`false`) |
 | `workbook` | `course`, `authors`, `date`, `show-solution`, `task-show-points`, `oneside` (`false`) |
 
@@ -126,6 +128,33 @@ except `flyer`, `letter` and `slides`.
   )
   ```
 Missing or misspelled arguments are reported with an error message.
+
+### Own title, outline and section slides
+
+The options `title-slide`, `outline-slide` and `section-slide` of
+`slides(...)` are handled the same way: `auto` uses the slide of the template,
+`none` shows no slide, a slide function (built with `touying-slide-wrapper`)
+replaces it. The title and outline slide are shown where `#title-slide()` and
+`#outline-slide(..)` are called and get their arguments (`outline-slide`:
+`cover-lvl` and e.g. `title`), the section slide at each first level heading.
+The information of the slides is in `self.info` (`title` is `[Title]` or
+`([Long], [Short])`), the options of the template in `self.info.extra.opts`
+(e.g. `lang`, `theme`, `fonts`, `logo`), the colors in `self.colors`; in article mode the title
+and outline slide are skipped:
+  ```typst
+  #show: bmim.slides(
+    // ...
+    title-slide: (..args) => touying-slide-wrapper(self => {
+      self = utils.merge-dicts(self,
+        config-page(margin: 0pt, header: none, footer: none),
+        config-common(freeze-slide-counter: true))
+      touying-slide(self: self, block(width: 100%, height: 100%,
+        fill: self.colors.primary, inset: 2em,
+        text(fill: white, size: 28pt, (self.info.title,).flatten().first())))
+    }),
+  )
+  ```
+See [example/slides-customSlides.typ](example/slides-customSlides.typ).
 
 ### Slides as article
 
@@ -152,12 +181,12 @@ that replaces the whole content of its slide), `#article-only[..]` and
 | `enum-label("name")` | Inside an enum item: makes the item referable with `@name` |
 | `wrapped-enum-numbering("A")` | Enum numbering that works with `enum-label`, e.g. `#set enum(numbering: wrapped-enum-numbering("A"))` |
 | `poster-box([Heading], [Content], height: none)` | Colored box with heading for posters |
-| `title-slide()` | Title slide of the slides, uses the information of `slides(...)` |
-| `outline-slide(title: [...], cover-lvl: 1)` | Slide with the outline, the section `cover-lvl` is highlighted |
+| `title-slide()` | Title slide of the slides, uses the information of `slides(...)`, or the option `title-slide` if given |
+| `outline-slide(title: [...], cover-lvl: 1)` | Slide with the outline, the section `cover-lvl` is highlighted, or the option `outline-slide` if given |
 | `translated-month(date, lang)` | Name of the month of `date` in the language `lang` |
-| `flyer-heading(body, size: 20pt, rule: 100%)` | Heading with a line below on the back page of the flyer; `rule` is the length of the line |
-| `flyer-badge(body)` | Rotated badge on the back page of the flyer, right aligned up to the page edge, where it is placed; a datetime is shown with date and time |
-| `context print-date-time(date)` | Date with the time of a datetime in the language of the document, e.g. "5th November 2026, 17:00" or "5. November 2026, 17.00 Uhr" (as in the badge of the flyer) |
+| `flyer-heading(body, size: auto, rule: 100%)` | Heading with a line below on the back page of the flyer; `size` (`auto`: `heading` of the option `sizes` of the flyer) is the font size, `rule` the length of the line |
+| `flyer-badge(body, end: none)` | Rotated badge on the back page of the flyer, right aligned up to the page edge, where it is placed; a datetime is shown with date and time, an optional `end` gives a time span, e.g. "5th November 2026, 17:00–18:30" |
+| `context print-date-time(date, end: none)` | Date with the time of a datetime in the language of the document, e.g. "5th November 2026, 17:00" or "5. November 2026, 17.00 Uhr" (as in the badge of the flyer); with `end` a time span, "5th November 2026, 17:00–18:30" on the same day, otherwise "start – end" |
 | `build-vcard((firstname: .., lastname: .., ..))` | Contact as vCard 3.0, e.g. as data of a QR code; optional keys `title`, `role`, `organization`, `address` (`street`, `zip`, `town`, `country`), `telephone`, `email`, `url`, one of `firstname` and `lastname` is required |
 | `build-vcalendar((name: .., start: .., ..))` | Event as iCalendar (RFC 5545), e.g. as data of a QR code; `start` and optional `end` are datetimes (without time an all-day event), optional `location`, `description`, `uid` |
 
