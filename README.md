@@ -137,7 +137,8 @@ replaces it. The title and outline slide are shown where `#title-slide()` and
 `#outline-slide(..)` are called and get their arguments (`outline-slide`:
 `cover-lvl` and e.g. `title`), the section slide at each first level heading.
 The information of the slides is in `self.info` (`title` is `[Title]` or
-`([Long], [Short])`), the colors in `self.colors`; in article mode the title
+`([Long], [Short])`), the options of the template in `self.info.extra.opts`
+(e.g. `lang`, `theme`, `fonts`, `logo`), the colors in `self.colors`; in article mode the title
 and outline slide are skipped:
   ```typst
   #show: bmim.slides(

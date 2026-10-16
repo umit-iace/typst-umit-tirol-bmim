@@ -8,6 +8,8 @@
     config-common(freeze-slide-counter: true),
   )
   let info = self.info
+  // the options of bmim.slides, e.g. lang, theme, fonts, logo
+  let opts = info.extra.opts
   touying-slide(self: self, grid(
     columns: (3fr, 2fr),
     rows: 100%,
@@ -33,7 +35,8 @@
         v(0.3em)
         text(size: 8pt, info.institution.join[\ ])
         place(bottom + left, dy: 12pt, text(size: 12pt)[
-          #info.date.display("[day].[month].[year]"), #info.location
+          #let (d, m, y) = (info.date.day(), translated-month(info.date, opts.lang), info.date.year())
+          #if opts.lang == "de" [#d. #m #y] else [#m #d, #y], #info.location
         ])
       },
     ),
@@ -43,7 +46,10 @@
         dir: ltr,
         spacing: 14pt,
         image("./../assets/logo_lfui_color_invert.png", height: 36pt),
-        image("./../assets/logo_umit_white_en.svg", height: 30pt),
+        image(
+          if opts.lang == "de" { "./../assets/logo_umit_white_gr.svg" } else { "./../assets/logo_umit_white_en.svg" },
+          height: 30pt,
+        ),
       ))
     }),
   ))
