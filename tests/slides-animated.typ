@@ -1,5 +1,5 @@
 #import "/src/lib.typ" as bmim 
-#import "@preview/touying:0.8.0": touying-slide-wrapper, touying-slide, pause
+#import "@preview/touying:0.8.0": touying-slide-wrapper, touying-slide, pause, uncover
 
 #show: bmim.slides(
   title: (
