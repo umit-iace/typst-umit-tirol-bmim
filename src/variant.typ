@@ -837,7 +837,7 @@
       },
       footer: self => {
         set std.align(bottom)
-        set text(size: 9pt)
+        set text(size: 10pt)
         utils.call-or-display(self, self.store.footer)
       },
       header-ascent: 0pt,
@@ -852,7 +852,9 @@
       institution: institution,
       conference: conference,
       location: location,
-      extra: (opts: opts),
+      extra: (
+        opts: opts
+      ),
     ),
     config-common(
       new-section-slide-fn: if section-slide != auto {
