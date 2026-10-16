@@ -26,6 +26,7 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 - [example/exercise.typ](example/exercise.typ) for the corresponding exercise Typst file.
 - [example/flyer-bio.typ](example/flyer-bio.typ) for the corresponding flyer Typst file (A4, front and back page) with a short bio in the lower area of the back page.
 - [example/flyer-text.typ](example/flyer-text.typ) for a flyer with a second text in the lower area of the back page, in German.
+- [example/flyer-custom.typ](example/flyer-custom.typ) for a flyer with own images: an image in place of the QR code and own logos bottom right.
 - [example/lab.typ](example/lab.typ) for the corresponding report Typst file with self defined title block.
 - [example/lecture.typ](example/lecture.typ) for the corresponding lecture notes Typst file.
 - [example/letter.typ](example/letter.typ) for the corresponding letter Typst file.
@@ -102,7 +103,7 @@ except `flyer`, `letter` and `slides`.
 | `article` | `title`, `subtitle`, `course`, `authors`, `date` |
 | `exam` | `course`, `title`, `authors`, `date`, `total-time` (required), `show-solution`, `empty-sheets` (`auto` = one per task, `none`, int), `show-hints` (`true`), `oneside` (`false`) |
 | `exercise` | `course`, `title`, `authors`, `date`, `show-solution`, `task-show-points` |
-| `flyer` | `title` (required), `series` (above the title), `details` (rows below the title with free labels: `(([Presenter], [...]), ([Date], [...]))`), `background` (image of the front page), `qr-code`, `back-image` (image at the top of the back page); the document body is the back page, designed freely with `flyer-heading` and `flyer-badge` (see Helpers), a second logo next to the UMIT logo is set with `logo: (flyer-left: ..)`, `flyer-right` replaces the UMIT logo |
+| `flyer` | `title` (required), `series` (above the title), `details` (rows below the title with free labels: `(([Presenter], [...]), ([Date], [...]))`, `none` or `[]` as label gives a row without label and colon), `background` (image of the front page), `qr-code` (any content bottom left of the front page, e.g. a QR code or an image, its size is set by the user, e.g. `width: 70pt`), `back-image` (image at the top of the back page), `size` (`9.5pt`, body text of the back page), `sizes` (font sizes, single ones can be given: `series` `11pt`, `title` `25pt`, `details` `16pt`, `badge` `11pt`, `heading` `20pt`); the document body is the back page, designed freely with `flyer-heading` and `flyer-badge` (see Helpers), a second logo next to the UMIT logo is set with `logo: (flyer-left: ..)`, `flyer-right` replaces the UMIT logo |
 | `lecture` | `course`, `authors`, `date`, `oneside` (`false`) |
 | `letter` | `subject`, `date`, `location`, `recipient` (`name`, `address`, `pro`, `institution`), `sender` (`name`, `pos`, `institute`, `department`, `tel`, `fax`, `email`, `signature`) |
 | `poster` | `title`, `authors`, `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `event`, `location`, `contact` |
@@ -183,9 +184,9 @@ that replaces the whole content of its slide), `#article-only[..]` and
 | `title-slide()` | Title slide of the slides, uses the information of `slides(...)`, or the option `title-slide` if given |
 | `outline-slide(title: [...], cover-lvl: 1)` | Slide with the outline, the section `cover-lvl` is highlighted, or the option `outline-slide` if given |
 | `translated-month(date, lang)` | Name of the month of `date` in the language `lang` |
-| `flyer-heading(body, size: 20pt, rule: 100%)` | Heading with a line below on the back page of the flyer; `rule` is the length of the line |
-| `flyer-badge(body)` | Rotated badge on the back page of the flyer, right aligned up to the page edge, where it is placed; a datetime is shown with date and time |
-| `context print-date-time(date)` | Date with the time of a datetime in the language of the document, e.g. "5th November 2026, 17:00" or "5. November 2026, 17.00 Uhr" (as in the badge of the flyer) |
+| `flyer-heading(body, size: auto, rule: 100%)` | Heading with a line below on the back page of the flyer; `size` (`auto`: `heading` of the option `sizes` of the flyer) is the font size, `rule` the length of the line |
+| `flyer-badge(body, end: none)` | Rotated badge on the back page of the flyer, right aligned up to the page edge, where it is placed; a datetime is shown with date and time, an optional `end` gives a time span, e.g. "5th November 2026, 17:00–18:30" |
+| `context print-date-time(date, end: none)` | Date with the time of a datetime in the language of the document, e.g. "5th November 2026, 17:00" or "5. November 2026, 17.00 Uhr" (as in the badge of the flyer); with `end` a time span, "5th November 2026, 17:00–18:30" on the same day, otherwise "start – end" |
 | `build-vcard((firstname: .., lastname: .., ..))` | Contact as vCard 3.0, e.g. as data of a QR code; optional keys `title`, `role`, `organization`, `address` (`street`, `zip`, `town`, `country`), `telephone`, `email`, `url`, one of `firstname` and `lastname` is required |
 | `build-vcalendar((name: .., start: .., ..))` | Event as iCalendar (RFC 5545), e.g. as data of a QR code; `start` and optional `end` are datetimes (without time an all-day event), optional `location`, `description`, `uid` |
 

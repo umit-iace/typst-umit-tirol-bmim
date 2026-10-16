@@ -159,11 +159,21 @@ Put a `#pause` between parts of your slide you want to uncover.
 
 #pause
 
-#lorem(50)
+#lorem(5)
 
 #pause
 
-#lorem(50)
+#lorem(5)
+
+#pause
+
+#lorem(5)
+
+#pause
+
+#lorem(5)
+
+#uncover("3-5")[Hier steht richtig viel Text]
 
 
 == Speaker Notes

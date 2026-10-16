@@ -487,10 +487,12 @@
 #let flyer(
   title: none, // [Title] or ([Long Title], [Short Title])
   series: none, // e.g. [Mechatronisches Kolloquium], shown above the title
-  details: (), // rows below the title: (([Label], [Text]), ...), e.g. presenter, date
+  details: (), // rows below the title: (([Label], [Text]), ...), e.g. presenter, date; none or [] as label shows no label and no colon
   background: none, // content, e.g. image("…"), background of the front page
-  qr-code: none, // content, e.g. a QR code, bottom left of the front page
+  qr-code: none, // content, e.g. a QR code or an image in its own size, bottom left of the front page
   back-image: none, // content, e.g. image("…"), top of the back page
+  size: 9.5pt, // body text of the back page
+  sizes: (:), // font sizes: series, title, details, badge, heading (see flyer-size-defaults)
   ..chosen // other options: theme, lang, logo, etc
 ) = { body => {
   // the document body is the back page, designed freely, e.g. with
@@ -499,7 +501,26 @@
   assert(type(details) == array and details.all(d => type(d) == array and d.len() == 2), message:
     "Option 'details' must be an array of ([Label], [Text]) pairs, but was set to " + repr(details)
   )
+  assert(type(sizes) == dictionary, message:
+    "Option 'sizes' must be a dictionary of font sizes, but was set to " + repr(sizes)
+  )
+  for (key, value) in sizes {
+    assert(key in flyer-size-defaults, message:
+      "Unknown size '" + key + "', known sizes are [" +
+      flyer-size-defaults.keys().map(repr).join(", ") + "]"
+    )
+    assert(type(value) == length, message:
+      "Size '" + key + "' must be a length, e.g. 12pt, but was set to " + repr(value)
+    )
+  }
+  assert(type(size) == length, message:
+    "Option 'size' must be a length, e.g. 10pt, but was set to " + repr(size)
+  )
+  let sizes = flyer-size-defaults + sizes
+  // only for the body text of the back page, the spacings of the flyer refer
+  // to the base size of the document
   option-set(chosen.named())
+  flyer-sizes.update(sizes)
   show: bmim-common
   context {
     let opts = options.final()
@@ -513,6 +534,7 @@
       details: details,
       background: background,
       qr-code: qr-code,
+      sizes: sizes,
     )))
 
     // back page: image at the top, the gradient below, the body as content
@@ -542,7 +564,7 @@
         }
       },
     )[
-      #set text(size: 9.5pt)
+      #set text(size: size)
       #body
     ]
   }
