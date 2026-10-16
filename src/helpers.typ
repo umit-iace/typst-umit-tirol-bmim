@@ -145,20 +145,35 @@
 
 // Date with the time if the datetime has one, e.g. for the badge of the flyer:
 // "5. November 2026, 17.00 Uhr" or "5th November 2026, 17:00"
-#let print-date-time(date) = {
+#let print-date-time(date, end: none) = {
   let opts = options.final()
-  if type(date) != datetime { return date }
-  let day = if opts.lang == "de" {
-    print-date(date)
+  let time(date) = if opts.lang == "de" {
+    date.display("[hour].[minute]")
   } else {
-    [#date.day()#super(ordinal-suffix(date.day())) #translated-month(date, opts.lang) #date.year()]
+    date.display("[hour]:[minute]")
   }
-  if date.hour() == none {
-    day
-  } else if opts.lang == "de" {
-    [#day, #date.display("[hour].[minute]") Uhr]
+  let unit = if opts.lang == "de" [ Uhr]
+  let print(date) = {
+    if type(date) != datetime { return date }
+    let day = if opts.lang == "de" {
+      print-date(date)
+    } else {
+      [#date.day()#super(ordinal-suffix(date.day())) #translated-month(date, opts.lang) #date.year()]
+    }
+    if date.hour() == none { day } else [#day, #time(date)#unit]
+  }
+  if end == none { return print(date) }
+  let same-day = (
+    type(date) == datetime and type(end) == datetime
+      and date.year() == end.year() and date.month() == end.month() and date.day() == end.day()
+      and date.hour() != none and end.hour() != none
+  )
+  if same-day {
+    // e.g. "5th November 2026, 17:00–18:30"
+    let day = print(datetime(year: date.year(), month: date.month(), day: date.day()))
+    [#day, #time(date)–#time(end)#unit]
   } else {
-    [#day, #date.display("[hour]:[minute]")]
+    [#print(date) – #print(end)]
   }
 }
 

@@ -503,10 +503,22 @@
 // Left and right margin of the back page of the flyer
 #let flyer-side = 8%
 
-// Heading on the back page of the flyer, with a line below; `rule` is the
-// length of the line
-#let flyer-heading(body, size: 20pt, rule: 100%) = context {
+// Font sizes of the flyer, set with the option `sizes` of flyer()
+#let flyer-size-defaults = (
+  series: 11pt, // above the title on the front page
+  title: 25pt, // title on the front page
+  details: 16pt, // rows below the title
+  badge: 11pt, // flyer-badge
+  heading: 20pt, // flyer-heading
+)
+#let flyer-sizes = state("bmim-flyer-sizes", flyer-size-defaults)
+
+// Heading on the back page of the flyer, with a line below; `size` (auto: the
+// size `heading` of the option `sizes`) is the font size, `rule` the length of
+// the line
+#let flyer-heading(body, size: auto, rule: 100%) = context {
   let opts = options.final()
+  let size = if size == auto { flyer-sizes.get().heading } else { size }
   block(below: 1.2em, {
     block(below: 8pt, {
       set par(leading: 0.4em)
@@ -520,13 +532,19 @@
 // datetime is shown with date and time in the language of the document. It is
 // right aligned and reaches beyond the right page edge: right margin plus some
 // extra, so that the rotated edge is outside of the page as well.
-#let flyer-badge(body) = context {
+#let flyer-badge(body, end: none) = context {
   let opts = options.final()
-  let bleed = page.width * (flyer-side / 100%) + 2em
+  // the spacings (em) refer to the default body size, not to the option size
+  // of the flyer, so the badge only changes with its own size
+  set text(size: 9.5pt)
+  let side = page.width * (flyer-side / 100%)
+  // the box reaches 2em beyond the page edge, the rotation leaves no gap
+  let bleed = side + 2em
   align(right, move(dx: bleed, rotate(-5deg, reflow: true, box(
     fill: opts.theme.highlight,
-    inset: (left: 1em, right: 1em + bleed, y: 1.7em),
-    text(size: 11pt, weight: "bold", print-date-time(body)),
+    // the text ends at half the side margin from the page edge
+    inset: (left: 1em, right: 2em + side / 2, y: 1.7em),
+    text(size: flyer-sizes.get().badge, weight: "bold", print-date-time(body, end: end)),
   ))))
 }
 
@@ -764,19 +782,30 @@
             below: 0.8em,
             stroke: (bottom: 0.6pt + fg),
             inset: (bottom: 0.5em),
-            text(size: 11pt, weight: "semibold", upper(args.series)),
+            text(size: args.sizes.series, weight: "semibold", upper(args.series)),
           )
         }
-        block(below: 1.8em, text(size: 25pt, weight: "semibold", hyphenate: false, long(args.title)))
+        block(below: 1.8em, text(size: args.sizes.title, weight: "semibold", hyphenate: false, long(args.title)))
         // freely labelled rows, e.g. presenter, organisation, date
-        set text(size: 16pt)
+        set text(size: args.sizes.details)
         grid(
           columns: (8em, 1fr),
           row-gutter: 0.9em,
-          ..args.details.map(((label, body)) => ([#label:], body)).flatten(),
+          // an empty label (none or []) shows no colon
+          ..args.details.map(((label, body)) => (
+            if label in (none, [], "") { [] } else [#label:],
+            body,
+          )).flatten(),
         )
-        // QR code bottom left, logos bottom right; the QR code is shown as
-        // given, so its colors have to contrast with the box
+        // logos bottom right, the QR code (or any content, e.g. an image)
+        // bottom left in its own size, both aligned at the bottom; it is shown
+        // as given, so its colors have to contrast with the box
+        let main-logo = if logo-right == auto {
+          let logo = if opts.lang == "de" { "logo_umit_white_gr.svg" } else { "logo_umit_white_en.svg" }
+          image("./../assets/" + logo, height: 50pt)
+        } else {
+          logo-right
+        }
         if args.qr-code != none {
           place(bottom + left, args.qr-code)
         }
@@ -784,12 +813,7 @@
           dir: ltr,
           spacing: 1.5em,
           if logo-left != auto { align(bottom, logo-left) },
-          align(bottom, if logo-right == auto {
-            let logo = if opts.lang == "de" { "logo_umit_white_gr.svg" } else { "logo_umit_white_en.svg" }
-            image("./../assets/" + logo, height: 50pt)
-          } else {
-            logo-right
-          }),
+          align(bottom, main-logo),
         ))
       }),
     ))
