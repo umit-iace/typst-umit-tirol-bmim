@@ -271,8 +271,18 @@ warnings. pdftotext (poppler) is required.
 
 ## License
 
-The images logo_iace_\*/logo_umit_\*/background_\*/footer_umit_\* in the `assets` folder are the property of the UMIT TIROL.
+The images
+- logo_iace_\*
+- logo_ims_\*
+- logo_umit_\*
+- background_\*
+- footer_umit_\*
 
-The images logo_lfui_\* in the `assets` folder are the property of the University of Innsbruck.
+in the `assets` folder are the property of the UMIT TIROL.
+
+The images
+- logo_lfui_\* 
+
+in the `assets` folder are the property of the University of Innsbruck.
 
 The rest of the project is licensed under the [MIT License](LICENSE).
