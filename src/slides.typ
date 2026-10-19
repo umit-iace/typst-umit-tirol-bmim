@@ -24,6 +24,26 @@
   (wrapper.value.fn)(self)
 }
 
+// Size and margins of one slide. With speaker notes on a second screen
+// (option notes), touying doubles the page and adds the notes half to a margin,
+// so page.width and page.margin no longer describe the slide.
+#let slide-geometry(self) = {
+  let (width, height) = utils.get-page-dimensions(self)
+  let margin = self.page.at("margin", default: 0pt)
+  let side(names) = if type(margin) != dictionary { margin } else {
+    let hit = names.find(name => name in margin)
+    if hit != none { margin.at(hit) } else { 0pt }
+  }
+  (
+    width: width,
+    height: height,
+    left: side(("left", "x", "rest")),
+    right: side(("right", "x", "rest")),
+    top: side(("top", "y", "rest")),
+    bottom: side(("bottom", "y", "rest")),
+  )
+}
+
 #let title-slide(
   ..args,
 ) = touying-slide-wrapper(self => {
@@ -69,9 +89,10 @@
     let left-margin = 28pt
 
     // body
-    context place(
+    // the margin of the slide, page.margin also holds the notes (option notes)
+    place(
       bottom+left,
-      dy: page.margin.bottom,
+      dy: slide-geometry(self).bottom,
     block(
       inset: left-margin,
       fill: gradient.linear(

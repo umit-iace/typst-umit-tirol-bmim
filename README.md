@@ -34,6 +34,8 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 - [example/report.typ](example/report.typ) for the corresponding report Typst file.
 - [example/slides-longTitle.typ](example/slides-longTitle.typ) for the corresponding slide Typst file using different logos, activate progress animation with a huge number of authors and a long title, see [Github Pages](https://umit-iace.github.io/typst-umit-tirol-bmim) for an example output.
 - [example/slides-customSlides.typ](example/slides-customSlides.typ) for the slides of slides-longTitle with own title, outline and section slides (options `title-slide`, `outline-slide`, `section-slide`).
+- [example/slides-notes.typ](example/slides-notes.typ) for the slides of slides-longTitle with the speaker notes right of each slide (option `notes`).
+- [example/slides-handout.typ](example/slides-handout.typ) for the slides of slides-longTitle as handout, animations show their final state (option `handout`).
 - [example/slides-shortTitle.typ](example/slides-shortTitle.typ) for the corresponding slide Typst file.
 - [example/slides-article.typ](example/slides-article.typ) for the slides of slides-longTitle rendered as an article (article mode); both share the slides in [example/content/slides.typ](example/content/slides.typ).
 - [example/thesis.typ](example/thesis.typ) for the corresponding thesis Typst file.

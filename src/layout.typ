@@ -197,8 +197,13 @@
   },
   poster: header-colored(),
   report: header-colored(),
-  slides: (heading: none, progress-animation: none) => context {
+  // slide: size and margins of the slide (slide-geometry), none: of the page
+  slides: (heading: none, progress-animation: none, slide: none) => context {
     let opts = options.final()
+    let slide = if slide != none { slide } else {
+      (width: page.width, height: page.height, left: page.margin.left,
+        right: page.margin.right, top: page.margin.top, bottom: page.margin.bottom)
+    }
     let show-ani = type(progress-animation) == dictionary and progress-animation.at("section", default: false)
     let logo-left = pick-logo(opts.logo, "left")
     let logo-right = pick-logo(opts.logo, "right")
@@ -209,13 +214,13 @@
       height: 100%,
     )
     pad(
-      top: -page.margin.top * 1.42,
+      top: -slide.top * 1.42,
       grid(
         columns: (auto, 1fr, auto),
         if logo-left == auto {
           pad(
             top: -6.5pt,
-            left: page.margin.left - 11%,
+            left: slide.left - 11%,
             image("./../assets/logo_iace_white.svg", height: 20.8pt)
           )
         } else {
@@ -227,7 +232,7 @@
         if logo-right == auto {
           pad(
             top: -2.2pt,
-            right: page.margin.right,
+            right: slide.right,
             image("./../assets/logo_umit_white_wo.svg", height: 17.2pt)
           )
         } else {
@@ -342,15 +347,20 @@
     )
   },
   report: footer-course-title,
-  slides: (author:none, title:none, date:none, pagenum:none, progress-animation:none) => context {
+  // slide: size and margins of the slide (slide-geometry), none: of the page
+  slides: (author:none, title:none, date:none, pagenum:none, progress-animation:none, slide: none) => context {
     let opts = options.final()
+    let slide = if slide != none { slide } else {
+      (width: page.width, height: page.height, left: page.margin.left,
+        right: page.margin.right, top: page.margin.top, bottom: page.margin.bottom)
+    }
     let show-ani = type(progress-animation) == dictionary and progress-animation.at("slides", default: false)
     block(
       [
         #if show-ani {
           block(
-            inset: (bottom: -page.height * 5.7%),
-            components.progress-bar(height: page.height * 3.3%, opts.theme.highlight, opts.theme.primary)
+            inset: (bottom: -slide.height * 5.7%),
+            components.progress-bar(height: slide.height * 3.3%, opts.theme.highlight, opts.theme.primary)
           )
         }
         #box(
@@ -359,10 +369,10 @@
           ),
           fill: if show-ani {none} else {opts.theme.primary},
           inset: (
-            left: page.margin.left,
-            right: page.margin.right,
-            top: -page.height * 0.525%,
-            bottom: page.height * 0.9%
+            left: slide.left,
+            right: slide.right,
+            top: -slide.height * 0.525%,
+            bottom: slide.height * 0.9%
           ),
           grid(
             // author, date and page number never break, the title takes the
@@ -370,7 +380,7 @@
             columns: (auto, 1fr, auto, auto),
             gutter: 2%,
             align: (left, left, right, right),
-            rows: page.height * 2.8%,
+            rows: slide.height * 2.8%,
             text(white)[#author],
             text(white, fit-line(title)),
             text(white)[#print-date(date)],

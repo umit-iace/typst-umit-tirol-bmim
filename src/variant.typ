@@ -950,7 +950,7 @@
       // too long headings are cut to a single line
       heading: self => utils.display-current-heading(depth: self.slide-level, setting: fit-line),
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
-      header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading), progress-animation: progress-animation),
+      header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading), progress-animation: progress-animation, slide: slide-geometry(self)),
       footer: self => (footer.slides)(
         author: if authors-short == none {
           if type(authors) != array {authors} else {authors.at(0)}
@@ -961,6 +961,7 @@
         date: date,
         pagenum: utils.call-or-display(self, self.store.footer-pagenum),
         progress-animation: progress-animation,
+        slide: slide-geometry(self),
       ),
     ),
   )
