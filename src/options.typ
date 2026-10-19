@@ -20,6 +20,7 @@
   ),
   size: 11pt,
   logo: auto, // none, auto, (left: // , right: //)
+  institute: "iace", // key of institutes (data.typ) or (name: content, logo: content)
   titleblock: auto, // none, auto, function
   oneside: true
 )
@@ -67,6 +68,16 @@
       assert-one-of("lang", val, i18n.keys())
     } else if key == "show-solution" {
       assert-one-of("show-solution", val, (none, "inline", "bottom"))
+    } else if key == "institute" {
+      if type(val) == dictionary {
+        for inst-key in val.keys() {
+          assert(inst-key in ("name", "logo"), message:
+            "Unknown key '" + inst-key + "' of option 'institute', known keys are ['name', 'logo']"
+          )
+        }
+      } else {
+        assert-one-of("institute", val, institutes.keys())
+      }
     }
   }
 }

@@ -8,6 +8,7 @@
   empty-sheets: auto,
   total-time: [90min],
   show-hints: true,
+  institute: "ims",
   lang: "de",
 )
 

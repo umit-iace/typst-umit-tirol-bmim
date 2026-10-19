@@ -19,6 +19,7 @@
     [Max Mustermann$zwj^(1)$]
   ),
   authors-short: [Doel et al.],
+  institute: "ims",
   date: datetime(day: 1, month: 3, year: 2024),
   bib-as-footnote: false,
   handout: false,

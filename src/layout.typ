@@ -120,8 +120,7 @@
         pad(
           left: page.margin.left * 0.4,
           bottom: page.margin.top * 0.12,
-          image(
-            "./../assets/logo_iace_white.svg", height: page.margin.top * 0.254
+          institute-logo(opts, "header", height: page.margin.top * 0.254
           )
         )
       ),
@@ -221,7 +220,7 @@
           pad(
             top: -6.5pt,
             left: slide.left - 11%,
-            image("./../assets/logo_iace_white.svg", height: 20.8pt)
+            institute-logo(opts, "slides-header", height: 20.8pt)
           )
         } else {
           logo-left
@@ -639,8 +638,7 @@
                 align(left,{
                   pad(
                     left: page.margin.left * 0.4,
-                    image(
-                      "./../assets/logo_iace_white.svg", height: page.margin.top * 0.508
+                    institute-logo(opts, "title-page", height: page.margin.top * 0.508
                     )
                   )
                 })
@@ -694,7 +692,7 @@
       #par[]
       #[
         #set text(1.2em)
-        #opts.spell.institute-iace \
+        #institute-name(opts) \
       ]
       #par[]
       #par[]
@@ -974,7 +972,7 @@
       #par[]
       #[
         #set text(1.1em)
-        #opts.spell.institute-iace
+        #institute-name(opts)
 
         #grid(
           columns: (auto, auto),
@@ -982,7 +980,7 @@
             pad(
               left: -0.6em,
               right: -0.2em,
-              image("./../assets/logo_iace_white.svg", height: 2.65em)
+              institute-logo(opts, "title-page", height: 2.65em)
             )
           )
         )

@@ -85,6 +85,7 @@ These options can be passed to every variant:
 | `fonts` | see [Fonts](#fonts) | Fonts per role, single roles can be replaced |
 | `size` | `11pt` | Font size (poster: `20pt`, slides: `18pt`) |
 | `logo` | `auto` | `auto`, `none`, content, or a dictionary with `left`, `right`, `title-left`, `title-right` (slides), `flyer-left`, `flyer-right` (flyer) |
+| `institute` | `"iace"` | Institute, whose logo and name are shown (header, title slide, title page of lecture and workbook, …): `"iace"` (Institut für Automatisierungs- und Regelungstechnik), `"ims"` (Institut für Mess- und Sensortechnik), or an own one as `(name: [..], logo: image(..))`, see [Institutes](#institutes) |
 | `titleblock` | `auto` | `auto` (title block of the variant), `none`, or a function `args => content` |
 | `show-solution` | `none` | `none`, `"inline"` or `"bottom"` (exam, exercise, report, workbook) |
 | `task-show-points` | `false` | Show the points of each task (exercise, workbook) |
@@ -206,6 +207,32 @@ colors (`primary`, `secondary`, `highlight`, `background`, `neutral-lightest`):
   #show: bmim.report(
     // ...
     theme: (primary: rgb("#008000")),
+  )
+  ```
+
+## Institutes
+
+The institutes are defined in `institutes` in [data.typ](src/data.typ): the
+name per language, the white logo in the `assets` folder and optionally a
+`scale` of the logo, if it appears larger or smaller than the others at the
+same height, and a vertical shift `dy` relative to its height (positive:
+down). `scale` and `dy` are a single value for all places of the logo or a
+dictionary per place (`header`, `slides-header`, `title-slide`, `title-page`)
+with `rest` for the others, e.g. `dy: (slides-header: 20%, rest: 0%)`. A
+further institute only needs a further entry there, its key is then a value
+of the option `institute`:
+  ```typst
+  #show: bmim.report(
+    // ...
+    institute: "ims",
+  )
+  ```
+An institute that is not defined there can be given directly; its logo is
+shown as given:
+  ```typst
+  #show: bmim.report(
+    // ...
+    institute: (name: [Own institute], logo: image("logo.svg", height: 20pt)),
   )
   ```
 

@@ -66,6 +66,37 @@
   style(it, numbering(it.numbering, ..counter(heading).get()))
 }
 
+// Name of the institute (option 'institute') in the language of the document
+#let institute-name(opts) = {
+  let inst = opts.institute
+  if type(inst) == dictionary { inst.at("name", default: none) } else {
+    institutes.at(inst).name.at(opts.lang)
+  }
+}
+
+// White logo of the institute (option 'institute') at the place `place` (see
+// institute-places) with the given `height`, scaled and shifted by scale and
+// dy of the institute; an own logo (content) is shown as given
+#let institute-logo(opts, place, height: auto) = {
+  assert(place in institute-places, message: "Unknown place '" + place + "' of the institute logo")
+  let inst = opts.institute
+  if type(inst) == dictionary { return inst.at("logo", default: none) }
+  let entry = institutes.at(inst)
+  // a single value, or a dictionary per place with `rest` for the others
+  let at-place(key, default) = {
+    let value = entry.at(key, default: default)
+    if type(value) == dictionary {
+      value.at(place, default: value.at("rest", default: default))
+    } else { value }
+  }
+  let height = if height == auto { auto } else { height * (at-place("scale", 100%) / 100%) }
+  let logo = image("./../assets/" + entry.logo, height: height)
+  let dy = at-place("dy", 0%)
+  if dy == 0% or height == auto { logo } else {
+    box(move(dy: height * (dy / 100%), logo))
+  }
+}
+
 #let pick-logo(logo, key) = if type(logo) == dictionary {
   logo.at(key, default: auto)
 } else {

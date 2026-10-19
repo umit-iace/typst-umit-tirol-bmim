@@ -33,7 +33,6 @@
     winter-term: "Winter term",
     lecture-notes: "Lecture notes for the course",
     workbook: "Exercises for the course",
-    institute-iace: "Institute of Automation and Control Engineering",
     name: "Name",
     student-id: "Student ID",
     student-id-short: "Student ID",
@@ -117,7 +116,6 @@
     winter-term: "Wintersemester",
     lecture-notes: "Skriptum zur Lehrveranstaltung",
     workbook: "Übungsaufgaben zur Lehrveranstaltung",
-    institute-iace: "Institut für Automatisierungs- und Regelungstechnik",
     name: "Name",
     student-id: "Matrikelnummer",
     student-id-short: "Matrikelnr",
@@ -175,6 +173,42 @@
     ],
     signed-at: (city) => [#city am],
   )
+)
+
+// Institutes for the option 'institute': name per language, the white logo in
+// the assets folder and optionally
+// - scale: of the logo, if it appears larger or smaller than the others at the
+//   same height
+// - dy: vertical shift of the logo, relative to its height (positive: down),
+//   if it sits higher or lower than the others
+// scale and dy are a single value for all places of the logo, or a dictionary
+// per place (see institute-places) with `rest` for the places not given.
+// A further institute only needs a further entry here.
+// Places of the institute logo
+#let institute-places = (
+  "header", // header of exam, exercise, report, workbook
+  "slides-header", // header of the slides
+  "title-slide", // title slide of the slides
+  "title-page", // title page of lecture and workbook
+)
+
+#let institutes = (
+  iace: (
+    name: (
+      de: "Institut für Automatisierungs- und Regelungstechnik",
+      en: "Institute of Automation and Control Engineering",
+    ),
+    logo: "logo_iace_white.svg",
+  ),
+  ims: (
+    name: (
+      de: "Institut für Mess- und Sensortechnik",
+      en: "Institute of Measurement and Sensor Technology",
+    ),
+    logo: "logo_ims_white.svg",
+    scale: 85%,
+    dy: (slides-header: 20%, title-slide: 30%, rest: -5%), // positive: down
+  ),
 )
 
 // Supported values of the thesis options 'program' and 'university'
