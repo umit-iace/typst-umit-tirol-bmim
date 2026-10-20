@@ -77,7 +77,7 @@
 // White logo of the institute (option 'institute') at the place `place` (see
 // institute-places) with the given `height`, scaled and shifted by scale and
 // dy of the institute; an own logo (content) is shown as given
-#let institute-logo(opts, place, height: auto) = {
+#let place-institute-logo(opts, place, height: auto) = {
   assert(place in institute-places, message: "Unknown place '" + place + "' of the institute logo")
   let inst = opts.institute
   if type(inst) == dictionary { return inst.at("logo", default: none) }
@@ -95,6 +95,31 @@
   if dy == 0% or height == auto { logo } else {
     box(move(dy: height * (dy / 100%), logo))
   }
+}
+
+// UMIT TIROL logo in the language of the document, `color` "white" or
+// "blue", `subtitle` with the line below the name ("Die Tiroler
+// Privatuniversität"); `args` (e.g. height) are passed to image
+#let umit-logo(color: "white", subtitle: true, ..args) = context {
+  assert(color in ("white", "blue"), message:
+    "Argument 'color' of umit-logo must be one of [\"white\", \"blue\"], but was set to " + repr(color))
+  assert(type(subtitle) == bool, message:
+    "Argument 'subtitle' of umit-logo must be true or false, but was set to " + repr(subtitle))
+  let opts = options.final()
+  let variant = if not subtitle { "wo" } else if opts.lang == "de" { "gr" } else { "en" }
+  image("./../assets/logo_umit_" + color + "_" + variant + ".svg", ..args)
+}
+
+// White logo of an institute: `institute` is a key of institutes (data.typ),
+// auto: the one of the option 'institute'; `args` (e.g. height) are passed to
+// image. An own institute of the option (dictionary) gives its logo as given.
+#let institute-logo(institute: auto, ..args) = context {
+  let inst = if institute == auto { options.final().institute } else { institute }
+  if type(inst) == dictionary { return inst.at("logo", default: none) }
+  assert(inst in institutes, message:
+    "Argument 'institute' of institute-logo must be one of [" +
+    institutes.keys().map(repr).join(", ") + "], but was set to " + repr(inst))
+  image("./../assets/" + institutes.at(inst).logo, ..args)
 }
 
 #let pick-logo(logo, key) = if type(logo) == dictionary {

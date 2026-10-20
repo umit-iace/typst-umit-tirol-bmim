@@ -42,7 +42,7 @@
   ),
   // second logo next to the UMIT logo, comparable to the title slide
   logo: (
-    flyer-left: image("./../assets/logo_iace_white.svg", height: 40pt),
+    flyer-left: bmim.institute-logo(institute: "iace", height: 40pt),
   ),
 )
 

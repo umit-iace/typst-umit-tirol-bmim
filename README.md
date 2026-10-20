@@ -187,6 +187,8 @@ that replaces the whole content of its slide), `#article-only[..]` and
 | `title-slide()` | Title slide of the slides, uses the information of `slides(...)`, or the option `title-slide` if given |
 | `outline-slide(title: [...], cover-lvl: 1)` | Slide with the outline, the section `cover-lvl` is highlighted, or the option `outline-slide` if given |
 | `translated-month(date, lang)` | Name of the month of `date` in the language `lang` |
+| `umit-logo(color: "white", subtitle: true, ..args)` | Logo of UMIT TIROL in the language of the document, `color` `"white"` or `"blue"`, `subtitle: false` without "Die Tiroler Privatuniversität"; `args` (e.g. `height: 30pt`) are passed to `image`, e.g. `logo: (flyer-right: umit-logo(height: 40pt))` |
+| `institute-logo(institute: auto, ..args)` | White logo of an institute, `institute` is a key of `institutes` (`"iace"`, `"ims"`, …), `auto` the one of the option `institute`; `args` (e.g. `height: 30pt`) are passed to `image` |
 | `flyer-heading(body, size: auto, rule: 100%)` | Heading with a line below on the back page of the flyer; `size` (`auto`: `heading` of the option `sizes` of the flyer) is the font size, `rule` the length of the line |
 | `flyer-badge(body, end: none)` | Rotated badge on the back page of the flyer, right aligned up to the page edge, where it is placed; a datetime is shown with date and time, an optional `end` gives a time span, e.g. "5th November 2026, 17:00–18:30" |
 | `context print-date-time(date, end: none)` | Date with the time of a datetime in the language of the document, e.g. "5th November 2026, 17:00" or "5. November 2026, 17.00 Uhr" (as in the badge of the flyer); with `end` a time span, "5th November 2026, 17:00–18:30" on the same day, otherwise "start – end" |
@@ -227,6 +229,10 @@ of the option `institute`:
     institute: "ims",
   )
   ```
+The logos of the package can be placed anywhere with `umit-logo` and
+`institute-logo` (see Helpers); a path into the package does not work in
+documents that import it.
+
 An institute that is not defined there can be given directly; its logo is
 shown as given:
   ```typst

@@ -120,7 +120,7 @@
         pad(
           left: page.margin.left * 0.4,
           bottom: page.margin.top * 0.12,
-          institute-logo(opts, "header", height: page.margin.top * 0.254
+          place-institute-logo(opts, "header", height: page.margin.top * 0.254
           )
         )
       ),
@@ -220,7 +220,7 @@
           pad(
             top: -6.5pt,
             left: slide.left - 11%,
-            institute-logo(opts, "slides-header", height: 20.8pt)
+            place-institute-logo(opts, "slides-header", height: 20.8pt)
           )
         } else {
           logo-left
@@ -638,7 +638,7 @@
                 align(left,{
                   pad(
                     left: page.margin.left * 0.4,
-                    institute-logo(opts, "title-page", height: page.margin.top * 0.508
+                    place-institute-logo(opts, "title-page", height: page.margin.top * 0.508
                     )
                   )
                 })
@@ -980,7 +980,7 @@
             pad(
               left: -0.6em,
               right: -0.2em,
-              institute-logo(opts, "title-page", height: 2.65em)
+              place-institute-logo(opts, "title-page", height: 2.65em)
             )
           )
         )

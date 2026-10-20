@@ -46,10 +46,8 @@
         dir: ltr,
         spacing: 14pt,
         image("./../assets/logo_lfui_color_invert.png", height: 36pt),
-        image(
-          if opts.lang == "de" { "./../assets/logo_umit_white_gr.svg" } else { "./../assets/logo_umit_white_en.svg" },
-          height: 30pt,
-        ),
+        // in the language of the document
+        bmim.umit-logo(height: 30pt),
       ))
     }),
   ))

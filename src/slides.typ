@@ -1,7 +1,7 @@
 #import "@preview/touying:0.8.0": *
 #import "colors.typ": *
 #import "data.typ": *
-#import "helpers.typ": print-date, pick-logo, institute-logo
+#import "helpers.typ": print-date, pick-logo, place-institute-logo
 #import "options.typ": options
 
 // Own slide of the option `name` (title-slide, outline-slide) of slides(),
@@ -175,7 +175,7 @@
                 if logo-left == auto {
                   pad(
                     top: 0pt,
-                    institute-logo(opts, "title-slide", height: 40pt)
+                    place-institute-logo(opts, "title-slide", height: 40pt)
                   )
                 } else {
                   logo-left

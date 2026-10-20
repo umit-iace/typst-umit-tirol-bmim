@@ -36,9 +36,9 @@
   qr-code: image("./../assets/logo_lfui_color_invert.png", height: 36pt),
   logo: (
     // second logo, left of the right logo
-    flyer-left: image("./../assets/logo_iace_white.svg", height: 40pt),
+    flyer-left: bmim.institute-logo(institute: "iace", height: 40pt),
     // replaces the UMIT logo
-    flyer-right: image("./../assets/logo_umit_white_wo.svg", height: 36pt),
+    flyer-right: bmim.umit-logo(subtitle: false, height: 36pt),
   ),
 )
 
