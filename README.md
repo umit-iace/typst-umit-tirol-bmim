@@ -68,8 +68,8 @@ This will watch your file and recompile it to a pdf when the file is saved.
 
 ### Install locally
 
-- Store the package in `~/.local/share/typst/packages/local/ratsch-bmim/0.4.1`
-- Import from it with `#import "@local/ratsch-bmim:0.4.1": *`
+- Store the package in `~/.local/share/typst/packages/local/ratsch-bmim/0.5.0`
+- Import from it with `#import "@local/ratsch-bmim:0.5.0": *`
 
 ## Options
 
