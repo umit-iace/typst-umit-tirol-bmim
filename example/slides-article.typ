@@ -30,6 +30,10 @@
   bib-as-footnote: false,
   handout: false,
   article-mode: true,
+  // variant of the document: "report" (default), "article", "lecture" or a
+  // function, e.g. info => bmim.workbook(course: info.title, authors: info.authors);
+  // an own title block is given with titleblock: args => [..]
+  article-variant: "report",
   notes: none,
   logo: (
     left: pad(

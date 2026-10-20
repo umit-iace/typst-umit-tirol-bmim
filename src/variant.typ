@@ -814,7 +814,8 @@
   progress-animation: none, // progress in header/footer: (slides: bool, section: bool)
   size: 18pt,
   handout: false, // render as handout: false, true
-  article-mode: false, // render the slides as a report (touying article mode): false, true
+  article-mode: false, // render the slides as a document (touying article mode): false, true
+  article-variant: "report", // variant of the article mode: "report", "article", "lecture" or a function info => variant
   notes: none, // show speaker notes: none, right, bottom
   margins: (x: 27pt, ),
   section-slide: auto, // auto, none, function
@@ -822,6 +823,10 @@
   outline-slide: auto, // auto, none, function (like section-slide)
   ..chosen,
 ) = { body => context {
+  assert(
+    article-variant in ("report", "article", "lecture") or type(article-variant) == function,
+    message: "Option 'article-variant' must be one of [\"report\", \"article\", \"lecture\"] or a function, but was set to " + repr(article-variant),
+  )
   for (name, value) in (
     section-slide: section-slide,
     title-slide: title-slide,
@@ -888,15 +893,32 @@
       handout: handout,
       show-notes-on-second-screen: notes,
       export-mode: if article-mode { "article" } else { "slides" },
-      // the report variant of this template renders the article mode, the
-      // subtitle of the slides takes the place of the course
-      article-theme: body => report(
-        title: title,
-        course: subtitle,
-        authors: (authors,).flatten(),
-        date: if date == none { datetime.today() } else { date },
-        size: 11pt,
-      )(body),
+      // a variant of this template renders the article mode (option
+      // article-variant), with the information of the slides; a function gets
+      // it as dictionary and returns a variant, e.g. info => workbook(..)
+      article-theme: body => {
+        let info = (
+          title: title,
+          subtitle: subtitle,
+          authors: (authors,).flatten(),
+          date: if date == none { datetime.today() } else { date },
+          institution: institution,
+          conference: conference,
+          location: location,
+        )
+        let variant = if type(article-variant) == function {
+          article-variant(info)
+        } else if article-variant == "article" {
+          article(title: title, subtitle: subtitle, authors: info.authors, date: info.date, size: 11pt)
+        } else if article-variant == "lecture" {
+          // the lecture has no title, the title of the slides is the course
+          lecture(course: title, authors: info.authors, date: info.date, size: 11pt)
+        } else {
+          // the subtitle of the slides takes the place of the course
+          report(title: title, course: subtitle, authors: info.authors, date: info.date, size: 11pt)
+        }
+        variant(body)
+      },
     ),
     config-methods(
       alert: utils.alert-with-primary-color,

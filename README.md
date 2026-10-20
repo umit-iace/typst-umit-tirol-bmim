@@ -111,7 +111,7 @@ except `flyer`, `letter` and `slides`.
 | `letter` | `subject`, `date`, `location`, `recipient` (`name`, `address`, `pro`, `institution`), `sender` (`name`, `pos`, `institute`, `department`, `tel`, `fax`, `email`, `signature`) |
 | `poster` | `title`, `authors`, `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `event`, `location`, `contact` |
 | `report` | `title`, `course`, `authors`, `date`, `show-solution` |
-| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as report, see below), `notes`, `margins`, `title-slide`, `outline-slide`, `section-slide` (`auto`, `none` or a touying slide function, see below) |
+| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as document, see below), `article-variant` (`"report"`, `"article"`, `"lecture"` or a function, see below), `notes`, `margins`, `title-slide`, `outline-slide`, `section-slide` (`auto`, `none` or a touying slide function, see below) |
 | `thesis` | `program` (`"Master"`, `"Bachelor"`), `university` (`"LFUI"`, `"UMIT"`), `title`, `subtitle`, `author` (required), `date`, `advisor` (array of `(name, university, department, unit)`), `abstract` (`(english, german)`), `thanks`, `oneside` (`false`) |
 | `workbook` | `course`, `authors`, `date`, `show-solution`, `task-show-points`, `oneside` (`false`) |
 
@@ -162,7 +162,7 @@ See [example/slides-customSlides.typ](example/slides-customSlides.typ).
 ### Slides as article
 
 touying's article mode renders the same source as a document instead of slides,
-in the layout of the `report` variant: `title`, `subtitle` (in place of the
+by default in the layout of the `report` variant: `title`, `subtitle` (in place of the
 course), `authors` and `date` of the slides form its title block, `title-slide` and `outline-slide` are
 skipped and animations show their final state. Enable it with
 `article-mode: true` or when compiling:
@@ -173,6 +173,21 @@ touying's markers select content per output, e.g. `#article-text[..]` (prose
 that replaces the whole content of its slide), `#article-only[..]` and
 `#slides-only[..]`, see
 [example/slides-article.typ](example/slides-article.typ).
+
+The option `article-variant` selects the variant of the document: `"report"`
+(default), `"article"` (title and subtitle), `"lecture"` (the title of the
+slides as course) or a function, which gets the information of the slides
+(`title`, `subtitle`, `authors`, `date`, `institution`, `conference`,
+`location`) and returns a variant. The global option `titleblock` gives an own
+title block of that variant:
+  ```typst
+  #show: bmim.slides(
+    // ...
+    article-mode: true,
+    article-variant: info => bmim.workbook(course: info.title, authors: info.authors),
+    titleblock: args => [...],
+  )
+  ```
 
 ### Helpers
 
