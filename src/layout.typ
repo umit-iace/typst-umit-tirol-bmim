@@ -194,7 +194,6 @@
       )
     }
   },
-  poster: header-colored(),
   report: header-colored(),
   // slide: size and margins of the slide (slide-geometry), none: of the page
   slides: (heading: none, progress-animation: none, slide: none) => context {
@@ -326,25 +325,6 @@
         width: 100%
       )
     }
-  },
-  // blue bar with event, date and location on the left and the contact on the right
-  poster: (event, date, location, contact, ..args) => context {
-    let opts = options.final()
-    let date = if type(date) == datetime { print-date(date) } else { date }
-    set text(fill: opts.theme.background, weight: "bold")
-    block(
-      width: 100%,
-      height: 1.5em,
-      inset: (x: 0.6em),
-      radius: 0.4em,
-      fill: opts.theme.primary,
-      grid(
-        columns: (2fr, 1fr),
-        align: (left + horizon, right + horizon),
-        (event, date, location).filter(x => x not in (none, [], "")).join(", "),
-        contact,
-      ),
-    )
   },
   report: footer-course-title,
   // slide: size and margins of the slide (slide-geometry), none: of the page
@@ -827,53 +807,28 @@
       }),
     ))
   },
-  // title and authors centered, the thesis box (type, author, supervisors and
-  // photo) on the right
+  // left box of the poster header: title, a golden rule, authors in one line
+  // and the affiliations below, white on the primary color
   poster: (args) => context {
-    let opts = options.final()
-    let title = {
-      set align(center)
-      set par(justify: false)
-      block(below: 0.6em, text(2.2em, weight: "bold", long(args.title)))
-      if args.thesis == none and args.authors.len() > 0 {
-        text(1.2em, args.authors.join(linebreak()))
-      }
+    // in the lower header of the landscape poster the title, the other text
+    // and the gaps are smaller (`title-scale`, `text-scale`, `gap-scale`)
+    let title-size = args.at("title-scale", default: 1)
+    let size = args.at("text-scale", default: 1)
+    let gap = args.at("gap-scale", default: 1)
+    set text(fill: white)
+    set par(justify: false)
+    block(spacing: 0pt, text(2.8em * title-size, weight: "bold", hyphenate: false,
+      { set par(leading: 0.3em); long(args.title) }))
+    v(1.75em * gap)
+    line(length: 19.4em * title-size, stroke: 0.5em * gap + color-cd2020.yellow)
+    if args.authors.len() > 0 {
+      v(1.6em * gap)
+      text(1.3em * size, args.authors.join(", "))
     }
-    let thesis = args.thesis
-    let thesis-box = if thesis != none {
-      let kind = if thesis.kind == "Master" { opts.spell.master-thesis }
-        else if thesis.kind == "Bachelor" { opts.spell.bachelor-thesis }
-        else { thesis.kind }
-      let names = {
-        set par(justify: false, spacing: 0.4em)
-        set text(0.8em)
-        align(center, text(1.25em, strong(kind)))
-        v(0.3em)
-        strong(opts.spell.thesis-author)
-        align(right, thesis.author)
-        strong(opts.spell.supervisor)
-        align(right, thesis.supervisors.join(linebreak()))
-      }
-      rect(
-        stroke: opts.theme.primary + 0.1em,
-        radius: 0.6em,
-        inset: 0.5em,
-        grid(
-          columns: if thesis.photo == none { 1 } else { (auto, 5em) },
-          column-gutter: 0.8em,
-          align: horizon,
-          names,
-          if thesis.photo != none { box(width: 5em, thesis.photo) },
-        ),
-      )
+    if args.affiliations.len() > 0 {
+      v(0.6em * gap)
+      text(0.85em * size, { set par(leading: 0.4em); args.affiliations.join(linebreak()) })
     }
-    block(width: 100%, below: 1em, grid(
-      columns: if thesis-box == none { (1fr,) } else { (1fr, auto) },
-      column-gutter: 1em,
-      align: horizon,
-      title,
-      thesis-box,
-    ))
   },
   article:   (args) => context {
     let opts = options.final()
@@ -1033,9 +988,34 @@
 )
 
 // heading bar of a poster box, nothing without a heading
+// Style of the poster boxes (option 'box-style' of the poster): "framed"
+// with heading bar and frame, "plain" as in the poster of Ecklebe et al.,
+// without frame, the heading in gray with a golden line below
+#let poster-box-style = state("bmim-poster-box-style", "framed")
+
+// heading of a poster box in the style of the poster, nothing without a heading
 #let poster-heading(heading) = context {
   let opts = options.final()
   if heading in (none, []) { return }
+  let numbered(it) = {
+    if it.numbering != none { counter(std.heading).display(it.numbering) + h(0.3em) }
+    it.body
+  }
+  if poster-box-style.get() == "plain" {
+    block(width: 100%, below: 0.8em, {
+      set par(justify: false)
+      // the size of the poster, not the one of the headings of the document
+      set text(size: 1.68 * opts.size, fill: color-cd2020.dark_gray, weight: "bold")
+      show std.heading: it => {
+        // bold as in the poster of Ecklebe et al., not semibold as the headings
+        text(weight: "bold", numbered(it))
+        v(0.45em, weak: true)
+        line(length: 4.2em, stroke: 0.3em + color-cd2020.yellow.lighten(35%))
+      }
+      std.heading(level: 1, heading)
+    })
+    return
+  }
   block(
     width: 100%,
     inset: 0.4em,
@@ -1046,10 +1026,7 @@
       set align(center)
       set par(justify: false)
       set text(fill: opts.theme.neutral-lightest, weight: "bold")
-      show std.heading: it => {
-        if it.numbering != none { counter(std.heading).display(it.numbering) + h(0.3em) }
-        it.body
-      }
+      show std.heading: numbered
       std.heading(level: 1, heading)
     },
   )
@@ -1071,18 +1048,21 @@
   context {
     let opts = options.final()
     let size = if height != none { (height: height) } else { (:) }
+    let framed = poster-box-style.get() == "framed"
     [#block(
       width: 100%,
       ..size,
       breakable: false,
-      fill: opts.theme.highlight.lighten(90%),
-      stroke: opts.theme.highlight + 0.1em,
-      radius: 0.4em,
+      ..if framed { (
+        fill: opts.theme.highlight.lighten(90%),
+        stroke: opts.theme.highlight + 0.1em,
+        radius: 0.4em,
+      ) },
       {
         // a height for the box from the poster area must not reach the content
         set block(height: auto)
         poster-heading(heading)
-        block(width: 100%, inset: 0.5em, body)
+        block(width: 100%, inset: if framed { 0.5em } else { 0pt }, body)
       },
     )<bmim-poster-box>]
   }
@@ -1218,11 +1198,13 @@
     layout(size => {
       let w = size.width
       let ws = poster-tracks(widths, w, gutter).first()
+      // without the frame of the framed style no inset, only a gap below the top
+      let inset = if poster-box-style.get() == "framed" { 0.5em } else { (bottom: 0.5em) }
       let top-part = block(width: w, {
         poster-heading(heading)
-        block(width: 100%, inset: 0.5em, top)
+        block(width: 100%, inset: inset, top)
       })
-      let side-part = block(width: ws, inset: 0.5em, side)
+      let side-part = block(width: ws, inset: inset, side)
       let ht = measure(top-part).height
       let h = if fill { size.height } else {
         let natural-inner = measure(block(width: w - ws - gutter,
@@ -1232,11 +1214,14 @@
       let x(v) = if at == left { v } else { w - v }
       let points = ((0pt, 0pt), (w, 0pt), (w, ht), (ws, ht), (ws, h), (0pt, h))
         .map(((px, py)) => (x(px), py))
-      place(std.top + left, curve(
-        fill: opts.theme.highlight.lighten(90%),
-        stroke: opts.theme.highlight + 0.1em,
-        ..rounded-outline(points, 0.4em.to-absolute()),
-      ))
+      // the outline of the angle, only in the framed style
+      if poster-box-style.get() == "framed" {
+        place(std.top + left, curve(
+          fill: opts.theme.highlight.lighten(90%),
+          stroke: opts.theme.highlight + 0.1em,
+          ..rounded-outline(points, 0.4em.to-absolute()),
+        ))
+      }
       let inner-cell = pad(top: gutter, ..if at == left { (left: gutter) } else { (right: gutter) },
         poster-cell(inner, true))
       grid(
@@ -1247,4 +1232,139 @@
       )
     })
   })<bmim-poster-area>]
+}
+
+// Box of a student in the poster header: the UMIT logo above photo, name and
+// a short bio, the type of thesis and the supervisors if given, white on the
+// primary color; `scale` of the logo (lower header of the landscape poster)
+#let poster-thesis-box(thesis, scale: 1) = context {
+  let opts = options.final()
+  let kind = if thesis.kind == "Master" { opts.spell.master-thesis }
+    else if thesis.kind == "Bachelor" { opts.spell.bachelor-thesis }
+    else { thesis.kind }
+  set text(fill: white)
+  set par(justify: false, spacing: 0.5em)
+  stack(
+    spacing: 1em * scale,
+    align(center, umit-logo(height: 3.4em * scale)),
+    align(left, grid(
+    columns: if thesis.photo == none { (auto,) } else { (6em, auto) },
+    column-gutter: 1em,
+    align: horizon,
+    ..if thesis.photo != none { (box(width: 6em, clip: true, radius: 0.3em, thesis.photo),) },
+    {
+      if kind != none { text(0.85em, weight: "bold", kind) + parbreak() }
+      text(1.3em, weight: "bold", thesis.author)
+      if thesis.bio != none { parbreak() + text(0.85em, thesis.bio) }
+      if thesis.supervisors.len() > 0 {
+        parbreak()
+        text(0.85em)[*#opts.spell.supervisor:* #thesis.supervisors.join(", ")]
+      }
+    },
+    )),
+  )
+}
+
+// Background of a header filling its box: the primary color `fill`, with the
+// normalized option 'header-image' (header-image-option) a section of the
+// mountain panorama below the primary color with `overlay` opacity, or an own
+// image (content), shown as given and cut to the box.
+#let header-background(header-image, fill) = {
+  if header-image == none {
+    return rect(fill: fill, width: 100%, height: 100%)
+  }
+  box(width: 100%, height: 100%, clip: true, fill: fill, {
+    if type(header-image) == content {
+      place(top + left, header-image)
+    } else {
+      // `width` of the image width around the point (`x`, `y`) of the image,
+      // shifted only as far as the image still covers the header
+      layout(size => {
+        let path = "./../assets/background_bettelwurf.jpg"
+        let w = size.width / (header-image.width / 100%)
+        let h = measure(image(path, width: w)).height
+        let dx = size.width / 2 - w * (header-image.x / 100%)
+        let dy = size.height / 2 - h * (header-image.y / 100%)
+        // some PDF viewers let a clipped image bleed a pixel beyond its
+        // clip, so the image is cut `edge` inside the overlay above
+        let edge = 1pt
+        place(top + left, dx: edge, dy: edge, box(
+          width: size.width - 2 * edge,
+          height: size.height - 2 * edge,
+          clip: true,
+          place(top + left,
+            dx: calc.min(0pt, calc.max(size.width - w, dx)) - edge,
+            dy: calc.min(0pt, calc.max(size.height - h, dy)) - edge,
+            // laid out in the header, the image would be shrunk to its height
+            box(width: w, height: h, image(path, width: 100%, height: 100%))),
+        ))
+      })
+      place(top + left, rect(
+        width: 100%,
+        height: 100%,
+        fill: fill.transparentize(100% - header-image.overlay),
+      ))
+    }
+  })
+}
+
+// Header and footer of the poster as page background: a bar of the primary
+// color over the full width, split by a line in the left box (2/3, the
+// titleblock) and the right box (`right`); the footer bar shows `footer`.
+// Sizes in em of the poster font size, as in the poster of Ecklebe et al. in
+// portrait; in landscape header and footer are lower by `scale` and
+// `footer-scale`.
+#let poster-geometry(orientation) = {
+  let landscape = orientation == "landscape"
+  let scale = if landscape { 0.525 } else { 1 }
+  let footer-scale = if landscape { 0.7 } else { 1 }
+  (
+    scale: scale, // of the header and its gaps and logos
+    title-scale: if landscape { 0.55 } else { 1 }, // of the title in the titleblock
+    text-scale: if landscape { 0.65 } else { 1 }, // of authors and affiliations
+    gap-scale: if landscape { 0.5 } else { 1 }, // of the gaps of the titleblock
+    footer-scale: footer-scale, // of the footer and its contents
+    header: 16em * scale, // height of the header bar
+    footer: 5.25em * footer-scale, // height of the footer bar
+    margin: 3em, // left and right margin
+    split: 2 / 3, // position of the line in the header
+  )
+}
+
+#let poster-background(g, title-box, logo-box, footer, background, header-image) = context {
+  let opts = options.final()
+  background
+  // width of the page, page.width is the one before flipping
+  let size = (width: if page.flipped { page.height } else { page.width })
+  {
+    // header
+    place(top + left, block(width: 100%, height: g.header, {
+      place(top + left, header-background(header-image, opts.theme.primary))
+      let split = size.width * g.split
+      place(top + left, dx: g.margin, block(width: split - 2 * g.margin, height: 100%,
+        align(horizon, title-box)))
+      place(top + left, dx: split, dy: 1.9em * g.scale,
+        line(angle: 90deg, length: g.header - 2.9em * g.scale, stroke: 0.1em + white))
+      place(top + left, dx: split + g.margin, block(width: size.width - split - 2 * g.margin, height: 100%,
+        align(center + horizon, logo-box)))
+    }))
+    // footer
+    place(bottom + left, block(width: 100%, height: g.footer, fill: opts.theme.primary,
+      inset: (x: g.margin, y: 0.6em * g.footer-scale), {
+        set text(fill: white)
+        set par(justify: false)
+        align(horizon, footer)
+      }))
+  }
+}
+
+// default footer of the poster: logo of the institute with its name below on the right
+#let poster-footer(g) = context {
+  let opts = options.final()
+  set text(fill: white)
+  align(right + horizon, box(stack(
+    spacing: 0.4em * g.footer-scale,
+    align(center, place-institute-logo(opts, "poster-footer", height: 2.2em * g.footer-scale)),
+    text(0.75em, weight: "bold", institute-name(opts)),
+  )))
 }

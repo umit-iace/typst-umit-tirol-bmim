@@ -54,7 +54,6 @@
     master-thesis: "Master’s Thesis",
     assessor: "Assessor",
     supervisor: "Supervisor",
-    thesis-author: "Author",
     co-supervisor: "Co-supervisor",
     lfui-faculty-logo: [Faculty of\ Engineering Science],
     umit-department: [Department for Biomedical Informatics and Mechatronics],
@@ -138,7 +137,6 @@
     master-thesis: "Masterarbeit",
     assessor: "Beurteiler",
     supervisor: "Betreuer",
-    thesis-author: "Bearbeiter",
     co-supervisor: "Mitbetreuer",
     lfui-faculty-logo: [Fakultät für Technische\ Wissenschaften],
     umit-department: [Department für Biomedizinische Informatik und Mechatronik],
@@ -192,6 +190,7 @@
   "slides-header", // header of the slides
   "title-slide", // title slide of the slides
   "title-page", // title page of lecture and workbook
+  "poster-footer", // footer of the poster
 )
 
 #let institutes = (

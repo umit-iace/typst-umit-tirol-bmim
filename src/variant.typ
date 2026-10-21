@@ -447,28 +447,32 @@
 
 #let poster(
   title: none, // [Title] or ([Long Title], [Short Title])
-  authors: none, // array of str or content, one line each
+  authors: none, // array of str or content, shown in one line
+  affiliations: none, // str, content or array (one line each), below the authors
   page: "a2", // pagesize
   orientation: "landscape", // "landscape", "portrait"
-  date: datetime.today(), // datetime or content
-  event: none, // str or content
-  location: none, // str or content
-  contact: none, // str or content
-  thesis: none, // none or (kind: "Master", "Bachelor" or content, author: .., supervisors: (..), photo: none or image)
+  date: datetime.today(), // datetime or content, for an own titleblock
+  thesis: none, // none or (kind: "Master", "Bachelor", content or none, author: .., bio: .., supervisors: (..), photo: none or image)
+  header-right: auto, // right box of the header: auto (UMIT logo, with `thesis` the box of the student), none or content
+  footer: auto, // content of the footer: auto (logo and name of the institute on the right), none or content
+  background: none, // none or content behind the poster, e.g. image(..)
+  box-style: "framed", // poster boxes: "framed" (heading bar and frame), "plain" (gray heading with golden line, no frame)
+  header-image: true, // behind the header: true or (x: 50%, y: 60%, width: 100%, overlay: 75%) for the mountain panorama, false (none), or an own image (content), shown as given
   ..chosen // other options: theme, size, etc
 ) = { body => {
   assert-one-of("orientation", orientation, ("landscape", "portrait"))
   if thesis == none { assert-set("authors", authors) }
+  let as-array(x) = if x == none { () } else if type(x) == array { x } else { (x,) }
   let thesis = if thesis != none {
     assert(type(thesis) == dictionary, message: "Option 'thesis' must be none or a dictionary, but was set to " + repr(thesis))
-    let known = (kind: "Master", author: none, supervisors: (), photo: none)
+    let known = (kind: "Master", author: none, bio: none, supervisors: (), photo: none)
     for key in thesis.keys() {
       assert(key in known, message: "Unknown key '" + key + "' of option 'thesis', known keys are [" +
         known.keys().map(repr).join(", ") + "]")
     }
     let thesis = known + thesis
     assert(thesis.author != none, message: "Key 'author' of option 'thesis' must be set")
-    if type(thesis.supervisors) != array { thesis.supervisors = (thesis.supervisors,) }
+    thesis.supervisors = as-array(thesis.supervisors)
     thesis
   }
   option-set(
@@ -477,24 +481,37 @@
   )
   show: bmim-common
 
-  let margin = (x: 1.5em, top: 7em, bottom: 3em)
+  assert-one-of("box-style", box-style, ("framed", "plain"))
+  let header-image = header-image-option(header-image)
+  let g = poster-geometry(orientation)
+  let args = (
+    title: title,
+    authors: as-array(authors),
+    affiliations: as-array(affiliations),
+    date: date,
+    thesis: thesis,
+    scale: g.scale,
+    title-scale: g.title-scale,
+    text-scale: g.text-scale,
+    gap-scale: g.gap-scale,
+  )
+  let right = if header-right == auto {
+    if thesis != none { poster-thesis-box(thesis, scale: g.scale) } else { umit-logo(height: 4.5em * g.scale) }
+  } else { header-right }
+  let footer = if footer == auto { poster-footer(g) } else { footer }
   set std.page(
     paper: page,
     flipped: orientation == "landscape",
-    margin: margin,
-    header: header.poster,
-    footer: (footer.poster)(event, date, location, contact),
+    margin: (x: g.margin, top: g.header + 1.5em, bottom: g.footer + 1.5em),
+    header: none,
+    footer: none,
+    background: poster-background(g, render-titleblock("poster", args), right, footer, background, header-image),
   )
 
   set heading(numbering: "1.")
 
-  render-titleblock("poster", (
-    title: title,
-    authors: if authors == none { () } else if type(authors) == array { authors } else { (authors,) },
-    thesis: thesis,
-  ))
-
-  // the poster areas (poster-columns, poster-rows) fill the rest of the page
+  poster-box-style.update(box-style)
+  // the poster areas (poster-columns, poster-rows) fill the page
   block(width: 100%, height: 1fr, {
     show <bmim-poster-area>: set block(height: 100%)
     body
