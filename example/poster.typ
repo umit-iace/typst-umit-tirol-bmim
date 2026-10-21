@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: poster-box
+#import "./preamble.typ" as bmim: poster-box
 // #set page(width:5cm, height:7cm, margin: 10pt)
 #set page("a5", margin: 10pt, flipped: false)
 

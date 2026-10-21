@@ -22,15 +22,18 @@ fi
 
 new=$1
 
+# escape the dots, otherwise they match any character
+v_re=$(printf '%s' "$v" | sed 's/\./\\./g')
+
 for file in README.md typst.toml
 do
-    sed s/$v/$new/ -i $file
-    git add $file
+    sed "s/$v_re/$new/g" -i "$file"
+    git add "$file"
 done
 
 git commit -m"bump version"
 
-shortlog=$(git shortlog v$v..HEAD)
+shortlog=$(git shortlog $v..HEAD)
 tagmsg=$(printf "Release version %s\n\n%s" "$new" "$shortlog")
 
 git tag -a $new -e -m "$tagmsg"

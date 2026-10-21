@@ -1,12 +1,15 @@
-#import "utils.typ"
-#let enum-label-mark = metadata("enumeration_label")
-#let enum-counter = counter("enum-counter")
-#let enum-numbering-state = state("enum-numbering", none)
+#import "helpers.typ"
+#let enum-label-mark = metadata("bmim-enum-label")
+#let enum-counter = counter("bmim-enum")
+#let enum-numbering-state = state("bmim-enum-numbering", none)
 
 #let enum-label(label) = {
   if type(label) == content {
     // informative error message
-    assert(label.has("text"), message: "enum-label requires text content")
+    assert(label.has("text"), message:
+      "Argument 'label' of enum-label must be a string or plain text, " +
+      "but was " + repr(label)
+    )
     label = label.text
   }
   [#enum-label-mark#std.label(label)]
@@ -35,7 +38,7 @@
       num = num.with(loc:loc)
     }
     let ref-counter = numbering(num, ..enum-counter.at(loc))
-    if utils.is-empty(supp) {
+    if helpers.is-empty(supp) {
       link(el.location(), ref-counter)
     }
     else {

@@ -1,23 +1,74 @@
-#import "@preview/touying:0.7.1": *
+#import "@preview/touying:0.8.0": *
 #import "colors.typ": *
 #import "data.typ": *
-#import "utils.typ": translatedMonth
+#import "helpers.typ": print-date, pick-logo, place-institute-logo
 #import "options.typ": options
+
+// Own slide of the option `name` (title-slide, outline-slide) of slides(),
+// handled like section-slide: auto returns auto (the slide of the template),
+// none returns no slide, a slide function (touying-slide-wrapper) is called
+// with `args` and rendered with `self`.
+#let custom-slide(self, name, args) = {
+  let custom = self.store.at(name, default: auto)
+  if custom == auto { return auto }
+  if custom == none { return [] }
+  // unwrap the touying-slide-wrapper, as touying does for section-slide
+  let wrapper = custom(..args)
+  let wrapper = if type(wrapper) == content and wrapper.func() == block { wrapper.body } else { wrapper }
+  assert(
+    type(wrapper) == content and wrapper.func() == metadata
+      and type(wrapper.value) == dictionary
+      and wrapper.value.at("kind", default: none) == "touying-slide-wrapper",
+    message: "Option '" + name + "' must return a touying-slide-wrapper",
+  )
+  (wrapper.value.fn)(self)
+}
+
+// Size and margins of one slide. With speaker notes on a second screen
+// (option notes), touying doubles the page and adds the notes half to a margin,
+// so page.width and page.margin no longer describe the slide.
+#let slide-geometry(self) = {
+  let (width, height) = utils.get-page-dimensions(self)
+  let margin = self.page.at("margin", default: 0pt)
+  let side(names) = if type(margin) != dictionary { margin } else {
+    let hit = names.find(name => name in margin)
+    if hit != none { margin.at(hit) } else { 0pt }
+  }
+  (
+    width: width,
+    height: height,
+    left: side(("left", "x", "rest")),
+    right: side(("right", "x", "rest")),
+    top: side(("top", "y", "rest")),
+    bottom: side(("bottom", "y", "rest")),
+  )
+}
 
 #let title-slide(
   ..args,
 ) = touying-slide-wrapper(self => {
+  // not shown in article mode, the report variant has its own title block
+  if self.at("article-mode", default: false) { return touying-slide(self: self, []) }
+  let custom = custom-slide(self, "title-slide", args)
+  if custom != auto { return custom }
   let opts = options.final()
   let new-config = utils.merge-dicts(
     opts,
     config-page(
+      header: none,
       footer: none,
-      margin: (top: 4em, left: 1em),
+      background: place(
+        center+bottom,
+        image(height: 100%, "./../assets/background_bettelwurf.jpg")
+      ) + box(fill: self.colors.primary.transparentize(65%).lighten(50%), height:100%, width: 100%)
     ),
     config-common(freeze-slide-counter:true),
   )
 
   self = utils.merge-dicts(self, new-config)
+
+  let logo-left = pick-logo(opts.logo, "title-left")
+  let logo-right = pick-logo(opts.logo, "title-right")
 
   let authors = (self.info.authors,).flatten()
   let title = (self.info.title,).flatten()
@@ -30,104 +81,173 @@
   let bold(size, body) = strong(text(size: size, body))
 
   let body = {
-    set align(center + horizon)
-    set text(fill: self.colors.primary)
-    v(-3.0em)
-    block(
-      fill: self.colors.background,
-      inset: 1.5em,
-      radius: 0.5em,
-      breakable: false,
-      {
-        bold(1.75em, title.at(0, default:none))
-        if subtitle != none {
-          parbreak()
-          bold(1.0em, subtitle)
-        }
-      },
-    )
-    v(0.5em)
-    // authors
-    grid(
-      columns: (1fr,) * calc.min(authors.len(), 3),
-      column-gutter: 1em,
-      row-gutter: 1em,
-        ..authors.enumerate().map(((idx, author)) => {
-          author
-        }
-      )
-    )
-    v(1em)
-    // institution
-    if institution != none {
-      parbreak()
-      text(size: 0.7em, institution)
-    }
-    v(1em)
-    // conference
-    if conference != none {
-      parbreak()
-      text(size: 1.0em, conference)
-      linebreak()
-    }
-    let locStr = ""
-    if location != none {
-      locStr = [, #location]
-    }
-    // date
-    if date != none {
-      if conference == none {
-        parbreak()
-      }
-      text(size: 1.0em,
-        if opts.lang == "de" {
-          [#date.day(). #translatedMonth(date, opts.lang) #date.year()#locStr]
-        } else {
-          [#translatedMonth(date, opts.lang) #date.day(), #date.year()#locStr]
-        }
-      )
-    }
-  }
+    // restore defaults
+    set par(justify: false, spacing: 0.65em)
+    set text(fill: self.colors.background, spacing: 100%)
 
+    // settings
+    let left-margin = 28pt
+
+    // body
+    // the margin of the slide, page.margin also holds the notes (option notes)
+    place(
+      bottom+left,
+      dy: slide-geometry(self).bottom,
+    block(
+      inset: left-margin,
+      fill: gradient.linear(
+        self.colors.primary.transparentize(30%),
+        self.colors.primary.transparentize(0%).darken(100%),
+        angle: 90deg
+      ),
+      radius: 2pt,
+      {
+      // authors and institutions
+      block(
+        width: 100%,
+        align(left,
+        text(
+          size: 14pt)[#authors.join[, ]] + if institution != none [
+          #line(length: 30%, stroke: self.colors.background)
+          #text(size: 10pt)[#institution.join[\ ]]
+        ])
+      )
+      v(0.5em)
+      // title
+      block(
+        width: 100%,
+        {
+            set par(leading: .4em)
+            set text(
+              fill: self.colors.background,
+              font: opts.fonts.serif,
+              weight: "bold",
+              size: 34pt
+            )
+            [
+              #title.at(0, default:none)
+              #if subtitle != none {
+                parbreak()
+                text(
+                  size: 12pt,
+                  font: "Source Serif 4",
+                  weight: "regular",
+                  subtitle
+                )
+              }
+            ]
+        },
+      )
+      // flush the rest to the bottom
+      v(2em)
+      grid(
+        columns: (1fr, 1fr),
+        gutter: 7pt,
+        grid.cell(
+          align(left+top,{
+            let loc-str = ""
+            if location != none {
+              loc-str = [, #location]
+            }
+            [
+            // conference
+            #if conference != none {
+              parbreak()
+              text(size: 14pt, conference)
+              linebreak()
+            }
+            // date
+            #if date != none {
+              if conference == none {
+                parbreak()
+              }
+              text(size: 14pt)[#print-date(date)#loc-str]
+            }
+            ]
+          })
+        ),
+        grid.cell(
+          align(center+top,
+            grid(
+              columns: (1fr, 1fr),
+              gutter: 0pt,
+              grid.cell(
+                if logo-left == auto {
+                  pad(
+                    top: 0pt,
+                    place-institute-logo(opts, "title-slide", height: 40pt)
+                  )
+                } else {
+                  logo-left
+                }
+              ),
+              grid.cell(
+                if logo-right == auto {
+                  place(
+                    dy: 10pt,
+                    if opts.lang == "de" {
+                      image("./../assets/logo_umit_white_gr.svg", height: 36pt)
+                    } else {
+                      image("./../assets/logo_umit_white_en.svg", height: 36pt)
+                    }
+                  )
+                } else {
+                  logo-right
+                }
+              ),
+            )
+          )
+        )
+      )
+    }
+    ))
+  }
   touying-slide(self: self, body)
 })
 
 #let outline-slide(
+  cover-lvl: 1,
   ..args,
 ) = touying-slide-wrapper(self => {
+  // not shown in article mode, the report variant has its own outline
+  if self.at("article-mode", default: false) { return touying-slide(self: self, []) }
+  let custom = custom-slide(self, "outline-slide", arguments(cover-lvl: cover-lvl, ..args))
+  if custom != auto { return custom }
   let opts = options.final()
   let new-config = utils.merge-dicts(
     opts,
-    config-page(
-      margin: (top: 2em, left: 1em),
-      header: none,
-      footer: none,
-      background:
-        place(image("./../assets/bg-umit.jpg"))
-        + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
-    ),
   )
 
   self = utils.merge-dicts(self, new-config)
 
+  let cnt-outline = counter("bmim-outline")
+  cnt-outline.update(1)
+
   let body = {
     show: align.with(horizon)
+    show heading: none
     show outline.entry.where(level: 1): it => {
+      cnt-outline.step()
       let style(entry) = block(
           fill: gradient.linear(
-            self.colors.primary,
-            self.colors.primary.transparentize(100%),
+            if cnt-outline.get().at(0) == cover-lvl {
+              self.colors.primary.lighten(50%)
+            } else {
+              self.colors.primary.lighten(5%)
+            },
+            self.colors.primary.lighten(5%).transparentize(100%),
             relative: "parent",
           ),
           width: 100%,
           inset: 6pt,
-          strong(text( fill: white, entry ))
+          strong(text( fill: white, cnt-outline.display() + h(1em) + entry ))
         )
       link(it.element.location(), style( it.body() ))
+      []
       v(1em)
     }
 
-    pad(x: 5em, outline(depth: 1, ..args))
+    pad(x: 2.5em, outline(depth: 1, ..args))
   }
 
   touying-slide(self: self, body)
@@ -139,15 +259,17 @@
   ..args,
 ) = touying-slide-wrapper(self => {
   let opts = options.final()
+
   let new-config = utils.merge-dicts(
     opts,
     config-page(
       margin: 0pt,
       header: none,
       footer: none,
-      background:
-        place(image("./../assets/bg-umit.jpg"))
-        + box(fill: self.colors.primary.transparentize(45%).lighten(75%), height:100%, width: 100%)
+      background: place(
+        center+bottom,
+        image(height: 100%, "./../assets/background_bettelwurf.jpg")
+      ) + box(fill: self.colors.primary.transparentize(65%).lighten(50%), height:100%, width: 100%)
     ),
   )
 
@@ -160,8 +282,8 @@
     block(
       width: 100%,
       fill: gradient.linear(
-        self.colors.primary,
-        self.colors.primary.transparentize(100%),
+        self.colors.primary.lighten(5%),
+        self.colors.primary.lighten(5%).transparentize(100%),
         relative: "parent",
       ),
       inset: (x: 2em, y: .8em),

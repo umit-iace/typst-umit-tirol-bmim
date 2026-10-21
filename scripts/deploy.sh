@@ -15,7 +15,7 @@ fi
 
 v=$(awk '/version/ {print substr($3, 2, length($3)-2) }' typst.toml)
 
-if [ $(git describe) != v$v ]
+if [ $(git describe) != $v ]
 then
     printf "NOT on annotated tag. clean up!\n"
     exit
@@ -27,11 +27,11 @@ then
     exit
 fi
 
-msg=`git tag v$v -n99 --format='%(contents)'`
+msg=`git tag $v -n99 --format='%(contents)'`
 dest=$1/$pkg/$v
 
 mkdir $dest
-files=$(git ls-files -- . ':!:.github/'  ':!:.typstignore'  ':!:.gitignore' ':!:scripts/')
+files=$(git ls-files -- . ':!:.github/'  ':!:.typstignore'  ':!:.gitignore' ':!:scripts/' ':!:tests/')
 cp --parents $files $dest
 
 find $dest/example/ -name "*.typ" -exec sed -i "s|/src/lib.typ|@preview/ratsch-bmim:$v|" {} +

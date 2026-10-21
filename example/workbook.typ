@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: task, hint
+#import "./preamble.typ": *
 
 #show: bmim.workbook(
   course: [Vorlesung],
@@ -7,7 +7,9 @@
   show-solution: "inline",
 )
 
-#set math.equation(numbering: "(1.1)")
+#set math.equation(supplement: none, numbering: (..nums) => numbering("(1a)", ..nums))
+
+#show: mainmatter
 
 = Systems
 
@@ -77,7 +79,30 @@
 
 #lorem(30)
 
+#figure(
+  image("../assets/background_bettelwurf.jpg", width: 100%),
+  caption: [Bild mit Beschriftung darunter.],
+) <fig:test>
+
+Neben einem Bild in @fig:test gibt es Nummern in @tab:try.
+#lorem(20)
+
+#figure(
+  table(
+    columns: 4,
+    ..(context{counter("a").step(); str(counter("a").get().first())},)*8,
+  ),
+  caption: [Tabelle mit Beschriftung darüber.],
+) <tab:try>
+
 = Second
+
+Lists:
+- Element 1
+- Element 1
+- Element 1
+- Element 1
+and some text around.
 
 #lorem(30)
 
@@ -85,4 +110,4 @@
 
 #lorem(30)
 
-#bibliography("sources.bib", title: "References")
+#bibliography("sources.bib")
