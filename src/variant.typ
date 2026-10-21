@@ -447,37 +447,58 @@
 
 #let poster(
   title: none, // [Title] or ([Long Title], [Short Title])
-  authors: none, // array of str or content
+  authors: none, // array of str or content, one line each
   page: "a2", // pagesize
   orientation: "landscape", // "landscape", "portrait"
   date: datetime.today(), // datetime or content
   event: none, // str or content
   location: none, // str or content
   contact: none, // str or content
+  thesis: none, // none or (kind: "Master", "Bachelor" or content, author: .., supervisors: (..), photo: none or image)
   ..chosen // other options: theme, size, etc
 ) = { body => {
   assert-one-of("orientation", orientation, ("landscape", "portrait"))
-  assert-set("authors", authors)
+  if thesis == none { assert-set("authors", authors) }
+  let thesis = if thesis != none {
+    assert(type(thesis) == dictionary, message: "Option 'thesis' must be none or a dictionary, but was set to " + repr(thesis))
+    let known = (kind: "Master", author: none, supervisors: (), photo: none)
+    for key in thesis.keys() {
+      assert(key in known, message: "Unknown key '" + key + "' of option 'thesis', known keys are [" +
+        known.keys().map(repr).join(", ") + "]")
+    }
+    let thesis = known + thesis
+    assert(thesis.author != none, message: "Key 'author' of option 'thesis' must be set")
+    if type(thesis.supervisors) != array { thesis.supervisors = (thesis.supervisors,) }
+    thesis
+  }
   option-set(
     chosen.named()
     + if "size" not in chosen.named() { (size: 20pt) }
   )
   show: bmim-common
 
-  let margin = (x: 1.5em, y: 4em)
+  let margin = (x: 1.5em, top: 7em, bottom: 3em)
   set std.page(
     paper: page,
-    // columns: if orientation == "landscape" { 3 } else { 2 },
     flipped: orientation == "landscape",
     margin: margin,
     header: header.poster,
-    footer: (footer.poster)(event,date,location,contact),
-    // footer-descent: 00%,
+    footer: (footer.poster)(event, date, location, contact),
   )
 
-  (titleblock.poster)(title, authors)
+  set heading(numbering: "1.")
 
-  block(height:1fr, body)
+  render-titleblock("poster", (
+    title: title,
+    authors: if authors == none { () } else if type(authors) == array { authors } else { (authors,) },
+    thesis: thesis,
+  ))
+
+  // the poster areas (poster-columns, poster-rows) fill the rest of the page
+  block(width: 100%, height: 1fr, {
+    show <bmim-poster-area>: set block(height: 100%)
+    body
+  })
 }}
 
 #let flyer(

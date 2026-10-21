@@ -327,22 +327,23 @@
       )
     }
   },
-  poster: (event,date,location,contact, ..args) => context {
+  // blue bar with event, date and location on the left and the contact on the right
+  poster: (event, date, location, contact, ..args) => context {
     let opts = options.final()
-    // let ext = 5%
-    let ext = 0.4em+1pt
-    pad(
-      left: -ext,
-      right: -ext,
+    let date = if type(date) == datetime { print-date(date) } else { date }
+    set text(fill: opts.theme.background, weight: "bold")
+    block(
+      width: 100%,
+      height: 1.5em,
+      inset: (x: 0.6em),
+      radius: 0.4em,
+      fill: opts.theme.primary,
       grid(
-        columns: (ext, 2fr, 1fr, ext),
-        align: (auto, left, right, auto),
-        column-gutter: -1pt,
-        banner(),
-        banner([#event, #print-date(date), #location]),
-        banner([#contact]),
-        banner(),
-      )
+        columns: (2fr, 1fr),
+        align: (left + horizon, right + horizon),
+        (event, date, location).filter(x => x not in (none, [], "")).join(", "),
+        contact,
+      ),
     )
   },
   report: footer-course-title,
@@ -826,12 +827,53 @@
       }),
     ))
   },
+  // title and authors centered, the thesis box (type, author, supervisors and
+  // photo) on the right
   poster: (args) => context {
-    let (title, authors, ..) = args
-    place(top+center, float: true, scope: "parent",[
-      #text(1.4em, strong(long(title)))\
-      #authors.join([\ ])
-    ])
+    let opts = options.final()
+    let title = {
+      set align(center)
+      set par(justify: false)
+      block(below: 0.6em, text(2.2em, weight: "bold", long(args.title)))
+      if args.thesis == none and args.authors.len() > 0 {
+        text(1.2em, args.authors.join(linebreak()))
+      }
+    }
+    let thesis = args.thesis
+    let thesis-box = if thesis != none {
+      let kind = if thesis.kind == "Master" { opts.spell.master-thesis }
+        else if thesis.kind == "Bachelor" { opts.spell.bachelor-thesis }
+        else { thesis.kind }
+      let names = {
+        set par(justify: false, spacing: 0.4em)
+        set text(0.8em)
+        align(center, text(1.25em, strong(kind)))
+        v(0.3em)
+        strong(opts.spell.thesis-author)
+        align(right, thesis.author)
+        strong(opts.spell.supervisor)
+        align(right, thesis.supervisors.join(linebreak()))
+      }
+      rect(
+        stroke: opts.theme.primary + 0.1em,
+        radius: 0.6em,
+        inset: 0.5em,
+        grid(
+          columns: if thesis.photo == none { 1 } else { (auto, 5em) },
+          column-gutter: 0.8em,
+          align: horizon,
+          names,
+          if thesis.photo != none { box(width: 5em, thesis.photo) },
+        ),
+      )
+    }
+    block(width: 100%, below: 1em, grid(
+      columns: if thesis-box == none { (1fr,) } else { (1fr, auto) },
+      column-gutter: 1em,
+      align: horizon,
+      title,
+      thesis-box,
+    ))
   },
   article:   (args) => context {
     let opts = options.final()
@@ -990,32 +1032,124 @@
   },
 )
 
-#let poster-box(heading, content, height:none) = context {
-  let opts = options.final()
-  show std.heading.where(level:1): it => {
-    let opts = options.final()
-    set text(fill: opts.theme.neutral-lightest, size: 0.8em)
-    set align(center)
-    set block(
-      width: 100%,
-      inset: 0.4em,
-      fill: opts.theme.highlight,
-      stroke: opts.theme.highlight + 0.1em,
-      radius: (
-        top: 0.4em
-      ),
-      below: 0pt,
-    )
-    it
+// A poster box: heading bar above the content. Inside a poster area with a
+// fixed height (poster-columns, poster-rows) it fills its cell, `height` sets
+// the height explicitly. With a label as first argument the box is only
+// defined here and shown where a poster area names the label.
+#let poster-box(..args, height: none) = {
+  let pos = args.pos()
+  assert-no-extra(args, "poster-box")
+  let lbl = if pos.len() > 0 and type(pos.first()) == label { pos.remove(0) }
+  assert(pos.len() == 2, message: "poster-box expects a heading and the content, optionally preceded by a label")
+  let (heading, body) = pos
+  if lbl != none {
+    return [#metadata((kind: "bmim-poster-box", heading: heading, body: body, height: height))#lbl]
   }
-  std.heading(heading)
-  block(
-    width: 100%,
-    height: if height == none { auto } else { height },
-    inset: 0.4em,
-    fill: opts.theme.highlight.lighten(90%),
-    stroke: opts.theme.highlight + 0.1em,
+  context {
+    let opts = options.final()
+    let size = if height != none { (height: height) } else { (:) }
+    [#block(
+      width: 100%,
+      ..size,
+      breakable: false,
+      fill: opts.theme.highlight.lighten(90%),
+      stroke: opts.theme.highlight + 0.1em,
+      radius: 0.4em,
+      {
+        // a height for the box from the poster area must not reach the content
+        set block(height: auto)
+        if heading not in (none, []) {
+          block(
+            width: 100%,
+            inset: 0.4em,
+            below: 0pt,
+            fill: opts.theme.highlight,
+            radius: (top: 0.4em),
+            {
+              set align(center)
+              set par(justify: false)
+              set text(fill: opts.theme.neutral-lightest, weight: "bold")
+              show std.heading: it => {
+                if it.numbering != none { counter(std.heading).display(it.numbering) + h(0.3em) }
+                it.body
+              }
+              std.heading(level: 1, heading)
+            },
+          )
+        }
+        block(width: 100%, inset: 0.5em, body)
+      },
+    )<bmim-poster-box>]
+  }
+}
 
-    content
-  )
+// a child of a poster area: content, or a label of a poster-box defined elsewhere
+#let poster-child(child) = {
+  if type(child) != label { return child }
+  context {
+    let found = query(child).filter(it => it.func() == metadata
+      and type(it.value) == dictionary and it.value.at("kind", default: none) == "bmim-poster-box")
+    assert(found.len() > 0, message: "No poster-box with label <" + str(child) + "> defined")
+    assert(found.len() == 1, message: "Label <" + str(child) + "> is used for " + str(found.len()) + " poster boxes")
+    let (heading, body, height) = found.first().value
+    poster-box(heading, body, height: height)
+  }
+}
+
+// a child in a cell with a fixed height fills it, one in a cell of natural
+// height keeps its natural height
+#let poster-cell(child, fill) = {
+  let height = if fill { 100% } else { auto }
+  show <bmim-poster-box>: set block(height: height)
+  show <bmim-poster-area>: set block(height: height)
+  poster-child(child)
+}
+
+#let poster-area(kind, children, tracks, gutter) = [#block(width: 100%, context {
+  // with a fixed height (the poster body or a cell with fixed height) the
+  // area fills it, otherwise it takes its natural height
+  let fill = block.height != auto
+  set block(height: auto)
+  let n = children.len()
+  let gutter = if gutter == auto { 1em } else { gutter }
+  let tracks = if tracks == auto {
+    if kind == "columns" { (1fr,) * n } else { (auto,) * (n - 1) + (1fr,) }
+  } else if type(tracks) == array { tracks } else { (tracks,) * n }
+  assert(tracks.len() == n, message: "poster-" + kind + " has " + str(n) +
+    " children but " + str(tracks.len()) + " " + (if kind == "columns" { "widths" } else { "heights" }))
+  if kind == "columns" {
+    // all children get the height of the area, without a fixed height the one
+    // of the highest child
+    let cells(fill) = children.map(c => poster-cell(c, fill))
+    if fill {
+      grid(columns: tracks, rows: (100%,), column-gutter: gutter, ..cells(true))
+    } else {
+      layout(size => {
+        let natural = measure(grid(columns: tracks, column-gutter: gutter, ..cells(false)), width: size.width)
+        grid(columns: tracks, rows: (natural.height,), column-gutter: gutter, ..cells(true))
+      })
+    }
+  } else {
+    // without a fixed height there is no space to share, all rows are natural
+    let tracks = if fill { tracks } else { (auto,) * n }
+    grid(
+      columns: 100%,
+      rows: tracks,
+      row-gutter: gutter,
+      ..children.zip(tracks).map(((c, t)) => poster-cell(c, t != auto)),
+    )
+  }
+})<bmim-poster-area>]
+
+// Poster layout: children side by side, `widths` default to equal shares
+#let poster-columns(..children, widths: auto, gutter: auto) = {
+  assert-no-extra(children, "poster-columns")
+  poster-area("columns", children.pos(), widths, gutter)
+}
+
+// Poster layout: children stacked, `heights` default to the natural height,
+// the last child fills the rest
+#let poster-rows(..children, heights: auto, gutter: auto) = {
+  assert-no-extra(children, "poster-rows")
+  poster-area("rows", children.pos(), heights, gutter)
 }
