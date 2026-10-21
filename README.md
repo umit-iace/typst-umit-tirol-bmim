@@ -36,7 +36,7 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 - [example/slides-customSlides.typ](example/slides-customSlides.typ) for the slides of slides-longTitle with own title, outline and section slides (options `title-slide`, `outline-slide`, `section-slide`).
 - [example/slides-notes.typ](example/slides-notes.typ) for the slides of slides-longTitle with the speaker notes right of each slide (option `notes`).
 - [example/slides-handout.typ](example/slides-handout.typ) for the slides of slides-longTitle as handout, animations show their final state (option `handout`).
-- [example/slides-shortTitle.typ](example/slides-shortTitle.typ) for the corresponding slide Typst file.
+- [example/slides-shortTitle.typ](example/slides-shortTitle.typ) for the corresponding slide Typst file, with the mountain panorama in the header (option `header-image`) and the IMS as institute.
 - [example/slides-article.typ](example/slides-article.typ) for the slides of slides-longTitle rendered as an article (article mode); both share the slides in [example/content/slides.typ](example/content/slides.typ).
 - [example/thesis.typ](example/thesis.typ) for the corresponding thesis Typst file.
 - [example/workbook.typ](example/workbook.typ) for the corresponding workbook Typst file.
@@ -111,7 +111,7 @@ except `flyer`, `letter` and `slides`.
 | `letter` | `subject`, `date`, `location`, `recipient` (`name`, `address`, `pro`, `institution`), `sender` (`name`, `pos`, `institute`, `department`, `tel`, `fax`, `email`, `signature`) |
 | `poster` | `title`, `authors`, `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `event`, `location`, `contact` |
 | `report` | `title`, `course`, `authors`, `date`, `show-solution` |
-| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as document, see below), `article-variant` (`"report"`, `"article"`, `"lecture"` or a function, see below), `notes`, `margins`, `title-slide`, `outline-slide`, `section-slide` (`auto`, `none` or a touying slide function, see below) |
+| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as document, see below), `article-variant` (`"report"`, `"article"`, `"lecture"` or a function, see below), `notes`, `margins`, `header-image` (`false`, `true`, `(x: 50%, y: 60%, width: 100%, overlay: 55%)` or an own image, see below), `title-slide`, `outline-slide`, `section-slide` (`auto`, `none` or a touying slide function, see below) |
 | `thesis` | `program` (`"Master"`, `"Bachelor"`), `university` (`"LFUI"`, `"UMIT"`), `title`, `subtitle`, `author` (required), `date`, `advisor` (array of `(name, university, department, unit)`), `abstract` (`(english, german)`), `thanks`, `oneside` (`false`) |
 | `workbook` | `course`, `authors`, `date`, `show-solution`, `task-show-points`, `oneside` (`false`) |
 
@@ -131,6 +131,34 @@ except `flyer`, `letter` and `slides`.
   )
   ```
 Missing or misspelled arguments are reported with an error message.
+
+### Image in the slide header
+
+`header-image: true` puts a strip of the mountain panorama
+(`assets/background_bettelwurf.jpg`) behind the header of the slides, the
+primary color above it keeps the text readable. A dictionary selects the
+section of the image and the overlay, all keys are optional and between `0%`
+and `100%`:
+- `x` (`50%`) and `y` (`60%`): the point of the image (0% left/top, 100%
+  right/bottom) in the middle of the section.
+- `width` (`100%`): the share of the image width shown across the header, the
+  height of the section follows from the header; `50%` shows half of the image
+  enlarged to twice its size, and then `x` has room to move the section.
+- `overlay` (`55%`): opacity of the primary color above the image.
+
+The section always stays inside the image, at its edges it is shifted only as
+far as possible. `none` or `false` switches the image off.
+
+An own image is shown as given, without overlay and section, only cut to the
+header, so prepare it as needed:
+  ```typst
+  #show: bmim.slides(
+    // ...
+    header-image: (x: 30%, y: 55%, width: 50%, overlay: 40%),
+    // or an own image:
+    // header-image: image("header.jpg", width: 100%, height: 100%, fit: "cover"),
+  )
+  ```
 
 ### Own title, outline and section slides
 

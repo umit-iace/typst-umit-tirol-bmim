@@ -816,6 +816,7 @@
   handout: false, // render as handout: false, true
   article-mode: false, // render the slides as a document (touying article mode): false, true
   article-variant: "report", // variant of the article mode: "report", "article", "lecture" or a function info => variant
+  header-image: false, // behind the slide header: false (none), true or (x: 50%, y: 60%, width: 100%, overlay: 55%) for the mountain panorama, or an own image (content), shown as given
   notes: none, // show speaker notes: none, right, bottom
   margins: (x: 27pt, ),
   section-slide: auto, // auto, none, function
@@ -827,6 +828,32 @@
     article-variant in ("report", "article", "lecture") or type(article-variant) == function,
     message: "Option 'article-variant' must be one of [\"report\", \"article\", \"lecture\"] or a function, but was set to " + repr(article-variant),
   )
+  assert(
+    header-image == none or type(header-image) in (bool, dictionary, content),
+    message: "Option 'header-image' must be none, false, true, a dictionary or content, but was set to " + repr(header-image),
+  )
+  // the mountain panorama: the section of the image with `width` of the image
+  // width around the point (`x`, `y`) of the image is shown, `overlay` is the
+  // opacity of the primary color above it
+  let panorama-defaults = (x: 50%, y: 60%, width: 100%, overlay: 55%)
+  if type(header-image) == dictionary {
+    for (key, value) in header-image {
+      assert(key in panorama-defaults, message:
+        "Unknown key '" + key + "' of option 'header-image', known keys are [" +
+        panorama-defaults.keys().map(repr).join(", ") + "]")
+      assert(type(value) == ratio and value >= 0% and value <= 100%, message:
+        "Key '" + key + "' of option 'header-image' must be a ratio between 0% and 100%, but was set to " + repr(value))
+    }
+    assert(header-image.at("width", default: 100%) > 0%, message:
+      "Key 'width' of option 'header-image' must be greater than 0%")
+  }
+  let header-image = if header-image in (none, false) { none } else if header-image == true {
+    panorama-defaults
+  } else if type(header-image) == dictionary {
+    panorama-defaults + header-image
+  } else {
+    header-image
+  }
   for (name, value) in (
     section-slide: section-slide,
     title-slide: title-slide,
@@ -972,7 +999,7 @@
       // too long headings are cut to a single line
       heading: self => utils.display-current-heading(depth: self.slide-level, setting: fit-line),
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
-      header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading), progress-animation: progress-animation, slide: slide-geometry(self)),
+      header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading), progress-animation: progress-animation, slide: slide-geometry(self), header-image: header-image),
       footer: self => (footer.slides)(
         author: if authors-short == none {
           if type(authors) != array {authors} else {authors.at(0)}

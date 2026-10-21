@@ -24,6 +24,16 @@
   bib-as-footnote: false,
   handout: false,
   notes: none,
+  // mountain panorama behind the header; (x: 50%, y: 60%, width: 100%, overlay:
+  // 55%) shows `width` of the image width around the point (x, y) of the image,
+  // an own image is shown as given, e.g.
+  // image("header.jpg", width: 100%, height: 100%, fit: "cover")
+  header-image: (
+    x: 70%,
+    width: 50.0%, // a tenth enlarged (100% / 1.1)
+    y: 50%,
+    overlay: 85%,
+  ),
 )
 
 #bmim.title-slide()

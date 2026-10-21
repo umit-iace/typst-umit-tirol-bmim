@@ -197,7 +197,9 @@
   poster: header-colored(),
   report: header-colored(),
   // slide: size and margins of the slide (slide-geometry), none: of the page
-  slides: (heading: none, progress-animation: none, slide: none) => context {
+  // header-image: none, (x:, y:, width:, overlay: ratio) for the mountain
+  // panorama or content (an own image, shown as given)
+  slides: (heading: none, progress-animation: none, slide: none, header-image: none) => context {
     let opts = options.final()
     let slide = if slide != none { slide } else {
       (width: page.width, height: page.height, left: page.margin.left,
@@ -207,11 +209,50 @@
     let logo-left = pick-logo(opts.logo, "left")
     let logo-right = pick-logo(opts.logo, "right")
     set text(weight: "bold")
-    rect(
-      fill: opts.theme.primary,
-      width: 100%,
-      height: 100%,
-    )
+    if header-image == none {
+      rect(
+        fill: opts.theme.primary,
+        width: 100%,
+        height: 100%,
+      )
+    } else {
+      box(width: 100%, height: 100%, clip: true, fill: opts.theme.primary, {
+        if type(header-image) == content {
+          // an own image, shown as given, cut to the header
+          place(top + left, header-image)
+        } else {
+          // a section of the mountain panorama behind the header: `width` of
+          // the image width around the point (`x`, `y`) of the image, shifted
+          // only as far as the image still covers the header, the primary
+          // color with `overlay` opacity above keeps the text readable
+          layout(size => {
+            let path = "./../assets/background_bettelwurf.jpg"
+            let w = size.width / (header-image.width / 100%)
+            let h = measure(image(path, width: w)).height
+            let dx = size.width / 2 - w * (header-image.x / 100%)
+            let dy = size.height / 2 - h * (header-image.y / 100%)
+            // some PDF viewers let a clipped image bleed a pixel beyond its
+            // clip, so the image is cut `edge` inside the overlay above
+            let edge = 1pt
+            place(top + left, dx: edge, dy: edge, box(
+              width: size.width - 2 * edge,
+              height: size.height - 2 * edge,
+              clip: true,
+              place(top + left,
+                dx: calc.min(0pt, calc.max(size.width - w, dx)) - edge,
+                dy: calc.min(0pt, calc.max(size.height - h, dy)) - edge,
+                // laid out in the header, the image would be shrunk to its height
+                box(width: w, height: h, image(path, width: 100%, height: 100%))),
+            ))
+          })
+          place(top + left, rect(
+            width: 100%,
+            height: 100%,
+            fill: opts.theme.primary.transparentize(100% - header-image.overlay),
+          ))
+        }
+      })
+    }
     pad(
       top: -slide.top * 1.42,
       grid(
