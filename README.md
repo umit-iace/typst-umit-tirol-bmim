@@ -30,7 +30,7 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 - [example/lab.typ](example/lab.typ) for the corresponding report Typst file with self defined title block.
 - [example/lecture.typ](example/lecture.typ) for the corresponding lecture notes Typst file.
 - [example/letter.typ](example/letter.typ) for the corresponding letter Typst file.
-- [example/poster-landscape.typ](example/poster-landscape.typ) and [example/poster-portrait.typ](example/poster-portrait.typ) for posters in landscape (three columns) and portrait (two columns and a box over the full width, with the thesis box), both with the boxes of [example/poster-preamble.typ](example/poster-preamble.typ).
+- [example/poster-landscape.typ](example/poster-landscape.typ) and [example/poster-portrait.typ](example/poster-portrait.typ) for posters in landscape (three boxes in a row, below an angle box over two columns) and portrait (two and three boxes in a row, below an angle box over the full width, with the thesis box), both with the boxes of [example/poster-preamble.typ](example/poster-preamble.typ).
 - [example/report.typ](example/report.typ) for the corresponding report Typst file.
 - [example/slides-longTitle.typ](example/slides-longTitle.typ) for the corresponding slide Typst file using different logos, activate progress animation with a huge number of authors and a long title, see [Github Pages](https://umit-iace.github.io/typst-umit-tirol-bmim) for an example output.
 - [example/slides-customSlides.typ](example/slides-customSlides.typ) for the slides of slides-longTitle with own title, outline and section slides (options `title-slide`, `outline-slide`, `section-slide`).
@@ -139,6 +139,26 @@ footer:
     heights: (1fr, auto),
   )
   ```
+Rows can have a different number of boxes, e.g. three in the first and two in
+the second row. With fractions in `widths`, a child of `2fr` is as wide as two
+children of `1fr` together with the gutter between them, so the columns of
+rows with `(1fr, 1fr, 1fr)` and `(2fr, 1fr)` line up.
+
+`poster-angle` is a box in the shape of a right angle: the heading and `top`
+over the full width, below `side` on the left or right (`at`) over the full
+height, and in the corner `inner`, a poster-box or another area. `widths` are
+the shares of the side and of the corner:
+  ```typst
+  #bmim.poster-rows(
+    bmim.poster-columns(a, b, c), // three boxes
+    bmim.poster-columns(          // the angle over two columns, one box
+      bmim.poster-angle(heading: [Cooling], top: [...], side: [...], inner: d),
+      e,
+      widths: (2fr, 1fr),
+    ),
+    heights: (auto, 1fr),
+  )
+  ```
 With a label, a box is only defined and shown where an area names its label,
 so the layout can come first and the contents follow:
   ```typst
@@ -233,7 +253,7 @@ title block of that variant:
 | `enum-label("name")` | Inside an enum item: makes the item referable with `@name` |
 | `wrapped-enum-numbering("A")` | Enum numbering that works with `enum-label`, e.g. `#set enum(numbering: wrapped-enum-numbering("A"))` |
 | `poster-box(<label>, [Heading], [Content], height: none)` | Colored box with heading for posters, the label is optional (see below) |
-| `poster-columns(..children, widths: auto, gutter: auto)`, `poster-rows(..children, heights: auto, gutter: auto)` | Layout of a poster, see below |
+| `poster-columns(..children, widths: auto, gutter: auto)`, `poster-rows(..children, heights: auto, gutter: auto)`, `poster-angle(heading:, top:, side:, inner:, at: left, widths: (1fr, 1fr))` | Layout of a poster, see below |
 | `title-slide()` | Title slide of the slides, uses the information of `slides(...)`, or the option `title-slide` if given |
 | `outline-slide(title: [...], cover-lvl: 1)` | Slide with the outline, the section `cover-lvl` is highlighted, or the option `outline-slide` if given |
 | `translated-month(date, lang)` | Name of the month of `date` in the language `lang` |

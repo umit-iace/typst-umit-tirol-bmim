@@ -145,3 +145,23 @@
     #caption[Möglicher Aufbau eines Diagnosesystems]
   ],
 )
+
+// box in the shape of a right angle: heading and text over the full width,
+// below on one side the figure, `inner` fills the corner
+#let cooling-angle(inner, at: left, widths: (1fr, 1fr)) = bmim.poster-angle(
+  heading: [Kühlkreisläufe eines Großgasmotors],
+  top: [
+    Ein Großgasmotor besitzt mehrere Kühlkreisläufe, deren Zusammenspiel
+    Wirkungsgrad und Emissionen bestimmt:
+    - Ladeluftkühlkreislauf (zweistufig)
+    - #text(bmim.color.yellow)[Motorkühlwasserkreislauf (einstufig)]
+    - #text(bmim.color.green)[Ölkühlkreislauf (ein- oder zweistufig)]
+  ],
+  side: [
+    #placeholder(10em)
+    #caption[Mögliche Verschaltungsvariante der Motorkühlkreisläufe]
+  ],
+  inner: inner,
+  at: at,
+  widths: widths,
+)

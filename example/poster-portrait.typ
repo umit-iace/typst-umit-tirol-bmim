@@ -17,13 +17,11 @@
   contact: [`john.snow@umit-tirol.at`],
 )
 
-// two columns and below them the research box over the full width; `heights`
-// lets the columns take the free space instead of the last row
+// two boxes in the first row, three in the second, below the angle box
+// over the full width with the side on the right and two boxes in its corner
 #bmim.poster-rows(
-  bmim.poster-columns(
-    bmim.poster-rows(boxes.power-plant, boxes.control, boxes.cooling),
-    bmim.poster-rows(boxes.cooling-water, boxes.shower, boxes.catalyst, boxes.diagnosis),
-  ),
-  boxes.research,
-  heights: (1fr, auto),
+  bmim.poster-columns(boxes.power-plant, boxes.control),
+  bmim.poster-columns(boxes.cooling-water, boxes.shower, boxes.catalyst),
+  cooling-angle(bmim.poster-rows(boxes.research, boxes.diagnosis), at: right),
+  heights: (auto, auto, 1fr),
 )

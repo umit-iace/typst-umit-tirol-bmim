@@ -1032,6 +1032,29 @@
   },
 )
 
+// heading bar of a poster box, nothing without a heading
+#let poster-heading(heading) = context {
+  let opts = options.final()
+  if heading in (none, []) { return }
+  block(
+    width: 100%,
+    inset: 0.4em,
+    below: 0pt,
+    fill: opts.theme.highlight,
+    radius: (top: 0.4em),
+    {
+      set align(center)
+      set par(justify: false)
+      set text(fill: opts.theme.neutral-lightest, weight: "bold")
+      show std.heading: it => {
+        if it.numbering != none { counter(std.heading).display(it.numbering) + h(0.3em) }
+        it.body
+      }
+      std.heading(level: 1, heading)
+    },
+  )
+}
+
 // A poster box: heading bar above the content. Inside a poster area with a
 // fixed height (poster-columns, poster-rows) it fills its cell, `height` sets
 // the height explicitly. With a label as first argument the box is only
@@ -1058,25 +1081,7 @@
       {
         // a height for the box from the poster area must not reach the content
         set block(height: auto)
-        if heading not in (none, []) {
-          block(
-            width: 100%,
-            inset: 0.4em,
-            below: 0pt,
-            fill: opts.theme.highlight,
-            radius: (top: 0.4em),
-            {
-              set align(center)
-              set par(justify: false)
-              set text(fill: opts.theme.neutral-lightest, weight: "bold")
-              show std.heading: it => {
-                if it.numbering != none { counter(std.heading).display(it.numbering) + h(0.3em) }
-                it.body
-              }
-              std.heading(level: 1, heading)
-            },
-          )
-        }
+        poster-heading(heading)
         block(width: 100%, inset: 0.5em, body)
       },
     )<bmim-poster-box>]
@@ -1105,6 +1110,17 @@
   poster-child(child)
 }
 
+// Widths of columns of `fractions` in `width`: a child of `2fr` is as wide as
+// two of `1fr` with the gutter between them, so columns of rows with a
+// different number of children line up. Other widths are left to the grid.
+#let poster-tracks(fractions, width, gutter) = {
+  if not fractions.all(f => type(f) == fraction) { return fractions }
+  let units = fractions.map(f => f / 1fr)
+  let total = units.sum()
+  let unit = (width - (total - 1) * gutter) / total
+  units.map(n => n * unit + (n - 1) * gutter)
+}
+
 #let poster-area(kind, children, tracks, gutter) = [#block(width: 100%, context {
   // with a fixed height (the poster body or a cell with fixed height) the
   // area fills it, otherwise it takes its natural height
@@ -1121,14 +1137,15 @@
     // all children get the height of the area, without a fixed height the one
     // of the highest child
     let cells(fill) = children.map(c => poster-cell(c, fill))
-    if fill {
-      grid(columns: tracks, rows: (100%,), column-gutter: gutter, ..cells(true))
-    } else {
-      layout(size => {
+    layout(size => {
+      let tracks = poster-tracks(tracks, size.width, gutter.to-absolute())
+      if fill {
+        grid(columns: tracks, rows: (100%,), column-gutter: gutter, ..cells(true))
+      } else {
         let natural = measure(grid(columns: tracks, column-gutter: gutter, ..cells(false)), width: size.width)
         grid(columns: tracks, rows: (natural.height,), column-gutter: gutter, ..cells(true))
-      })
-    }
+      }
+    })
   } else {
     // without a fixed height there is no space to share, all rows are natural
     let tracks = if fill { tracks } else { (auto,) * n }
@@ -1152,4 +1169,82 @@
 #let poster-rows(..children, heights: auto, gutter: auto) = {
   assert-no-extra(children, "poster-rows")
   poster-area("rows", children.pos(), heights, gutter)
+}
+
+// closed outline through the corners `points` with rounded corners of `radius`
+#let rounded-outline(points, radius) = {
+  let n = points.len()
+  // point at `radius` from the corner `c` towards `p` (edges are axis-aligned)
+  let toward(c, p) = {
+    let (cx, cy) = c
+    let (px, py) = p
+    if px != cx { (cx + if px > cx { radius } else { -radius }, cy) }
+    else { (cx, cy + if py > cy { radius } else { -radius }) }
+  }
+  let segments = ()
+  for i in range(n) {
+    let c = points.at(i)
+    let a = toward(c, points.at(calc.rem(i + n - 1, n)))
+    let b = toward(c, points.at(calc.rem(i + 1, n)))
+    segments.push(if i == 0 { curve.move(a) } else { curve.line(a) })
+    segments.push(curve.quad(c, b))
+  }
+  segments + (curve.close(),)
+}
+
+// Poster box in the shape of a right angle: the heading and `top` over the
+// full width, `side` below on the left or right (`at`) over the full height,
+// in the corner `inner`, a poster-box or poster area. `widths` are the shares
+// of the side and the inner part like in poster-columns, so they line up with
+// the columns of the rows above or below.
+#let poster-angle(
+  heading: none,
+  top: [],
+  side: [],
+  inner: none,
+  at: left,
+  widths: (1fr, 1fr),
+  gutter: auto,
+) = {
+  assert(at in (left, right), message: "Option 'at' of poster-angle must be left or right, but was set to " + repr(at))
+  assert(type(widths) == array and widths.len() == 2 and widths.all(w => type(w) == fraction),
+    message: "Option 'widths' of poster-angle must be two fractions (side, inner), but was set to " + repr(widths))
+  [#block(width: 100%, context {
+    let opts = options.final()
+    let fill = block.height != auto
+    set block(height: auto)
+    let gutter = if gutter == auto { 1em } else { gutter }
+    let gutter = gutter.to-absolute()
+    layout(size => {
+      let w = size.width
+      let ws = poster-tracks(widths, w, gutter).first()
+      let top-part = block(width: w, {
+        poster-heading(heading)
+        block(width: 100%, inset: 0.5em, top)
+      })
+      let side-part = block(width: ws, inset: 0.5em, side)
+      let ht = measure(top-part).height
+      let h = if fill { size.height } else {
+        let natural-inner = measure(block(width: w - ws - gutter,
+          poster-cell(inner, false))).height
+        ht + calc.max(measure(side-part).height, natural-inner + gutter)
+      }
+      let x(v) = if at == left { v } else { w - v }
+      let points = ((0pt, 0pt), (w, 0pt), (w, ht), (ws, ht), (ws, h), (0pt, h))
+        .map(((px, py)) => (x(px), py))
+      place(std.top + left, curve(
+        fill: opts.theme.highlight.lighten(90%),
+        stroke: opts.theme.highlight + 0.1em,
+        ..rounded-outline(points, 0.4em.to-absolute()),
+      ))
+      let inner-cell = pad(top: gutter, ..if at == left { (left: gutter) } else { (right: gutter) },
+        poster-cell(inner, true))
+      grid(
+        columns: if at == left { (ws, 1fr) } else { (1fr, ws) },
+        rows: (ht, h - ht),
+        grid.cell(colspan: 2, top-part),
+        ..if at == left { (side-part, inner-cell) } else { (inner-cell, side-part) },
+      )
+    })
+  })<bmim-poster-area>]
 }
