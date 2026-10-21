@@ -30,7 +30,7 @@ See [Artifact](https://github.com/umit-iace/typst-umit-tirol-bmim/actions/) of l
 - [example/lab.typ](example/lab.typ) for the corresponding report Typst file with self defined title block.
 - [example/lecture.typ](example/lecture.typ) for the corresponding lecture notes Typst file.
 - [example/letter.typ](example/letter.typ) for the corresponding letter Typst file.
-- [example/poster.typ](example/poster.typ) for the corresponding poster Typst file.
+- [example/poster-landscape.typ](example/poster-landscape.typ) and [example/poster-portrait.typ](example/poster-portrait.typ) for posters in landscape (three boxes in a row, below an angle box over two columns) and portrait (two and three boxes in a row, below an angle box over the full width, with the thesis box), both with the boxes `poster-boxes` of [example/preamble.typ](example/preamble.typ), and [example/poster-ecklebe.typ](example/poster-ecklebe.typ), a rebuild of the poster of Ecklebe et al. without boxes, with own logos in the header, own footer and a background image.
 - [example/report.typ](example/report.typ) for the corresponding report Typst file.
 - [example/slides-longTitle.typ](example/slides-longTitle.typ) for the corresponding slide Typst file using different logos, activate progress animation with a huge number of authors and a long title, see [Github Pages](https://umit-iace.github.io/typst-umit-tirol-bmim) for an example output.
 - [example/slides-customSlides.typ](example/slides-customSlides.typ) for the slides of slides-longTitle with own title, outline and section slides (options `title-slide`, `outline-slide`, `section-slide`).
@@ -109,13 +109,93 @@ except `flyer`, `letter` and `slides`.
 | `flyer` | `title` (required), `series` (above the title), `details` (rows below the title with free labels: `(([Presenter], [...]), ([Date], [...]))`, `none` or `[]` as label gives a row without label and colon), `background` (image of the front page), `qr-code` (any content bottom left of the front page, e.g. a QR code or an image, its size is set by the user, e.g. `width: 70pt`), `back-image` (image at the top of the back page), `size` (`9.5pt`, body text of the back page), `sizes` (font sizes, single ones can be given: `series` `11pt`, `title` `25pt`, `details` `16pt`, `badge` `11pt`, `heading` `20pt`); the document body is the back page, designed freely with `flyer-heading` and `flyer-badge` (see Helpers), a second logo next to the UMIT logo is set with `logo: (flyer-left: ..)`, `flyer-right` replaces the UMIT logo |
 | `lecture` | `course`, `authors`, `date`, `oneside` (`false`) |
 | `letter` | `subject`, `date`, `location`, `recipient` (`name`, `address`, `pro`, `institution`), `sender` (`name`, `pos`, `institute`, `department`, `tel`, `fax`, `email`, `signature`) |
-| `poster` | `title`, `authors`, `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `event`, `location`, `contact` |
+| `poster` | `title`, `authors` (in one line), `affiliations` (one line each), `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `thesis` (`none` or `(kind, author, bio, supervisors, photo)`), `header-right` (`auto`, `none` or content), `footer` (`auto`, `none` or content), `background` (`none` or content), `header-image` (`true`, `false`, `(x: 50%, y: 60%, width: 100%, overlay: 75%)` or an own image), `box-style` (`"framed"`, `"plain"`), see below |
 | `report` | `title`, `course`, `authors`, `date`, `show-solution` |
 | `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as document, see below), `article-variant` (`"report"`, `"article"`, `"lecture"` or a function, see below), `notes`, `margins`, `title-slide`, `outline-slide`, `section-slide` (`auto`, `none` or a touying slide function, see below) |
 | `thesis` | `program` (`"Master"`, `"Bachelor"`), `university` (`"LFUI"`, `"UMIT"`), `title`, `subtitle`, `author` (required), `date`, `advisor` (array of `(name, university, department, unit)`), `abstract` (`(english, german)`), `thanks`, `oneside` (`false`) |
 | `workbook` | `course`, `authors`, `date`, `show-solution`, `task-show-points`, `oneside` (`false`) |
 
 `date` is a `datetime` (default: today) or content.
+
+### Poster layout
+
+The poster is split into areas: `poster-columns` puts its children side by
+side (`widths`, default equal shares), `poster-rows` stacks them (`heights`,
+default the natural height, the last child fills the rest). Children are
+`poster-box`es, other content or further areas, so any layout of the
+LaTeX poster (columns, boxes over several columns) can be built. Boxes in a
+cell with a fixed height fill it, so the boxes of all columns end at the
+footer:
+  ```typst
+  #show: bmim.poster(title: [...], authors: ([...], [...]), page: "a0", size: 28pt)
+  #let a = bmim.poster-box[Motivation][...]
+  // ...
+  #bmim.poster-rows(
+    bmim.poster-columns(
+      bmim.poster-rows(a, b),
+      bmim.poster-rows(c, d, e, heights: (auto, 1fr, auto)),
+    ),
+    f, // over both columns
+    heights: (1fr, auto),
+  )
+  ```
+Rows can have a different number of boxes, e.g. three in the first and two in
+the second row. With fractions in `widths`, a child of `2fr` is as wide as two
+children of `1fr` together with the gutter between them, so the columns of
+rows with `(1fr, 1fr, 1fr)` and `(2fr, 1fr)` line up.
+
+`poster-angle` is a box in the shape of a right angle: the heading and `top`
+over the full width, below `side` on the left or right (`at`) over the full
+height, and in the corner `inner`, a poster-box or another area. `widths` are
+the shares of the side and of the corner:
+  ```typst
+  #bmim.poster-rows(
+    bmim.poster-columns(a, b, c), // three boxes
+    bmim.poster-columns(          // the angle over two columns, one box
+      bmim.poster-angle(heading: [Cooling], top: [...], side: [...], inner: d),
+      e,
+      widths: (2fr, 1fr),
+    ),
+    heights: (auto, 1fr),
+  )
+  ```
+`box-style` sets the design of `poster-box` and `poster-angle`: `"framed"`
+(default) with heading bar and frame, `"plain"` as in the poster of Ecklebe et
+al., without frame, the heading in gray with a golden line below (see
+example/poster-landscape.typ).
+
+With a label, a box is only defined and shown where an area names its label,
+so the layout can come first and the contents follow:
+  ```typst
+  #bmim.poster-columns(<motivation>, <results>)
+  #bmim.poster-box(<motivation>)[Motivation][...]
+  #bmim.poster-box(<results>)[Results][...]
+  ```
+### Poster header and footer
+
+The header is a bar of the primary color, split by a line at two thirds of the
+width (as in the poster of Ecklebe et al.):
+- Left: the titleblock, by default the title, a golden line, the authors in
+  one line and the `affiliations` below. An own design is given with the
+  global option `titleblock: args => [...]` (`args`: `title`, `authors`,
+  `affiliations`, `date`, `thesis`).
+- Right (`header-right`): `auto` shows the UMIT logo in the middle, or with
+  `thesis` the box of the student; any content replaces it, e.g. further logos:
+  `header-right: stack(image("logo.png", width: 20em), bmim.umit-logo(width: 20em))`.
+- `thesis: (kind: "Master", author: [...], bio: [...], supervisors: ([...], [...]), photo: image("photo.jpg"))`
+  shows the box of the student with the UMIT logo above photo, name, short bio, the type of thesis
+  (`"Master"`, `"Bachelor"`, content or `none`) and the supervisors; all keys
+  except `author` are optional, the authors are then not needed.
+
+Behind the header lies the mountain panorama (`header-image: true`, the
+default, the primary color above it with 75 % opacity), with the same options as for the slides (see "Image in the slide
+header"): `false` switches it off, a dictionary selects the section and the
+overlay, an own image is shown as given.
+
+The footer (`footer`) is a bar of the primary color with own content, white
+text; `auto` shows the logo and the name of the institute on the right, `none`
+an empty bar. `background` is placed behind the poster, e.g. an image. Sizes
+of header and footer follow the font size (`size`).
 
 ### Tasks
 
@@ -198,7 +278,8 @@ title block of that variant:
 | `abstract[...]` | Abstract block for the article |
 | `enum-label("name")` | Inside an enum item: makes the item referable with `@name` |
 | `wrapped-enum-numbering("A")` | Enum numbering that works with `enum-label`, e.g. `#set enum(numbering: wrapped-enum-numbering("A"))` |
-| `poster-box([Heading], [Content], height: none)` | Colored box with heading for posters |
+| `poster-box(<label>, [Heading], [Content], height: none)` | Colored box with heading for posters, the label is optional (see below) |
+| `poster-columns(..children, widths: auto, gutter: auto)`, `poster-rows(..children, heights: auto, gutter: auto)`, `poster-angle(heading:, top:, side:, inner:, at: left, widths: (1fr, 1fr))` | Layout of a poster, see below |
 | `title-slide()` | Title slide of the slides, uses the information of `slides(...)`, or the option `title-slide` if given |
 | `outline-slide(title: [...], cover-lvl: 1)` | Slide with the outline, the section `cover-lvl` is highlighted, or the option `outline-slide` if given |
 | `translated-month(date, lang)` | Name of the month of `date` in the language `lang` |

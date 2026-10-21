@@ -122,3 +122,144 @@
 #let tip = tip.with(numbering: none, border: bmim.color.blue)
 #let hint = hint.with(numbering: none, border: bmim.color.green)
 
+// Poster: contents of the boxes, shared by poster-landscape.typ and
+// poster-portrait.typ, the same boxes, only the layout differs
+
+// gray placeholder for a figure
+#let poster-placeholder(height, label: [Figure]) = rect(
+  width: 100%,
+  height: height,
+  fill: luma(225),
+  stroke: luma(185),
+  align(center + horizon, text(luma(120), label)),
+)
+
+#let poster-caption(body) = align(center, text(0.8em, emph(body)))
+
+// topics on the left, details on the right
+#let poster-topics(..items) = grid(
+  columns: (35%, 1fr),
+  gutter: 0.6em,
+  align: horizon,
+  ..items.pos().map(((topic, points)) => (
+    rect(width: 100%, inset: 0.6em, radius: 0.4em, fill: bmim.color-cd2026.blue,
+      align(center, text(white, topic))),
+    rect(width: 100%, inset: 0.6em, radius: 0.4em, fill: luma(215),
+      text(0.8em, list(..points))),
+  )).flatten()
+)
+
+#let poster-boxes = (
+  // text and an image side by side
+  motivation: poster-box[Motivation][
+    #grid(
+      columns: (3fr, 2fr),
+      gutter: 0.8em,
+      [
+        #lorem(25)
+        - #lorem(6)
+        - #lorem(8)
+        - #lorem(5)
+      ],
+      [
+        #image("/assets/background_umit.jpg", width: 100%)
+        #poster-caption[#lorem(3)]
+      ],
+    )
+  ],
+
+  // topics with their details
+  topics: poster-box[Research Topics][
+    #poster-topics(
+      ([Modelling], ([#lorem(4)], [#lorem(3)], [#lorem(4)])),
+      ([Control Design], ([#lorem(5)], [#lorem(4)])),
+      ([Diagnosis], ([#lorem(4)], [#lorem(5)])),
+    )
+  ],
+
+  // text with a list and a figure
+  approach: poster-box[Approach][
+    #grid(
+      columns: (3fr, 2fr),
+      gutter: 0.8em,
+      [
+        #lorem(12)
+        - #lorem(3)
+        - #lorem(2)
+        - #lorem(3)
+        #lorem(5)
+      ],
+      poster-placeholder(6em),
+    )
+  ],
+
+  // a figure and a table side by side
+  setup: poster-box[Experimental Setup][
+    #grid(
+      columns: (1fr, 1fr),
+      gutter: 0.8em,
+      align: horizon,
+      [
+        #poster-placeholder(6em)
+        #poster-caption[#lorem(4)]
+      ],
+      table(
+        columns: 2,
+        stroke: none,
+        table.hline(),
+        [Parameter], [Value],
+        table.hline(stroke: 0.5pt),
+        [Length $l$], [1.5 m],
+        [Diameter $d$], [0.01 m],
+        [Flow $dot(V)$], [14 l/min],
+        [Dead time $tau$], [0.5 s],
+        table.hline(),
+      ),
+    )
+  ],
+
+  // equations
+  model: poster-box[Model][
+    #lorem(8)
+    $
+      dot(bold(x))(t) & = bold(A) bold(x)(t) + bold(b) u(t), \
+      y(t) & = bold(c)^top bold(x)(t - tau)
+    $
+    #lorem(15)
+  ],
+
+  // a figure with a caption and some text
+  results: poster-box[Results][
+    #poster-placeholder(6em)
+    #poster-caption[#lorem(5)]
+    #align(center)[
+      *#lorem(2)* \
+      $u(t) = -bold(k)^top bold(x)(t) + v(t)$
+    ]
+  ],
+
+  // a large image
+  outlook: poster-box[Outlook][
+    #image("/assets/background_bettelwurf.jpg", width: 100%)
+    #poster-caption[#lorem(4)]
+  ],
+)
+
+// box in the shape of a right angle: heading and text over the full width,
+// below on one side the figure, `inner` fills the corner
+#let poster-angle-box(inner, at: left, widths: (1fr, 1fr)) = bmim.poster-angle(
+  heading: [Methods],
+  top: [
+    #lorem(20)
+    - #lorem(4)
+    - #text(bmim.color.yellow)[#lorem(3)]
+    - #text(bmim.color.green)[#lorem(4)]
+  ],
+  side: [
+    #poster-placeholder(10em)
+    #poster-caption[#lorem(6)]
+  ],
+  inner: inner,
+  at: at,
+  widths: widths,
+)

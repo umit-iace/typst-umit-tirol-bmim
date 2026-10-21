@@ -190,6 +190,7 @@
   "slides-header", // header of the slides
   "title-slide", // title slide of the slides
   "title-page", // title page of lecture and workbook
+  "poster-footer", // footer of the poster
 )
 
 #let institutes = (
