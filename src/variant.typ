@@ -50,10 +50,14 @@
   }
   set figure(numbering: "1")
   show figure: fig => {
-    show figure.caption: cap => context [
-      #let n = numbering(cap.numbering, ..cap.counter.at(fig.location()))
-      *#cap.supplement~#n*:~#cap.body
-    ]
+    show figure.caption: cap => context {
+      if cap.numbering == none {
+        cap.body
+      } else {
+        let n = numbering(cap.numbering, ..cap.counter.at(fig.location()))
+        [*#cap.supplement~#n*:~#cap.body]
+      }
+    }
     fig
   }
 
