@@ -198,6 +198,7 @@ title block of that variant:
 | `abstract[...]` | Abstract block for the article |
 | `enum-label("name")` | Inside an enum item: makes the item referable with `@name` |
 | `wrapped-enum-numbering("A")` | Enum numbering that works with `enum-label`, e.g. `#set enum(numbering: wrapped-enum-numbering("A"))` |
+| `heading-prefix-numbering` | Enum numbering with the heading numbers as prefix (e.g. "2.3.1"), for `wrapped-enum-numbering`: `#set enum(full: true, numbering: wrapped-enum-numbering(heading-prefix-numbering))`; `heading-prefix-numbering.with(depth: 1)` takes only the first heading level. A custom numbering function for `wrapped-enum-numbering` needs the named argument `loc` (location of the item, `none` for the current one), as references call it with `loc` |
 | `poster-box([Heading], [Content], height: none)` | Colored box with heading for posters |
 | `title-slide()` | Title slide of the slides, uses the information of `slides(...)`, or the option `title-slide` if given |
 | `outline-slide(title: [...], cover-lvl: 1)` | Slide with the outline, the section `cover-lvl` is highlighted, or the option `outline-slide` if given |

@@ -15,6 +15,18 @@
   [#enum-label-mark#std.label(label)]
 }
 
+// Enum numbering with the heading numbers as prefix, e.g. "2.3.1" for the
+// first item in section 2.3; `depth` limits the prefix to the first levels.
+// Meant for `wrapped-enum-numbering`: references with `enum-label` call it with
+// `loc`, so the prefix is that of the item, not of the reference.
+#let heading-prefix-numbering(depth: none, ..args, loc: none) = context {
+  let hdr = counter(heading).at(if loc == none { here() } else { loc })
+  if depth != none {
+    hdr = (hdr + (0,) * depth).slice(0, depth)
+  }
+  (hdr + args.pos()).map(str).join(".")
+}
+
 #let wrapped-enum-numbering(numbering) = {
   let enum-numbering = (..it,) => {
     enum-numbering-state.update(x => numbering)
