@@ -367,11 +367,7 @@
     pagebreak.where(to: "even"),
   ): set page(header: none, footer: none)
 
-  set page(numbering: "i")
-  context heading(numbering: none, outlined: false, options.final().spell.toc)
-  outline(title: none)
-  chapter-break(oneside)
-
+  show: book-matter.with(oneside)
   body
 }}
 
@@ -704,10 +700,7 @@
   abstract.english
   chapter-break(oneside)
 
-  context heading(numbering: none, outlined: false, options.final().spell.toc)
-  outline(title: none)
-  chapter-break(oneside)
-
+  show: book-matter.with(oneside)
   body
 
   (finalblock.thesis)(author, university)
@@ -787,11 +780,7 @@
     pagebreak.where(to: "even"),
   ): set page(header: none, footer: none)
 
-  set page(numbering: "i")
-  context heading(numbering: none, outlined: false, options.final().spell.toc)
-  outline(title: none)
-  chapter-break(oneside)
-
+  show: book-matter.with(oneside)
   body
 
   if show-solution == "bottom" {
@@ -819,7 +808,7 @@
   size: 18pt,
   handout: false, // render as handout: false, true
   article-mode: false, // render the slides as a document (touying article mode): false, true
-  article-variant: "report", // variant of the article mode: "report", "article", "lecture" or a function info => variant
+  article-variant: "report", // variant of the article mode: "report", "article", "lecture", "workbook" or a function info => variant
   notes: none, // show speaker notes: none, right, bottom
   margins: (x: 27pt, ),
   section-slide: auto, // auto, none, function
@@ -828,8 +817,8 @@
   ..chosen,
 ) = { body => context {
   assert(
-    article-variant in ("report", "article", "lecture") or type(article-variant) == function,
-    message: "Option 'article-variant' must be one of [\"report\", \"article\", \"lecture\"] or a function, but was set to " + repr(article-variant),
+    article-variant in ("report", "article", "lecture", "workbook") or type(article-variant) == function,
+    message: "Option 'article-variant' must be one of [\"report\", \"article\", \"lecture\", \"workbook\"] or a function, but was set to " + repr(article-variant),
   )
   for (name, value) in (
     section-slide: section-slide,
@@ -917,6 +906,9 @@
         } else if article-variant == "lecture" {
           // the lecture has no title, the title of the slides is the course
           lecture(course: title, authors: info.authors, date: info.date, size: 11pt)
+        } else if article-variant == "workbook" {
+          // like the lecture, the title of the slides is the course
+          workbook(course: title, authors: info.authors, date: info.date, size: 11pt)
         } else {
           // the subtitle of the slides takes the place of the course
           report(title: title, course: subtitle, authors: info.authors, date: info.date, size: 11pt)

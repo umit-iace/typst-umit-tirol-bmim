@@ -39,18 +39,47 @@
   ),
   thanks: [Vielen Dank an ...],
   oneside: false,
+  lists: (image, table),
+  // own pages of the front matter after the lists, e.g. a list of symbols
+  frontmatter: [
+    #heading(numbering: none, outlined: true)[Symbolverzeichnis]
+
+    #let symbols(unit: true, ..rows) = table(
+      columns: if unit { (auto, 1fr, auto) } else { (auto, 1fr) },
+      stroke: none,
+      align: (center, left, left),
+      table.header([*Symbol*], [*Bedeutung*], ..if unit { ([*Einheit*],) }),
+      table.hline(stroke: 0.5pt),
+      ..rows,
+    )
+
+    *Physikalische Parameter*
+    #symbols(
+      $m$, [Masse des Wagens], [$"kg"$],
+      $l$, [Länge des Pendels], [$"m"$],
+      $g$, [Erdbeschleunigung], [$"m"\/"s"^2$],
+      $J$, [Massenträgheitsmoment], [$"kg" "m"^2$],
+    )
+
+    *Formelzeichen*
+    #symbols(
+      $bold(x)$, [Zustand], [–],
+      $u$, [Stellgröße], [$"N"$],
+      $y$, [Ausgangsgröße], [$"m"$],
+      $G(s)$, [Übertragungsfunktion], [–],
+    )
+
+    *Diakritische Zeichen*
+    #symbols(unit: false,
+      $dot(x)$, [Zeitableitung von $x$],
+      $hat(x)$, [Schätzwert von $x$],
+      $tilde(x)$, [Schätzfehler $x - hat(x)$],
+      $x^star$, [Referenzverlauf von $x$],
+    )
+  ],
 )
 
 #set math.equation(supplement: none, numbering: (..nums) => numbering("(1a)", ..nums))
-
-#outline(
-  title: [Abbildungsverzeichnis],
-  target: std.figure.where(kind: image, outlined: true),
-)
-
-#pagebreak(to: "odd", weak: true)
-
-#show: mainmatter
 
 = Ein Kapitel
 
@@ -146,10 +175,5 @@ Lists:
 and some text around.
 
 #lorem(500)
-
-#outline(
-  title:[Tabellenverzeichnis],
-  target: std.figure.where(kind: table, outlined: true),
-)
 
 #bibliography("sources.bib")

@@ -9,8 +9,6 @@
 
 #set math.equation(supplement: none, numbering: (..nums) => numbering("(1a)", ..nums))
 
-#show: mainmatter
-
 = Systems
 
 #task(

@@ -144,6 +144,51 @@
   it
 }
 
+// Lists of the option `lists` and the option `frontmatter` after the table of
+// contents of the book-like variants (lecture, thesis, workbook), each on a
+// new (two-sided: odd) page.
+#let front-lists = context {
+  let opts = options.final()
+  for entry in opts.lists {
+    let (kind, title) = if type(entry) == dictionary {
+      (entry.kind, entry.title)
+    } else {
+      (entry, (image: opts.spell.lof, table: opts.spell.lot, raw: opts.spell.lol)
+        .at(repr(entry)))
+    }
+    heading(numbering: none, outlined: true, title)
+    outline(title: none, target: figure.where(kind: kind, outlined: true))
+    chapter-break(opts.oneside)
+  }
+  if opts.frontmatter != none {
+    opts.frontmatter
+    chapter-break(opts.oneside)
+  }
+}
+
+// Front matter (roman page numbers, starting with the table of contents) and
+// main part (arabic page numbers from 1 on, chapters on a new page) of the
+// book-like variants. This happens in the variant and not with
+// `#show: mainmatter` in the document, so it also works in the article mode of
+// the slides, where touying neither enters `context` nor allows `set page` in
+// the content.
+#let book-matter(oneside, body) = {
+  set page(numbering: "i")
+  context heading(numbering: none, outlined: false, options.final().spell.toc)
+  outline(title: none)
+  chapter-break(oneside)
+  front-lists
+
+  set page(numbering: "1")
+  counter(page).update(1)
+  // chapters start on a new (two-sided: odd) page
+  show heading.where(level: 1): it => {
+    chapter-break(oneside)
+    it
+  }
+  body
+}
+
 #let mainmatter(content) = context {
   let opts = options.final()
 

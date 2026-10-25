@@ -90,6 +90,33 @@ These options can be passed to every variant:
 | `show-solution` | `none` | `none`, `"inline"` or `"bottom"` (exam, exercise, report, workbook) |
 | `task-show-points` | `false` | Show the points of each task (exercise, workbook) |
 | `oneside` | depends | One-sided layout: chapters start on the next instead of the next odd page |
+| `lists` | `()` | Lists after the table of contents (lecture, thesis, workbook): `image` (list of figures), `table` (list of tables), `raw` (listings) or `(kind: "def", title: [Definitions])` for own figure kinds, e.g. `lists: (image, table)` |
+| `frontmatter` | `none` | Content after the lists (lecture, thesis, workbook), e.g. a list of abbreviations; it ends with a page break |
+
+lecture, thesis and workbook have a front matter with roman page numbers (table
+of contents, `lists`, `frontmatter`); the main part (the document body) starts
+with arabic page number 1, chapters start on a new (two-sided: odd) page.
+`#show: mainmatter` is not needed for these variants (but does no harm). As this
+happens in the variant, it also works in the article mode of the slides, where
+touying can process neither `#show: mainmatter` nor `set page` in the content.
+
+`frontmatter` takes any content, e.g. a list of symbols with physical
+parameters, symbols and diacritics, see [example/thesis.typ](example/thesis.typ):
+  ```typst
+  #show: bmim.thesis(
+    // ...
+    lists: (image, table),
+    frontmatter: [
+      #heading(numbering: none, outlined: true)[Symbolverzeichnis]
+      #table(columns: (auto, 1fr, auto), stroke: none,
+        table.header([*Symbol*], [*Bedeutung*], [*Einheit*]),
+        $m$, [Masse des Wagens], [kg],
+        $hat(x)$, [Schätzwert von $x$], [],
+      )
+    ],
+  )
+  ```
+A table in `frontmatter` without `figure` does not appear in the list of tables.
 
 A user-defined `titleblock` gets a dictionary with the arguments of the
 variant plus `lang`, `spell` (the translations) and `show-solution`, see
@@ -111,7 +138,7 @@ except `flyer`, `letter` and `slides`.
 | `letter` | `subject`, `date`, `location`, `recipient` (`name`, `address`, `pro`, `institution`), `sender` (`name`, `pos`, `institute`, `department`, `tel`, `fax`, `email`, `signature`) |
 | `poster` | `title`, `authors`, `page` (`"a2"`), `orientation` (`"landscape"`, `"portrait"`), `date`, `event`, `location`, `contact` |
 | `report` | `title`, `course`, `authors`, `date`, `show-solution` |
-| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as document, see below), `article-variant` (`"report"`, `"article"`, `"lecture"` or a function, see below), `notes`, `margins`, `title-slide`, `outline-slide`, `section-slide` (`auto`, `none` or a touying slide function, see below) |
+| `slides` | `title`, `subtitle`, `conference`, `institution`, `location`, `authors`, `authors-short`, `date`, `bib-as-footnote` (`true`), `aspect-ratio` (`"16-9"`, `"16-10"`, `"4-3"`), `font`, `align`, `progress-animation` (`(slides: bool, section: bool)`), `size`, `handout`, `article-mode` (`false`, render as document, see below), `article-variant` (`"report"`, `"article"`, `"lecture"`, `"workbook"` or a function, see below), `notes`, `margins`, `title-slide`, `outline-slide`, `section-slide` (`auto`, `none` or a touying slide function, see below) |
 | `thesis` | `program` (`"Master"`, `"Bachelor"`), `university` (`"LFUI"`, `"UMIT"`), `title`, `subtitle`, `author` (required), `date`, `advisor` (array of `(name, university, department, unit)`), `abstract` (`(english, german)`), `thanks`, `oneside` (`false`) |
 | `workbook` | `course`, `authors`, `date`, `show-solution`, `task-show-points`, `oneside` (`false`) |
 
@@ -175,8 +202,8 @@ that replaces the whole content of its slide), `#article-only[..]` and
 [example/slides-article.typ](example/slides-article.typ).
 
 The option `article-variant` selects the variant of the document: `"report"`
-(default), `"article"` (title and subtitle), `"lecture"` (the title of the
-slides as course) or a function, which gets the information of the slides
+(default), `"article"` (title and subtitle), `"lecture"` and `"workbook"` (the
+title of the slides as course) or a function, which gets the information of the slides
 (`title`, `subtitle`, `authors`, `date`, `institution`, `conference`,
 `location`) and returns a variant. The global option `titleblock` gives an own
 title block of that variant:
@@ -188,12 +215,14 @@ title block of that variant:
     titleblock: args => [...],
   )
   ```
+The global options `lists` and `frontmatter` of the slides apply to the
+`"lecture"` and `"workbook"` variants, e.g. `lists: (image, table)`.
 
 ### Helpers
 
 | Function | Description |
 |---|---|
-| `#show: mainmatter` | Starts the main part: page numbering restarts at 1, chapters start on a new (two-sided: odd) page |
+| `#show: mainmatter` | Starts the main part: page numbering restarts at 1, chapters start on a new (two-sided: odd) page; lecture, thesis and workbook do this themselves |
 | `#show: backmatter` | Starts the appendix: chapters are numbered A, B, …; `to: "odd"` sets the page break (two-sided) |
 | `abstract[...]` | Abstract block for the article |
 | `enum-label("name")` | Inside an enum item: makes the item referable with `@name` |

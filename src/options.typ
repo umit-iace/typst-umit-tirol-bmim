@@ -22,7 +22,10 @@
   logo: auto, // none, auto, (left: // , right: //)
   institute: "iace", // key of institutes (data.typ) or (name: content, logo: content)
   titleblock: auto, // none, auto, function
-  oneside: true
+  oneside: true,
+  // front matter of lecture, thesis, workbook after the table of contents:
+  lists: (), // lists of figures: image, table, raw or (kind: .., title: ..)
+  frontmatter: none, // none or content, e.g. a list of abbreviations
 )
 
 #let options = state("bmim-options", option-defaults)
@@ -68,6 +71,20 @@
       assert-one-of("lang", val, i18n.keys())
     } else if key == "show-solution" {
       assert-one-of("show-solution", val, (none, "inline", "bottom"))
+    } else if key == "lists" {
+      assert(type(val) == array, message:
+        "Option 'lists' must be an array, e.g. (image, table), but was set to " + repr(val)
+      )
+      for entry in val {
+        assert(
+          entry in (image, table, raw) or (
+            type(entry) == dictionary
+            and entry.keys().sorted() == ("kind", "title")
+          ),
+          message: "Entries of option 'lists' must be image, table, raw or " +
+            "(kind: .., title: ..), but one was " + repr(entry)
+        )
+      }
     } else if key == "institute" {
       if type(val) == dictionary {
         for inst-key in val.keys() {

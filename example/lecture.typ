@@ -6,6 +6,7 @@
   authors: ("John Doe", "Jane Doe", "Max Mustermann"),
   date: datetime(day: 1, month: 3, year: 2024),
   oneside: false,
+  lists: (image, table),
 )
 
 #show: show-important
@@ -14,24 +15,6 @@
 #show: show-hint
 
 #set math.equation(supplement: none, numbering: (..nums) => numbering("(1a)", ..nums))
-
-#heading(numbering: none, outlined: true)[Abbildungsverzeichnis]
-#outline(
-  title: none,
-  target: std.figure.where(kind: image, outlined: true),
-)
-
-#pagebreak(weak: true)
-
-#heading(numbering: none, outlined: true)[Tabellenverzeichnis]
-#outline(
-  title: none,
-  target: std.figure.where(kind: table, outlined: true),
-)
-
-#pagebreak(weak: true)
-
-#show: mainmatter
 
 = Ein Kapitel
 
