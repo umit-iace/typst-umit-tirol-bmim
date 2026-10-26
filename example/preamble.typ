@@ -1,4 +1,4 @@
-#import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, mainmatter, backmatter, abstract, poster-box, translated-month
+#import "/src/lib.typ" as bmim: task, enum-label, wrapped-enum-numbering, heading-prefix-numbering, mainmatter, backmatter, abstract, poster-box, translated-month
 
 // various environments
 #import "@preview/rustycure:0.2.0": qr-code

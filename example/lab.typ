@@ -20,9 +20,11 @@
 
 #outline()
 
-= A Section
+= A Section without tasks
 
-#lorem(10) @netwok2020
+#lorem(40) @netwok2020
+
+= A Section with tasks
 
 #task(
   points: 10,
@@ -178,6 +180,17 @@ It is important to remember Newton's third law @newton-third, and Hook's law
     Solution of @task:main2 is $1+1=2$.
   ]
 )
+
+= Section with enums based on sections number
+
+#set enum(full: true, start: 0, numbering: wrapped-enum-numbering(heading-prefix-numbering))
+
+#lorem(40) @netwok2020
+
++ #lorem(10)
++ #lorem(10)
++ #lorem(10)
+
 
 #show: backmatter
 
