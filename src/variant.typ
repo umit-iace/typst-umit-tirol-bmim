@@ -144,7 +144,6 @@
 #let article(
   title: none, // [Title] or ([Long Title], [Short Title])
   subtitle: none,
-  course: none, // either [Course Name] , or ([Course Name], [Short Course Name])
   authors: none, // array of str or content
   date: datetime.today(), // datetime or content
   ..chosen, // other options: theme, size, lang, etc
@@ -964,7 +963,6 @@
     config-store(
       title-slide: title-slide,
       outline-slide: outline-slide,
-      alpha: 20%,
       // too long headings are cut to a single line
       heading: self => utils.display-current-heading(depth: self.slide-level, setting: fit-line),
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,

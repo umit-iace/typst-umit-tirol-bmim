@@ -196,13 +196,9 @@
   },
   poster: header-colored(),
   report: header-colored(),
-  // slide: size and margins of the slide (slide-geometry), none: of the page
+  // slide: size and margins of the slide (slide-geometry)
   slides: (heading: none, progress-animation: none, slide: none) => context {
     let opts = options.final()
-    let slide = if slide != none { slide } else {
-      (width: page.width, height: page.height, left: page.margin.left,
-        right: page.margin.right, top: page.margin.top, bottom: page.margin.bottom)
-    }
     let show-ani = type(progress-animation) == dictionary and progress-animation.at("section", default: false)
     let logo-left = pick-logo(opts.logo, "left")
     let logo-right = pick-logo(opts.logo, "right")
@@ -346,13 +342,9 @@
     )
   },
   report: footer-course-title,
-  // slide: size and margins of the slide (slide-geometry), none: of the page
+  // slide: size and margins of the slide (slide-geometry)
   slides: (author:none, title:none, date:none, pagenum:none, progress-animation:none, slide: none) => context {
     let opts = options.final()
-    let slide = if slide != none { slide } else {
-      (width: page.width, height: page.height, left: page.margin.left,
-        right: page.margin.right, top: page.margin.top, bottom: page.margin.bottom)
-    }
     let show-ani = type(progress-animation) == dictionary and progress-animation.at("slides", default: false)
     block(
       [
@@ -853,7 +845,6 @@
         })
     )
   },
-  slides: () => context {},
   thesis: (args) => context {
     let (program, university, title, subtitle, author, date, advisor, ..) = args
     let opts = options.final()
@@ -894,7 +885,7 @@
       ]
       v(8pt)
       large[
-+        #university-city(university), #if type(date) == datetime [
+        #university-city(university), #if type(date) == datetime [
           #translated-month(date, opts.lang) #date.year()
         ] else [
           #date

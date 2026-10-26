@@ -130,7 +130,7 @@ except `flyer`, `letter` and `slides`.
 
 | Variant | Parameters |
 |---|---|
-| `article` | `title`, `subtitle`, `course`, `authors`, `date` |
+| `article` | `title`, `subtitle`, `authors`, `date` |
 | `exam` | `course`, `title`, `authors`, `date`, `total-time` (required), `show-solution`, `empty-sheets` (`auto` = one per task, `none`, int), `show-hints` (`true`), `oneside` (`false`) |
 | `exercise` | `course`, `title`, `authors`, `date`, `show-solution`, `task-show-points` |
 | `flyer` | `title` (required), `series` (above the title), `details` (rows below the title with free labels: `(([Presenter], [...]), ([Date], [...]))`, `none` or `[]` as label gives a row without label and colon), `background` (image of the front page), `qr-code` (any content bottom left of the front page, e.g. a QR code or an image, its size is set by the user, e.g. `width: 70pt`), `back-image` (image at the top of the back page), `size` (`9.5pt`, body text of the back page), `sizes` (font sizes, single ones can be given: `series` `11pt`, `title` `25pt`, `details` `16pt`, `badge` `11pt`, `heading` `20pt`); the document body is the back page, designed freely with `flyer-heading` and `flyer-badge` (see Helpers), a second logo next to the UMIT logo is set with `logo: (flyer-left: ..)`, `flyer-right` replaces the UMIT logo |
@@ -318,7 +318,13 @@ The option `font` sets the main text font directly; by default (`auto`) it is
 compiled and checked against its header lines `// expect-error: <text>`
 (must fail with this error) or `// expect-text: <text>` (must compile and
 contain this text). Files without `expect-error` must compile without
-warnings. pdftotext (poppler) is required.
+warnings, and every page must match the reference image
+`tests/ref/<name>/<page>.png` (visual test); the difference of a failed
+comparison is saved in `tests/diff/`. After an intended change of the layout,
+or for a new test, `scripts/run_tests.sh --update` rewrites the reference
+images of the passing tests — check them with `git diff` before committing.
+`datetime.today()` is fixed to 2026-03-02, so the images do not depend on the
+day. pdftotext (poppler) and ImageMagick (`compare`) are required.
 
 ## License
 

@@ -1,6 +1,4 @@
 #import "@preview/touying:0.8.0": *
-#import "colors.typ": *
-#import "data.typ": *
 #import "helpers.typ": print-date, pick-logo, place-institute-logo
 #import "options.typ": options
 
@@ -53,7 +51,6 @@
   if custom != auto { return custom }
   let opts = options.final()
   let new-config = utils.merge-dicts(
-    opts,
     config-page(
       header: none,
       footer: none,
@@ -213,12 +210,6 @@
   if self.at("article-mode", default: false) { return touying-slide(self: self, []) }
   let custom = custom-slide(self, "outline-slide", arguments(cover-lvl: cover-lvl, ..args))
   if custom != auto { return custom }
-  let opts = options.final()
-  let new-config = utils.merge-dicts(
-    opts,
-  )
-
-  self = utils.merge-dicts(self, new-config)
 
   let cnt-outline = counter("bmim-outline")
   cnt-outline.update(1)
@@ -258,10 +249,7 @@
   numbered: true,
   ..args,
 ) = touying-slide-wrapper(self => {
-  let opts = options.final()
-
   let new-config = utils.merge-dicts(
-    opts,
     config-page(
       margin: 0pt,
       header: none,
@@ -274,7 +262,6 @@
   )
 
   self = utils.merge-dicts(self, new-config)
-  self.store.title = ""
 
   let body = {
     set text(size: 1.5em, fill: self.colors.neutral-lightest, weight: "bold")
