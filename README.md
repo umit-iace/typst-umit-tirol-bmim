@@ -324,7 +324,10 @@ comparison is saved in `tests/diff/`. After an intended change of the layout,
 or for a new test, `scripts/run_tests.sh --update` rewrites the reference
 images of the passing tests — check them with `git diff` before committing.
 `datetime.today()` is fixed to 2026-03-02, so the images do not depend on the
-day. pdftotext (poppler) and ImageMagick (`compare`) are required.
+day. The tests use only the fonts in `fonts/` (and the ones embedded in Typst),
+which `scripts/fonts.sh` downloads in fixed versions on the first run, so the
+images are the same on every machine and in CI. pdftotext (poppler),
+ImageMagick (`compare`) and curl are required.
 
 ## License
 

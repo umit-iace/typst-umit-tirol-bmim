@@ -11,10 +11,16 @@
 # Usage: scripts/run_tests.sh            run the tests
 #        scripts/run_tests.sh --update   also (re)write the reference images
 #                                        of the passing tests
-# ImageMagick (compare) is required for the visual comparison.
+# ImageMagick (compare) is required for the visual comparison, curl for the
+# download of the fonts (scripts/fonts.sh).
 set -uo pipefail
 shopt -s nullglob
 cd "$(dirname "$0")/.."
+
+# only the fonts of fonts/ (and the ones embedded in Typst), the same on every
+# machine and in CI, so that the reference images match
+scripts/fonts.sh || exit 1
+fonts=(--ignore-system-fonts --font-path fonts)
 
 update=false
 [ "${1:-}" = "--update" ] && update=true
@@ -40,7 +46,7 @@ fail() {
 visual() {
 	local file=$1 name=$2 ref=tests/ref/$2 out=$tmp/png/$2
 	mkdir -p "$out"
-	if ! typst compile --root . --ppi $ppi "$file" "$out/{p}.png" > /dev/null 2>&1; then
+	if ! typst compile --root . "${fonts[@]}" --ppi $ppi "$file" "$out/{p}.png" > /dev/null 2>&1; then
 		fail "$name" "PNG export failed"
 		return 1
 	fi
@@ -79,7 +85,7 @@ for file in tests/*.typ; do
 	name=$(basename "$file" .typ)
 	errors=$(sed -n 's|^// expect-error: ||p' "$file")
 	texts=$(sed -n 's|^// expect-text: ||p' "$file")
-	output=$(typst compile --root . "$file" "$tmp/$name.pdf" 2>&1)
+	output=$(typst compile --root . "${fonts[@]}" "$file" "$tmp/$name.pdf" 2>&1)
 	status=$?
 
 	if [ -n "$errors" ]; then
