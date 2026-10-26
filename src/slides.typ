@@ -1,5 +1,5 @@
 #import "@preview/touying:0.8.0": *
-#import "helpers.typ": print-date, pick-logo, place-institute-logo
+#import "helpers.typ": print-date, pick-logo, place-institute-logo, umit-lang
 #import "options.typ": options
 
 // Own slide of the option `name` (title-slide, outline-slide) of slides(),
@@ -42,6 +42,13 @@
   )
 }
 
+// Background of the title and section slides: the photo, lightened in the
+// primary color
+#let slide-background(self) = place(
+  center+bottom,
+  image(height: 100%, "./../assets/background_bettelwurf.jpg")
+) + box(fill: self.colors.primary.transparentize(65%).lighten(50%), height:100%, width: 100%)
+
 #let title-slide(
   ..args,
 ) = touying-slide-wrapper(self => {
@@ -54,10 +61,7 @@
     config-page(
       header: none,
       footer: none,
-      background: place(
-        center+bottom,
-        image(height: 100%, "./../assets/background_bettelwurf.jpg")
-      ) + box(fill: self.colors.primary.transparentize(65%).lighten(50%), height:100%, width: 100%)
+      background: slide-background(self),
     ),
     config-common(freeze-slide-counter:true),
   )
@@ -127,7 +131,7 @@
                 parbreak()
                 text(
                   size: 12pt,
-                  font: "Source Serif 4",
+                  font: opts.fonts.serif,
                   weight: "regular",
                   subtitle
                 )
@@ -182,11 +186,7 @@
                 if logo-right == auto {
                   place(
                     dy: 10pt,
-                    if opts.lang == "de" {
-                      image("./../assets/logo_umit_white_gr.svg", height: 36pt)
-                    } else {
-                      image("./../assets/logo_umit_white_en.svg", height: 36pt)
-                    }
+                    image("./../assets/logo_umit_white_" + umit-lang(opts) + ".svg", height: 36pt)
                   )
                 } else {
                   logo-right
@@ -254,10 +254,7 @@
       margin: 0pt,
       header: none,
       footer: none,
-      background: place(
-        center+bottom,
-        image(height: 100%, "./../assets/background_bettelwurf.jpg")
-      ) + box(fill: self.colors.primary.transparentize(65%).lighten(50%), height:100%, width: 100%)
+      background: slide-background(self),
     ),
   )
 

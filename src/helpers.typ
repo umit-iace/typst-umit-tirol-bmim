@@ -10,10 +10,35 @@
   text(style: "normal")[#body]
 }
 
+// Index of the last of `elements` (in document order) on a page before
+// `page`, -1 if there is none. A binary search, as headers and footers ask
+// this on every page: the elements come from a query without here(), which
+// Typst computes only once.
+#let last-before-page(elements, page) = {
+  let (lo, hi) = (0, elements.len())
+  while lo < hi {
+    let mid = calc.quo(lo + hi, 2)
+    if elements.at(mid).location().page() < page { lo = mid + 1 } else { hi = mid }
+  }
+  lo - 1
+}
+
+// Last heading on or before the current page: of the given `level`, or with
+// a level up to `depth`. Like utils.current-heading of touying, which filters
+// all headings of the document on every slide.
+#let current-heading(level: none, depth: 6) = {
+  let sel = if level != none { heading.where(level: level) } else {
+    selector.or(..range(1, depth + 1).map(l => heading.where(level: l)))
+  }
+  let headings = query(sel)
+  let i = last-before-page(headings, here().page() + 1)
+  if i >= 0 { headings.at(i) }
+}
+
 #let page-is-chap-start() = {
-  return query(heading.where(level: 1))
-    .map(it => it.location().page())
-    .contains(here().page())
+  let chapters = query(heading.where(level: 1))
+  let i = last-before-page(chapters, here().page() + 1)
+  i >= 0 and chapters.at(i).location().page() == here().page()
 }
 
 // Long or short form of a value given as either `x` or `(long, short)`.
@@ -30,21 +55,26 @@
 // Heading rules shared by book-like variants (lecture, thesis): reduce the
 // spacing between consecutive headings and scale the levels 2 to 5.
 #let book-headings(spacing-after: 0.2em, body) = {
+  // Clever trick to reduce spacing between consecutive headings
+  // See https://github.com/typst/typst/issues/2953
+  // The location of the previous heading is kept in a state; a query of all
+  // previous headings for each heading took quadratic time.
+  let previous = state("bmim-previous-heading", none)
   show heading: it => {
-    // Clever trick to reduce spacing between consecutive headings
-    // See https://github.com/typst/typst/issues/2953
-    let previous-headings = query(selector(heading).before(here(),
-      inclusive: false))
-    if previous-headings.len() > 0 {
-      let prev-pos = previous-headings.last().location().position()
-      let it-pos = it.location().position()
-      if (it-pos.page == prev-pos.page
-        and it-pos.x == prev-pos.x
-        and it-pos.y - prev-pos.y < 60pt) { // threshold
-        // amount to reduce spacing, could make this dependent on it.level
-        v(-0.3em)
+    context {
+      let prev = previous.get()
+      if prev != none {
+        let prev-pos = prev.position()
+        let it-pos = it.location().position()
+        if (it-pos.page == prev-pos.page
+          and it-pos.x == prev-pos.x
+          and it-pos.y - prev-pos.y < 60pt) { // threshold
+          // amount to reduce spacing, could make this dependent on it.level
+          v(-0.3em)
+        }
       }
     }
+    previous.update(it.location())
     [#it #v(spacing-after)]
   }
   show heading.where(level:2): set text(size: 1.4em)
@@ -97,6 +127,9 @@
   }
 }
 
+// Language part of the file names of the UMIT TIROL logos and footers
+#let umit-lang(opts) = if opts.lang == "de" { "gr" } else { "en" }
+
 // UMIT TIROL logo in the language of the document, `color` "white" or
 // "blue", `subtitle` with the line below the name ("Die Tiroler
 // Privatuniversität"); `args` (e.g. height) are passed to image
@@ -106,7 +139,7 @@
   assert(type(subtitle) == bool, message:
     "Argument 'subtitle' of umit-logo must be true or false, but was set to " + repr(subtitle))
   let opts = options.final()
-  let variant = if not subtitle { "wo" } else if opts.lang == "de" { "gr" } else { "en" }
+  let variant = if not subtitle { "wo" } else { umit-lang(opts) }
   image("./../assets/logo_umit_" + color + "_" + variant + ".svg", ..args)
 }
 
@@ -128,20 +161,23 @@
   logo
 }
 
-#let headings-on-odd-page(it) = {
+// Chapters (level 1 headings) start on a new (two-sided: odd) page
+#let chapters-on-new-page(oneside, body) = {
   show heading.where(level: 1): it => {
-    pagebreak(to: "odd")
+    chapter-break(oneside)
     it
   }
-  it
+  body
 }
 
-#let headings-on-next-page(it) = {
-  show heading.where(level: 1): it => {
-    pagebreak()
-    it
-  }
-  it
+// Pages inserted by pagebreak(to: "odd") or (to: "even") stay empty, without
+// header and footer
+#let empty-pages-plain(body) = {
+  show selector.or(
+    pagebreak.where(to: "odd"),
+    pagebreak.where(to: "even"),
+  ): set page(header: none, footer: none)
+  body
 }
 
 // Lists of the option `lists` and the option `frontmatter` after the table of
@@ -181,19 +217,12 @@
 
   set page(numbering: "1")
   counter(page).update(1)
-  // chapters start on a new (two-sided: odd) page
-  show heading.where(level: 1): it => {
-    chapter-break(oneside)
-    it
-  }
+  show: chapters-on-new-page.with(oneside)
   body
 }
 
 #let mainmatter(content) = context {
-  let opts = options.final()
-
-  show: if opts.oneside {headings-on-next-page } else { headings-on-odd-page }
-
+  show: chapters-on-new-page.with(options.final().oneside)
   set page(numbering: "1")
   counter(page).update(1)
 
@@ -290,19 +319,18 @@
   }
 }
 
-#let is-empty(value) = {
-  let empty-values = (
-    array: (),
-    dictionary: (:),
-    str: "",
-    content: [],
-  )
-  let t = repr(type(value))
-  if t in empty-values {
-    return value == empty-values.at(t)
-  } else {
-    return value == none
-  }
+#let is-empty(value) = value in (none, "", (), (:), [])
+
+// Show rule of references to elements marked with the metadata `mark` (tasks,
+// enum items): a link with the supplement (auto: `supplement`) and the number
+// `num(loc)` at the location of the element; other references stay as they are
+#let marked-ref(it, mark, supplement, num) = {
+  let el = it.element
+  if el == none or el.func() != metadata or el != mark { return it }
+  let supp = if it.supplement == auto { supplement } else { it.supplement }
+  let loc = el.location()
+  let n = num(loc)
+  link(loc, if is-empty(supp) { n } else { box[#supp~#n] })
 }
 
 #let show-marks(m, ys) = context {
@@ -369,6 +397,12 @@
       "Key '" + key + "' of " + of + " must be set"
     )
   }
+}
+
+// `dict` with all `keys`, the missing ones none; unknown keys are an error
+#let with-defaults(dict, of, keys) = {
+  assert-keys(dict, of, keys)
+  keys.map(key => (key, none)).to-dict() + dict
 }
 
 // Contact as vCard 3.0. All keys are optional, but one of firstname and

@@ -36,27 +36,11 @@
   enum-numbering
 }
 
-#let enum-show-ref(it, opts:none) = {
-  let el = it.element
-  if el != none and el.func() == metadata and el == enum-label-mark {
-    let supp = it.supplement
-    if supp == auto {
-      supp = opts.spell.item
-    }
-    // get the counter value in the correct format according to location
-    let loc = el.location()
-    let num = enum-numbering-state.at(loc)
-    if std.type(num) != str {
-      num = num.with(loc:loc)
-    }
-    let ref-counter = numbering(num, ..enum-counter.at(loc))
-    if helpers.is-empty(supp) {
-      link(el.location(), ref-counter)
-    }
-    else {
-      link(el.location(), box([#supp~#ref-counter]))
-    }
-  } else {
-    it
+#let enum-show-ref(it, opts:none) = helpers.marked-ref(it, enum-label-mark, opts.spell.item, loc => {
+  // the counter value in the numbering at the location of the item
+  let num = enum-numbering-state.at(loc)
+  if std.type(num) != str {
+    num = num.with(loc:loc)
   }
-}
+  numbering(num, ..enum-counter.at(loc))
+})

@@ -52,8 +52,7 @@
 
 // Colored bar with optional centered content. On slides, `progress` adds one
 // dot per section on the right, the current section filled.
-#let banner(slide: false, size: 1em, progress: false, ..body) = {
-  assert-no-extra(body, "banner")
+#let banner(body, slide: false, size: 1em, progress: false) = {
   let opts = options.final()
   let height = if slide { 0.5em } else { 1.5em }
   let show-progress = slide and progress
@@ -63,15 +62,15 @@
   let content = box(
     width: 100%,
     height: height,
-    if body.pos().len() != 0 {
+    if body != none {
       // slides: always left aligned, other headers and footers: centered
       set align(if slide { horizon+left } else { horizon+center })
-      pad(x: 15pt, body.pos().first())
+      pad(x: 15pt, body)
     }
   )
 
   let progress-dots() = {
-    let current-section = utils.current-heading(level: 1)
+    let current-section = current-heading(level: 1)
     let dot(filled) = circle(
       radius: 3.5pt,
       stroke: 1pt + gray.lighten(20%),
@@ -143,19 +142,27 @@
   set par(spacing: 0.5em)
 
   if page-is-chap-start() { return }
-  let chapter = query(selector(heading.where(level: 1)).before(here()))
-  if chapter.len() == 0 { return }
-  let sub = query(selector(heading.where(level: 2)).after(chapter.last().location()))
-  sub = sub.filter(el => el.location().page() <= here().page())
+  let page = here().page()
+  // the chapter started before this page, see last-before-page
+  let chapters = query(heading.where(level: 1))
+  let i = last-before-page(chapters, page)
+  if i < 0 { return }
+  let chapter = chapters.at(i)
+  // the last section up to this page, if it belongs to the chapter
+  let sections = query(heading.where(level: 2))
+  let j = last-before-page(sections, page + 1)
+  let this-sub = if j >= 0 {
+    let (sub, chap) = (sections.at(j).location().position(), chapter.location().position())
+    if sub.page > chap.page or (sub.page == chap.page and sub.y > chap.y) { sections.at(j) }
+  }
 
   let chap-title = {
     let cnt = counter(heading).at(here())
-    let nbr = chapter.last().numbering
+    let nbr = chapter.numbering
     if nbr != none { numbering(nbr, cnt.first())+[.~]+h(0.5em)}
-    chapter.last().body
+    chapter.body
   }
-  let sub-title = if sub.len() != 0 {
-    let this-sub = sub.last()
+  let sub-title = if this-sub != none {
     let nbr = this-sub.numbering
     if nbr != none {
       let cnt = counter(heading).at(this-sub.location())
@@ -180,20 +187,10 @@
   exam: header-colored(),
   exercise: header-colored(),
   lecture: context chapter-header(oneside: options.final().oneside, rule: true),
-  letter: () => context {
-    let opts = options.final()
-    if opts.lang == "de" {
-      image(
-        "./../assets/logo_umit_blue_gr.png",
-        width: 33%
-      )
-    } else {
-      image(
-        "./../assets/logo_umit_blue_en.png",
-        width: 33%
-      )
-    }
-  },
+  letter: () => context image(
+    "./../assets/logo_umit_blue_" + umit-lang(options.final()) + ".png",
+    width: 33%,
+  ),
   poster: header-colored(),
   report: header-colored(),
   // slide: size and margins of the slide (slide-geometry)
@@ -237,29 +234,26 @@
     )
   },
   thesis: chapter-header(),
-  workbook: context {
-    if page-is-chap-start() {
-      none
-    } else {
-      header-colored()
-    }
-  },
+  workbook: context if not page-is-chap-start() { header-colored() },
 )
 
-#let bmim-footer(foot, pagenum: context {counter(page).display("1")} ) = context {
-    let opts = options.final()
-    set text(size: 0.8em)
-    set par(spacing: 0.5em)
-    line(length: 100%, stroke: 0.5pt)
-    if opts.oneside {
-        foot; h(1fr); pagenum
-    } else {
-      if calc.odd(here().page()) {
-        foot; h(1fr); pagenum
-      } else {
-        pagenum; h(1fr); foot
-      }
-    }
+// `foot` and the page number below a line (`rule`), mirrored on the even pages
+// of two-sided documents
+#let bmim-footer(foot, pagenum: context {counter(page).display("1")}, rule: true) = context {
+  set text(size: 0.8em)
+  set par(spacing: 0.5em)
+  if rule { line(length: 100%, stroke: 0.5pt) }
+  if options.final().oneside or calc.odd(here().page()) {
+    foot; h(1fr); pagenum
+  } else {
+    pagenum; h(1fr); foot
+  }
+}
+
+// "with solution" in red if solutions are shown, `end` (e.g. a comma) is
+// added to the bold text
+#let solution-marker(opts, end: none) = if opts.show-solution != none {
+  text(color.red, strong[#opts.spell.with #opts.spell.sol#end])
 }
 
 #let footer-course-title(course, title) = context {
@@ -268,10 +262,7 @@
   let title = short(title)
   let foot = [
     #if course != none [#course - ]#title
-    #if opts.show-solution != none [
-      #set text(color.red)
-      *#opts.spell.with #opts.spell.sol*
-    ]
+    #solution-marker(opts)
   ]
   bmim-footer(foot)
 }
@@ -287,11 +278,8 @@
     let opts = options.final()
     let course = short(course)
     let foot = [
-      #opts.spell.exam - #course
-      #if opts.show-solution != none [
-        #set text(color.red)
-        *#opts.spell.with #opts.spell.sol*
-      ]
+      #opts.spell.exam#if course != none [#" - "#course]
+      #solution-marker(opts)
     ]
     if calc.odd(here().page()) and here().page() != 1 {
       bmim-footer([#foot #h(1fr) #opts.spell.student-id-short: #underline-space(25%)], pagenum: counter(page).display("1/1", both: true))
@@ -300,8 +288,7 @@
     }
   },
   exercise: footer-course-title,
-  lecture: (course, date) => context{
-    let opts = options.final()
+  lecture: (course, date) => context {
     let course = short(course)
 
     let foot = [
@@ -309,20 +296,10 @@
     ]
     bmim-footer(foot, pagenum: counter(page).display())
   },
-  letter: () => context {
-    let opts = options.final()
-    if opts.lang == "de" {
-      image(
-        "./../assets/footer_umit_gr.png",
-        width: 100%
-      )
-    } else {
-      image(
-        "./../assets/footer_umit_en.png",
-        width: 100%
-      )
-    }
-  },
+  letter: () => context image(
+    "./../assets/footer_umit_" + umit-lang(options.final()) + ".png",
+    width: 100%,
+  ),
   poster: (event,date,location,contact, ..args) => context {
     let opts = options.final()
     // let ext = 5%
@@ -334,10 +311,10 @@
         columns: (ext, 2fr, 1fr, ext),
         align: (auto, left, right, auto),
         column-gutter: -1pt,
-        banner(),
+        banner(none),
         banner([#event, #print-date(date), #location]),
         banner([#contact]),
-        banner(),
+        banner(none),
       )
     )
   },
@@ -381,26 +358,11 @@
       ]
     )
   },
-  thesis: context {
-    let opts = options.final()
-    set text(size: 0.8em)
-    set par(spacing: 0.5em)
-    let pagenum = counter(page).display()
-    if opts.oneside {
-        h(1fr); pagenum
-    } else {
-      if calc.odd(here().page()) {
-        h(1fr); pagenum
-      } else {
-        pagenum; h(1fr)
-      }
-    }
-  },
+  thesis: bmim-footer(none, pagenum: context counter(page).display(), rule: false),
   workbook: (course) => context {
     let opts = options.final()
-    let course = if type(course) == array { course.at(1) } else { course }
     let foot = [
-      #course - #opts.spell.exercises
+      #short(course) - #opts.spell.exercises
     ]
     bmim-footer(foot, pagenum: counter(page).display())
   },
@@ -475,12 +437,7 @@
       gutter: 0.5em,
       align: (right, left),
       text[
-        #if opts.show-solution != none {
-          set text(color.red)
-          strong[
-            #opts.spell.with #opts.spell.sol,
-          ]
-        }
+        #solution-marker(opts, end: [,])
         #if args.date != none [
           #opts.spell.on #print-date(args.date),
         ]
@@ -548,6 +505,13 @@
     text(size: flyer-sizes.get().badge, weight: "bold", print-date-time(body, end: end)),
   ))))
 }
+
+// Background of the title page of lecture and workbook
+#let title-page-background(opts) = box(
+  width: 100%,
+  height: 100%,
+  fill: gradient.linear(opts.theme.primary, black, angle: 90deg),
+)
 
 #let titleblock = (
   exam:     (args) => context {
@@ -656,15 +620,7 @@
     set par(spacing: 3em)
 
     [
-      #set page(background: box(
-        width: 100%,
-        height: 100%,
-        fill: gradient.linear(
-          opts.theme.primary,
-          black,
-          angle: 90deg
-        )
-      ))
+      #set page(background: title-page-background(opts))
       #set text(fill: opts.theme.background)
       #smallcaps[
         #set text(1.5em)
@@ -691,7 +647,7 @@
       #print-semester(args.date)
     ]
   },
-  letter: (args) => context {
+  letter: (args) => {
     let (recipient, sender, location, date, subject, ..) = args
     let head-text(body) = {
       set text(gray, size: 8pt)
@@ -801,8 +757,7 @@
         // bottom left in its own size, both aligned at the bottom; it is shown
         // as given, so its colors have to contrast with the box
         let main-logo = if logo-right == auto {
-          let logo = if opts.lang == "de" { "logo_umit_white_gr.svg" } else { "logo_umit_white_en.svg" }
-          image("./../assets/" + logo, height: 50pt)
+          image("./../assets/logo_umit_white_" + umit-lang(opts) + ".svg", height: 50pt)
         } else {
           logo-right
         }
@@ -866,8 +821,7 @@
           v(-2em)
           opts.spell.lfui-faculty-logo
         } else {
-          let logo = if opts.lang == "de" { "logo_umit_blue_gr.svg" } else { "logo_umit_blue_en.svg" }
-          pad(left: -4.4mm, top: 7.5mm, image("./../assets/" + logo, height: 16.5mm))
+          pad(left: -4.4mm, top: 7.5mm, image("./../assets/logo_umit_blue_" + umit-lang(opts) + ".svg", height: 16.5mm))
           v(-0.5em)
           opts.spell.umit-department
           v(1.3em)
@@ -914,16 +868,16 @@
     if program == "Master" { // advisors
       pagebreak(to: "odd")
       v(1fr)
-      let adv = advisor.at(0)
-      let z= h(0pt, weak:true)
+      // the given parts of an advisor, separated by commas; the weak spacing
+      // removes a space at the end of a part, e.g. [ Name ]
+      let parts(adv) = (adv.name, adv.university, adv.department, adv.unit)
+        .filter(x => x != none).join[#h(0pt, weak: true), ]
       grid(
         columns:(1fr, 3.2fr), gutter:1.2em,
         [#opts.spell.supervisor:],
-        [#adv.name#z, #adv.university#z, #adv.department#z, #adv.unit],
+        parts(advisor.at(0)),
         ..if advisor.len() > 1 {
-          let adv = advisor.at(1)
-          (align(top,[#opts.spell.co-supervisor:]),
-          [#adv.name#z, #adv.university#z, #adv.department#z, #adv.unit])
+          (align(top,[#opts.spell.co-supervisor:]), parts(advisor.at(1)))
         }
       )
     }
@@ -935,15 +889,7 @@
     set par(spacing: 3em)
 
     [
-      #set page(background: box(
-        width: 100%,
-        height: 100%,
-        fill: gradient.linear(
-          opts.theme.primary,
-          black,
-          angle: 90deg
-        )
-      ))
+      #set page(background: title-page-background(opts))
       #set text(fill: opts.theme.background)
       #smallcaps[
         #set text(1.3em)

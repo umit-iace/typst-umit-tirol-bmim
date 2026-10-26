@@ -68,22 +68,16 @@
   lbl + enum(task)
 }
 
-#let solution-inline(solution) = context {
-  let opts = options.final()
-  block(
-    width: 100%,
-    stroke: 2pt + color.red,
-    inset: .5em,
-    breakable: true,
-    block(
-      breakable: true,
-    )[
-      *#opts.spell.solution:*
+#let solution-inline(solution) = context block(
+  width: 100%,
+  stroke: 2pt + color.red,
+  inset: .5em,
+  breakable: true,
+)[
+  *#options.final().spell.solution:*
 
-      #solution
-    ]
-  )
-}
+  #solution
+]
 
 #let solution-bottom = context [
   #let spell = options.final().spell
@@ -100,6 +94,12 @@
     #solution
   ]
 ]
+
+// Solutions of the option show-solution "bottom", on a new page
+#let solutions-at-end(show-solution) = if show-solution == "bottom" {
+  pagebreak(weak: true)
+  solution-bottom
+}
 
 #let subtask-keys = ("points", "description", "solution", "label")
 
@@ -158,24 +158,20 @@
   }
 
   let opts = options.final()
-  let wrap = if opts.task-wrap-counter == none {
-    (c: counter("bmim-task-counter-ignore"), lvl: 0)
-  } else {
-    let (c, lvl) = opts.task-wrap-counter
-    (c: c, lvl: lvl)
-  }
-  if wrap.lvl != 0 { // check if we need to reset, recursively
-    let w = wrap.c.get()
-    for i in range(wrap.lvl) {
+  // counter and level (e.g. the chapter) after which the task numbers restart
+  let (wrap, lvl) = if opts.task-wrap-counter == none { (none, 0) } else { opts.task-wrap-counter }
+  if wrap != none { // check if we need to reset, recursively
+    let w = wrap.get()
+    for i in range(lvl) {
       if w.at(i) != t-count.get().at(i) {
         t-count.update(
-          w.slice(0, wrap.lvl)
+          w.slice(0, lvl)
         )
         break
       }
     }
   }
-  t-count.step(level: wrap.lvl+1)
+  t-count.step(level: lvl+1)
   t-points.update(p => { p.push(points-or-empty); return p });
   if is-super {
     // store points
@@ -190,7 +186,7 @@
     let tasknum = t-points.get().len()
 
     let points = t-points.final().at(tasknum, default:())
-    let enum-cnt = t-count.step(level:wrap.lvl+2)
+    let enum-cnt = t-count.step(level:lvl+2)
     let description = if is-super {
       args.pos().first()
       enum-cnt
@@ -218,10 +214,10 @@
       )
     )}
 
-    let sol-style = if is-super {
-      (it, p) => [+ #it \ #show-points(p) ]
-    } else {
-      (it, p) => [#it \ #show-points(p) ]
+    // subtasks: one enum item per solution
+    let sol-style(it, p) = {
+      let body = [#it \ #show-points(p) ]
+      if is-super { enum.item(body) } else { body }
     }
     let solution = (
       if is-super {
@@ -245,23 +241,8 @@
 
 #let show-ref(it) = {
   let opts = options.final()
-  let el = it.element
-  if el != none and el.func() == metadata and el == t-mark {
-    let supp = it.supplement
-    if supp == auto {
-      supp = opts.spell.task
-    }
-    let loc = el.location()
-    let ref-counter = numbering(task-numbering(opts), ..t-count.at(loc))
-    if helpers.is-empty(supp) {
-      link(el.location(), ref-counter)
-    }
-    else {
-      link(el.location(), box([#supp~#ref-counter]))
-    }
-  } else {
-    it
-  }
+  helpers.marked-ref(it, t-mark, opts.spell.task,
+    loc => numbering(task-numbering(opts), ..t-count.at(loc)))
 }
 
 

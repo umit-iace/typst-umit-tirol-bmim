@@ -26,29 +26,21 @@
     lang: opts.lang,
     size: opts.size,
     font: main-font(opts),
-    weight: "regular",
   )
   set strong(delta: 250) // Source serif is quite heavy, this will lighten the bold settings
   show raw: set text(font: opts.fonts.mono, size: opts.size)
 
-  show figure.where(kind: table): set figure(
-    placement: none,
-    supplement: opts.spell.tab
-  )
+  show figure.where(kind: table): set figure(supplement: opts.spell.tab)
   show figure.where(kind: table): it => {
     set figure.caption(position: top)
     show figure.caption: set align(start)
     it
   }
-  show figure.where(kind: image): set figure(
-    placement: none,
-    supplement: opts.spell.fig
-  )
+  show figure.where(kind: image): set figure(supplement: opts.spell.fig)
   show figure.where(kind: image): it => {
     show figure.caption: set align(start)
     it
   }
-  set figure(numbering: "1")
   show figure: fig => {
     show figure.caption: cap => context {
       if cap.numbering == none {
@@ -139,6 +131,15 @@
   } else if opts.titleblock == auto {
     (titleblock.at(kind))(args)
   }
+}
+
+// Title block of the book-like variants (lecture, thesis, workbook), then a
+// new (two-sided: odd) page with page number 1, also after a user-defined
+// title block
+#let book-title(kind, args) = {
+  render-titleblock(kind, args)
+  pagebreak(to: "odd", weak: true)
+  counter(page).update(1)
 }
 
 #let article(
@@ -254,10 +255,7 @@
 
   body
 
-  if show-solution == "bottom" {
-    pagebreak(weak:true)
-    task.solution-bottom
-  }
+  task.solutions-at-end(show-solution)
   context {
     let sheets = if type(empty-sheets) == int {
       empty-sheets
@@ -311,10 +309,7 @@
 
   body
 
-  if show-solution == "bottom" {
-    pagebreak(weak:true)
-    task.solution-bottom
-  }
+  task.solutions-at-end(show-solution)
 }}
 
 #let lecture(
@@ -331,14 +326,11 @@
   )
   show: bmim-common
 
-  render-titleblock("lecture", (
+  book-title("lecture", (
     course: course,
     authors: authors,
     date: date,
   ))
-  // also applies to a user-defined title block
-  pagebreak(to: "odd", weak: true)
-  counter(page).update(1)
 
   set outline(depth: 3)
   set heading(numbering: "1.1")
@@ -361,10 +353,7 @@
     footer: (footer.lecture)(course, date),
   )
 
-  show selector.or(
-    pagebreak.where(to: "odd"),
-    pagebreak.where(to: "even"),
-  ): set page(header: none, footer: none)
+  show: empty-pages-plain
 
   show: book-matter.with(oneside)
   body
@@ -374,24 +363,15 @@
   subject: none,
   date: datetime.today(), // datetime or content
   location: none,
-  recipient: (
-    name: none,
-    address: none,
-    pro: none,
-    institution: none,
-  ),
-  sender: (
-    name: none,
-    pos: none,
-    institute: none,
-    department: none,
-    tel: none,
-    fax: none,
-    email: none,
-    signature: none,
-  ),
+  recipient: (:), // name, address, pro, institution
+  sender: (:), // name, pos, institute, department, tel, fax, email, signature
   ..chosen
 ) = { body => context {
+  // keys not given are none
+  let recipient = with-defaults(recipient, "'recipient' of letter",
+    ("name", "address", "pro", "institution"))
+  let sender = with-defaults(sender, "'sender' of letter",
+    ("name", "pos", "institute", "department", "tel", "fax", "email", "signature"))
   option-set(
     chosen.named()
   )
@@ -604,10 +584,7 @@
 
   body
 
-  if show-solution == "bottom" {
-    pagebreak(weak:true)
-    task.solution-bottom
-  }
+  task.solutions-at-end(show-solution)
 }}
 
 #let thesis(
@@ -617,7 +594,7 @@
   subtitle: [],
   author: none, // str or content
   date: datetime.today(), // datetime (shown as month and year) or content
-  advisor: ((
+  advisor: ((  // a dictionary or an array of them (supervisor, co-supervisor)
     name: [Prof. John],
     university: [Uni name],
     department: [Department],
@@ -634,6 +611,8 @@
   assert-set("author", author)
   assert-one-of("program", program, thesis-programs)
   assert-one-of("university", university, universities)
+  let advisor = (advisor,).flatten().map(adv => with-defaults(adv,
+    "'advisor' of thesis", ("name", "university", "department", "unit")))
 
   option-set(
     (oneside: oneside)
@@ -651,7 +630,7 @@
     ),
   )
 
-  render-titleblock("thesis", (
+  book-title("thesis", (
     program: program,
     university: university,
     title: title,
@@ -660,9 +639,6 @@
     date: date,
     advisor: advisor,
   ))
-  // also applies to a user-defined title block
-  pagebreak(to: "odd", weak: true)
-  counter(page).update(1)
 
   set outline(depth: 3)
   set heading(numbering: "1.1")
@@ -678,10 +654,7 @@
     footer: footer.thesis,
   )
 
-  show selector.or(
-    pagebreak.where(to: "odd"),
-    pagebreak.where(to: "even"),
-  ): set page(header: none, footer: none)
+  show: empty-pages-plain
 
   set page(numbering: "i")
 
@@ -726,14 +699,11 @@
   show: bmim-common
   show ref: task.show-ref
 
-  render-titleblock("workbook", (
+  book-title("workbook", (
     course: course,
     authors: authors,
     date: date,
   ))
-  // also applies to a user-defined title block
-  pagebreak(to: "odd", weak: true)
-  counter(page).update(1)
 
   set outline(depth: 1)
   set heading(numbering: "1.1")
@@ -774,10 +744,7 @@
     footer: (footer.workbook)(course),
   )
 
-  show selector.or(
-    pagebreak.where(to: "odd"),
-    pagebreak.where(to: "even"),
-  ): set page(header: none, footer: none)
+  show: empty-pages-plain
 
   show: book-matter.with(oneside)
   body
@@ -942,13 +909,6 @@
         show footnote.entry: set text(size: 0.7em)
         set footnote.entry(gap: 0.2em)
 
-        // show link: it => if type(it.dest) == str {
-        //   set text(fill: self.colors.primary)
-        //   it
-        // } else {
-        //   it
-        // }
-
         show strong: self.methods.alert.with(self: self)
 
         show raw: set text(font: opts.fonts.mono)
@@ -956,15 +916,20 @@
         body
       },
     ),
-    config-colors(
-      ..opts.theme,
-      neutral-lightest: white,
-    ),
+    config-colors(..opts.theme),
     config-store(
       title-slide: title-slide,
       outline-slide: outline-slide,
       // too long headings are cut to a single line
-      heading: self => utils.display-current-heading(depth: self.slide-level, setting: fit-line),
+      heading: self => context {
+        let current = current-heading(depth: self.slide-level)
+        if current != none { fit-line({
+          if current.numbering != none {
+            numbering(current.numbering, ..counter(heading).at(current.location())) + h(.3em)
+          }
+          current.body
+        }) }
+      },
       footer-pagenum: context utils.slide-counter.display() + " / " + utils.last-slide-number,
       header: self => (header.slides)(heading: utils.call-or-display(self, self.store.heading), progress-animation: progress-animation, slide: slide-geometry(self)),
       footer: self => (footer.slides)(
