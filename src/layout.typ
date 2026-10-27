@@ -710,8 +710,6 @@
     let fg = opts.theme.background
     let logo-left = pick-logo(opts.logo, "flyer-left")
     let logo-right = pick-logo(opts.logo, "flyer-right")
-    set text(fill: fg)
-    set par(justify: false)
 
     // background image, covers the whole page
     if args.background != none {
@@ -723,14 +721,24 @@
       ))
     }
 
-    // information box at the bottom half
-    place(bottom + left, dx: 4%, box(
-      width: 92%,
-      height: 50%,
+    // information box, at least the bottom half; it grows upwards with its
+    // content and must not reach beyond the top edge of the page
+    let main-logo = if logo-right == auto {
+      image("./../assets/logo_umit_white_" + umit-lang(opts) + ".svg", height: 50pt)
+    } else {
+      logo-right
+    }
+    let width = page.width * 0.92
+    let info-box(height) = box(
+      width: width,
+      height: height,
       fill: flyer-gradient(opts),
-      inset: (x: 6%, top: 2.2em, bottom: 1.8em),
+      inset: (x: width * 0.06, top: 2.2em, bottom: 1.8em),
       // the alignment of place would apply to the content as well
       align(top + left, {
+        // set here, measure() does not see the set rules of the context
+        set text(fill: fg)
+        set par(justify: false)
         // series above the title, separated by a line
         if args.series != none {
           block(
@@ -753,25 +761,34 @@
             body,
           )).flatten(),
         )
+        // at least some spacing above the bottom row, which is at the bottom
+        // of the box if it is higher than its content
+        v(1.5em)
+        if height != auto { v(1fr) }
         // logos bottom right, the QR code (or any content, e.g. an image)
         // bottom left in its own size, both aligned at the bottom; it is shown
         // as given, so its colors have to contrast with the box
-        let main-logo = if logo-right == auto {
-          image("./../assets/logo_umit_white_" + umit-lang(opts) + ".svg", height: 50pt)
-        } else {
-          logo-right
-        }
-        if args.qr-code != none {
-          place(bottom + left, args.qr-code)
-        }
-        place(bottom + right, stack(
-          dir: ltr,
-          spacing: 1.5em,
-          if logo-left != auto { align(bottom, logo-left) },
-          align(bottom, main-logo),
-        ))
+        grid(
+          columns: (auto, 1fr),
+          align: (left + bottom, right + bottom),
+          if args.qr-code != none { args.qr-code },
+          stack(
+            dir: ltr,
+            spacing: 1.5em,
+            if logo-left != auto { align(bottom, logo-left) },
+            align(bottom, main-logo),
+          ),
+        )
       }),
-    ))
+    )
+    let needed = measure(info-box(auto)).height
+    assert(needed <= page.height, message:
+      "The content of the flyer box is too high for the front page (" +
+      repr(needed) + " > " + repr(page.height) + "), shorten the title or the " +
+      "details or reduce the sizes"
+    )
+    let height = calc.max(needed, page.height / 2)
+    place(bottom + left, dx: page.width * 0.04, info-box(height))
   },
   poster: (args) => context {
     let (title, authors, ..) = args
