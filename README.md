@@ -85,7 +85,7 @@ These options can be passed to every variant:
 | `fonts` | see [Fonts](#fonts) | Fonts per role, single roles can be replaced |
 | `size` | `11pt` | Font size (poster: `20pt`, slides: `18pt`) |
 | `logo` | `auto` | `auto`, `none`, content, or a dictionary with `left`, `right`, `title-left`, `title-right` (slides), `flyer-left`, `flyer-right` (flyer) |
-| `institute` | `"iace"` | Institute, whose logo and name are shown (header, title slide, title page of lecture and workbook, …): `"iace"` (Institut für Automatisierungs- und Regelungstechnik), `"ims"` (Institut für Mess- und Sensortechnik), or an own one as `(name: [..], logo: image(..))`, see [Institutes](#institutes) |
+| `institute` | `"iace"` | Institute, whose logo and name are shown (header, title slide, title page of lecture and workbook, …): `"iace"` (Institut für Automatisierungs- und Regelungstechnik), `"ims"` (Institut für Mess- und Sensortechnik), an own one as `(name: [..], logo: image(..))`, or `none` (no institute: no logo, the colored bar runs through to the UMIT TIROL logo, no name), see [Institutes](#institutes) |
 | `titleblock` | `auto` | `auto` (title block of the variant), `none`, or a function `args => content` |
 | `show-solution` | `none` | `none`, `"inline"` or `"bottom"` (exam, exercise, report, workbook) |
 | `task-show-points` | `false` | Show the points of each task (exercise, workbook) |
@@ -233,7 +233,7 @@ The global options `lists` and `frontmatter` of the slides apply to the
 | `outline-slide(title: [...], cover-lvl: 1)` | Slide with the outline, the section `cover-lvl` is highlighted, or the option `outline-slide` if given |
 | `translated-month(date, lang)` | Name of the month of `date` in the language `lang` |
 | `umit-logo(color: "white", subtitle: true, ..args)` | Logo of UMIT TIROL in the language of the document, `color` `"white"` or `"blue"`, `subtitle: false` without "Die Tiroler Privatuniversität"; `args` (e.g. `height: 30pt`) are passed to `image`, e.g. `logo: (flyer-right: umit-logo(height: 40pt))` |
-| `institute-logo(institute: auto, ..args)` | White logo of an institute, `institute` is a key of `institutes` (`"iace"`, `"ims"`, …), `auto` the one of the option `institute`; `args` (e.g. `height: 30pt`) are passed to `image` |
+| `institute-logo(institute: auto, ..args)` | White logo of an institute, `institute` is a key of `institutes` (`"iace"`, `"ims"`, …), `auto` the one of the option `institute`, `none` gives `none`; `args` (e.g. `height: 30pt`) are passed to `image` |
 | `flyer-heading(body, size: auto, rule: 100%)` | Heading with a line below on the back page of the flyer; `size` (`auto`: `heading` of the option `sizes` of the flyer) is the font size, `rule` the length of the line |
 | `flyer-badge(body, end: none)` | Rotated badge on the back page of the flyer, right aligned up to the page edge, where it is placed; a datetime is shown with date and time, an optional `end` gives a time span, e.g. "5th November 2026, 17:00–18:30" |
 | `context print-date-time(date, end: none)` | Date with the time of a datetime in the language of the document, e.g. "5th November 2026, 17:00" or "5. November 2026, 17.00 Uhr" (as in the badge of the flyer); with `end` a time span, "5th November 2026, 17:00–18:30" on the same day, otherwise "start – end" |
@@ -286,6 +286,9 @@ shown as given:
     institute: (name: [Own institute], logo: image("logo.svg", height: 20pt)),
   )
   ```
+With `institute: none` no institute is shown: neither logo nor name, the
+colored bar of the headers runs through and the UMIT TIROL logo stays on the
+right.
 
 ## Fonts
 

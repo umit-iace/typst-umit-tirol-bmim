@@ -12,6 +12,7 @@
   show-solution: none,
   titleblock: none,
   task-show-points: false,
+  institute: none, // no institute: no logo, the bar runs through
 )
 
 #align(center)[

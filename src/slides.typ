@@ -176,7 +176,11 @@
                 if logo-left == auto {
                   pad(
                     top: 0pt,
-                    place-institute-logo(opts, "title-slide", height: 40pt)
+                    // without an institute the height of its logo is kept
+                    // for the placed UMIT TIROL logo on the right
+                    if opts.institute == none { box(height: 40pt) } else {
+                      place-institute-logo(opts, "title-slide", height: 40pt)
+                    }
                   )
                 } else {
                   logo-left

@@ -20,7 +20,7 @@
   ),
   size: 11pt,
   logo: auto, // none, auto, (left: // , right: //)
-  institute: "iace", // key of institutes (data.typ) or (name: content, logo: content)
+  institute: "iace", // key of institutes (data.typ), (name: content, logo: content) or none
   titleblock: auto, // none, auto, function
   oneside: true,
   // front matter of lecture, thesis, workbook after the table of contents:
@@ -93,7 +93,7 @@
           )
         }
       } else {
-        assert-one-of("institute", val, institutes.keys())
+        assert-one-of("institute", val, (..institutes.keys(), none))
       }
     }
   }

@@ -638,7 +638,7 @@
       }
       #par[]
       #par[]
-      #[
+      #if opts.institute != none [
         #set text(1.2em)
         #institute-name(opts) \
       ]
@@ -924,7 +924,7 @@
       }
       #par[]
       #par[]
-      #[
+      #if opts.institute != none [
         #set text(1.1em)
         #institute-name(opts)
 

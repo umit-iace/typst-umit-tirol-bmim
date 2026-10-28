@@ -96,20 +96,23 @@
   style(it, numbering(it.numbering, ..counter(heading).get()))
 }
 
-// Name of the institute (option 'institute') in the language of the document
+// Name of the institute (option 'institute') in the language of the document,
+// none without an institute
 #let institute-name(opts) = {
   let inst = opts.institute
-  if type(inst) == dictionary { inst.at("name", default: none) } else {
+  if inst == none { none } else if type(inst) == dictionary { inst.at("name", default: none) } else {
     institutes.at(inst).name.at(opts.lang)
   }
 }
 
 // White logo of the institute (option 'institute') at the place `place` (see
 // institute-places) with the given `height`, scaled and shifted by scale and
-// dy of the institute; an own logo (content) is shown as given
+// dy of the institute; an own logo (content) is shown as given, none without
+// an institute (the colored bar then runs through to the UMIT TIROL logo)
 #let place-institute-logo(opts, place, height: auto) = {
   assert(place in institute-places, message: "Unknown place '" + place + "' of the institute logo")
   let inst = opts.institute
+  if inst == none { return none }
   if type(inst) == dictionary { return inst.at("logo", default: none) }
   let entry = institutes.at(inst)
   // a single value, or a dictionary per place with `rest` for the others
@@ -145,9 +148,11 @@
 
 // White logo of an institute: `institute` is a key of institutes (data.typ),
 // auto: the one of the option 'institute'; `args` (e.g. height) are passed to
-// image. An own institute of the option (dictionary) gives its logo as given.
+// image. An own institute of the option (dictionary) gives its logo as given,
+// none (also of the option) gives none.
 #let institute-logo(institute: auto, ..args) = context {
   let inst = if institute == auto { options.final().institute } else { institute }
+  if inst == none { return none }
   if type(inst) == dictionary { return inst.at("logo", default: none) }
   assert(inst in institutes, message:
     "Argument 'institute' of institute-logo must be one of [" +

@@ -27,17 +27,6 @@
   bib-as-footnote: true,
   handout: false,
   notes: none,
-  logo: (
-    left: pad(
-      top: -8.0pt,
-      left: 21pt,
-      image("./../assets/logo_lfui_color_invert.png", height: 30pt)
-    ),
-    title-left: pad(
-      top: -1.0pt,
-      image("./../assets/logo_lfui_color_invert.png", height: 48pt)
-    ),
-  ),
   progress-animation: (
     slides: true,
     section: true,
