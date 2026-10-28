@@ -59,8 +59,7 @@ Antriebe.
 - Vorträge zu den Studiengängen
 - Gespräche mit Studierenden und Lehrenden
 
-// push the following to the bottom of the page
-#v(1fr)
+#v(1em)
 
 #bmim.flyer-heading(size: 16pt)[Anfahrt und Kontakt]
 

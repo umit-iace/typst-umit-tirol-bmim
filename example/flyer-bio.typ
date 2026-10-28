@@ -62,8 +62,7 @@ nightmare? Welcome to quantum computing.
 // the badge where it is placed, a datetime is shown with date and time
 #bmim.flyer-badge(start, end: end)
 
-// push the following to the bottom of the page
-#v(1fr)
+#v(1em)
 
 // line below the heading as wide as the portrait
 #bmim.flyer-heading(size: 16pt, rule: 25%)[Short bio]

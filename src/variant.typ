@@ -516,20 +516,40 @@
       sizes: sizes,
     )))
 
-    // back page: image at the top, the gradient below, the body as content
-    let image-height = 22%
+    // back page: image at the top, the gradient below, the body as content;
+    // the image fills the height above the body
+    let gap = 2em.to-absolute() // between the image and the body
+    let bottom = 2.5em.to-absolute()
+    let image-height = if back-image != none {
+      // measure() does not see the set rules of the context, so set them here;
+      // it would drop the content after fractional spacing like v(1fr), which
+      // is zero anyway if the body fills the page
+      let needed = measure(width: page.width * (100% - 2 * flyer-side), {
+        set text(font: opts.fonts.sans, size: size)
+        set par(justify: true)
+        show v: it => if type(it.amount) == fraction { none } else { it }
+        body
+      }).height
+      let height = page.height - needed - gap - bottom
+      assert(height > 0pt, message:
+        "The content of the back page of the flyer is too high for the back " +
+        "image (" + repr(needed) + " > " + repr(page.height - gap - bottom) +
+        "), shorten the content or reduce the size, or set no back-image"
+      )
+      height
+    } else { 0pt }
     page(
       margin: (
         x: flyer-side,
-        top: if back-image != none { image-height + 2em } else { 2.5em },
-        bottom: 2.5em,
+        top: if back-image != none { image-height + gap } else { bottom },
+        bottom: bottom,
       ),
       header: none,
       footer: none,
       // same gradient as the box on the front page, starting below the image
       fill: opts.theme.primary.darken(80%),
       background: {
-        let start = if back-image != none { image-height } else { 0% }
+        let start = image-height
         place(top, dy: start, box(
           width: 100%,
           height: 100% - start,
