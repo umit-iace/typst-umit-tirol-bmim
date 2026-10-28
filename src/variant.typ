@@ -27,7 +27,12 @@
     size: opts.size,
     font: main-font(opts),
   )
-  set strong(delta: 250) // Source serif is quite heavy, this will lighten the bold settings
+  // Source serif is quite heavy, this will lighten the bold settings. The
+  // resulting weights must not lie exactly between two weights of the font
+  // (Source Serif 4: 200, 300, 400, 600, 700, 900), e.g. 400 + 250 = 650,
+  // otherwise the chosen weight depends on the order in which the fonts are
+  // loaded (file system), and differs between machines
+  set strong(delta: 220)
   show raw: set text(font: opts.fonts.mono, size: opts.size)
 
   show figure.where(kind: table): set figure(supplement: opts.spell.tab)
@@ -175,7 +180,8 @@
   // level 1 headings are bigger
   show heading.where(level: 1): it => {
     // set align(center)
-    text(weight: "medium", style: "normal", size: 1.1em)[
+    // no medium (500) in Source Serif 4, see the delta of strong above
+    text(weight: "semibold", style: "normal", size: 1.1em)[
       #it
     ]
   }

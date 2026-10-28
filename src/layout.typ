@@ -809,7 +809,7 @@
           linebreak()
           text(size: 1.5em, weight: "semibold", args.subtitle)
           line(length: 33%)
-          text(size: 0.9em, weight: "medium")[
+          text(size: 0.9em, weight: "semibold")[
             #args.authors.join(", ")
             #linebreak()
             #opts.spell.date: #print-date(args.date)
