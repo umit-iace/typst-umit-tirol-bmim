@@ -51,6 +51,13 @@ jobs:
       - name: Run tests
         run: scripts/run_tests.sh
 
+      - name: Upload test differences
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-diff
+          path: tests/diff/
+
       - name: Build Examples
         run: |
           shopt -s extglob

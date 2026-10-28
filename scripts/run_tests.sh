@@ -6,7 +6,9 @@
 #                             PDF (whitespace is normalized)
 # Without expect-error, the file must compile without warnings, and each page
 # (PNG) must match the reference image tests/ref/<name>/<page>.png; the
-# difference of a failed comparison is saved in tests/diff/<name>-<page>.png.
+# difference of a failed comparison is saved in tests/diff/<name>-<page>.png,
+# the rendered page in tests/diff/<name>-<page>-actual.png (in CI uploaded as
+# the artifact test-diff). Small color differences of a pixel are tolerated.
 #
 # Usage: scripts/run_tests.sh            run the tests
 #        scripts/run_tests.sh --update   also (re)write the reference images
@@ -26,6 +28,10 @@ update=false
 [ "${1:-}" = "--update" ] && update=true
 # resolution of the reference images, enough to see layout changes
 ppi=30
+# tolerated color difference of a pixel: the rasterization of gradients,
+# images and anti-aliased edges differs slightly between typst builds and
+# machines (e.g. locally and in CI), layout changes differ much more
+fuzz=10%
 # fixed date for datetime.today(), the default date of most variants, so that
 # the images do not change from day to day
 export SOURCE_DATE_EPOCH=1772452800 # 2026-03-02 12:00 UTC
@@ -70,11 +76,12 @@ visual() {
 	local page diff
 	for page in $pages; do
 		# number of differing pixels; a different image size is an error
-		diff=$(compare -metric AE "$ref/$page" "$out/$page" "$tmp/diff.png" 2>&1)
+		diff=$(compare -metric AE -fuzz $fuzz "$ref/$page" "$out/$page" "$tmp/diff.png" 2>&1)
 		diff=${diff%% *}
 		if [ "$diff" != 0 ]; then
 			mkdir -p tests/diff
 			cp "$tmp/diff.png" "tests/diff/$name-$page" 2> /dev/null
+			cp "$out/$page" "tests/diff/$name-${page%.png}-actual.png"
 			fail "$name" "page ${page%.png} differs from the reference ($diff pixels), see tests/diff/$name-$page"
 			return 1
 		fi
